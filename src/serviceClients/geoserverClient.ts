@@ -2,7 +2,7 @@ import { Logger } from '@map-colonies/js-logger';
 import { NotFoundError } from '@map-colonies/error-types';
 import { HttpClient, IHttpRetryConfig } from '@map-colonies/mc-utils';
 import { inject, injectable } from 'tsyringe';
-import { Exception, trace, Tracer } from '@opentelemetry/api';
+import { Tracer } from '@opentelemetry/api';
 import { AxiosBasicCredentials } from 'axios';
 import { IConfig } from '../common/interfaces';
 import { SERVICES } from '../common/constants';
@@ -47,7 +47,7 @@ export class GeoserverClient extends HttpClient {
       const response = await this.get<T>(url, options?.queryParams, undefined, this.auth, options?.headers);
       return response;
     } catch (error) {
-      this.logger.error({ msg: `Failed to perform GET request to ${endpoint}: ${(error as Exception).toString()}`, logContext: logCtx });
+      this.logger.error({ msg: `Failed to perform GET request to ${url}`, logContext: logCtx, error: error });
       if (error instanceof NotFoundError) {
         error.message = `No resource was found for get of ${endpoint}`;
       }
@@ -62,7 +62,7 @@ export class GeoserverClient extends HttpClient {
       const response = await this.post<T>(url, body, options?.queryParams, undefined, this.auth, options?.headers);
       return response;
     } catch (error) {
-      this.logger.error({ msg: `Failed to perform POST request to ${endpoint}: ${(error as Exception).toString()}`, logContext: logCtx });
+      this.logger.error({ msg: `Failed to perform POST request to ${url}`, logContext: logCtx, error: error });
       throw error;
     }
   }
@@ -73,7 +73,7 @@ export class GeoserverClient extends HttpClient {
     try {
       await this.delete(url, options?.queryParams, undefined, this.auth, options?.headers);
     } catch (error) {
-      this.logger.error({ msg: `Failed to perform DELETE request to ${endpoint}: ${(error as Exception).toString()}`, logContext: logCtx });
+      this.logger.error({ msg: `Failed to perform DELETE request to ${url}`, logContext: logCtx, error: error });
       if (error instanceof NotFoundError) {
         error.message = `No resource was found for delete of ${endpoint}`;
       }
@@ -88,7 +88,7 @@ export class GeoserverClient extends HttpClient {
       const response = await this.put<T>(url, body, options?.queryParams, undefined, this.auth, options?.headers);
       return response;
     } catch (error) {
-      this.logger.error({ msg: `Failed to perform PUT request to ${endpoint}: ${(error as Exception).toString()}`, logContext: logCtx });
+      this.logger.error({ msg: `Failed to perform PUT request to ${url}`, logContext: logCtx, error: error });
       if (error instanceof NotFoundError) {
         error.message = `No resource was found for put of ${endpoint}`;
       }
