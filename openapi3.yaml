@@ -1,58 +1,740 @@
 openapi: 3.0.1
 info:
-  title: service-name
-  description: basic template for map colonies service
+  title: Polygon Parts Geoserver API
+  description: Unified REST API access to geoserver adminstarion
   version: 1.0.0
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
 paths:
-  /anotherResource:
+  /workspaces:
     get:
-      operationId: getAnotherResource
+      operationId: getAllWorkspacesNames
       tags:
-        - anotherResource
-      summary: gets the resource
+        - workspaces
+      summary: Get List of all workspaces name
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/anotherResource'
-  /resourceName:
-    get:
-      operationId: getResourceName
-      tags:
-        - resourceName
-      summary: gets the resource
-      responses:
-        200:
-          description: OK
+                $ref: '#/components/schemas/workspaces'
+        401:
+          description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/resource'
+                $ref: '#/components/schemas/error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
     post:
-      operationId: createResource
+      operationId: createWorkspace
       tags:
-        - resourceName
-      summary: creates a new record of type resource
+        - workspaces
+      summary: create new Workspace object by name
+      requestBody:
+        description: A json object containing desired workspace name
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: workspace name
       responses:
         201:
-          description: created
+          description: Created
+        409:
+          description: Duplication Conflict
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/resource'
+                $ref: '#/components/schemas/error'
+  /workspaces/{workspace}:
+    get:
+      operationId: getWorkspaceIfExist
+      tags:
+        - workspaces
+      summary: Get Workspace object if exist by name or null
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/workspaceInfo'
+        404:
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    delete:
+      operationId: deleteWorkspace
+      tags:
+        - workspaces
+      summary: delete Workspace by name
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: recurse
+          schema:
+            type: boolean
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: 'OK'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              example:
+                message: 'No such workspace'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              example:
+                message: 'Workspace or related Namespace is not empty (and recurse not true)'
+  /workspaces/{workspace}/{newWorkspaceName}:
+    put:
+      operationId: updateWorkspace
+      tags:
+        - workspaces
+      summary: Update Workspace object by name
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: newWorkspaceName
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Modified
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              example:
+                message: 'No such workspace'
+        405:
+          description: InternalServerError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /dataStores/{workspace}:
+    get:
+      operationId: getAllDataStores
+      tags:
+        - dataStores
+      summary: gets the workspace's datasotres
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dataStores'
+    post:
+      operationId: createNewDatastore
+      tags:
+        - dataStores
+      summary: create dataStore on provided workspace
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: A json object containing desired data store creation
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/createDataStoreReq'
+                - $ref: '#/components/schemas/dataStore'
+                - $ref: '#/components/schemas/extraDataStoreConnectionParams'
+            example:
+              userName: admin
+              userPass: admin
+              name: polygon_part_ds
+              host: localhost
+              port: 5432
+              schema: polygon_parts
+              dbtype: postgis
+              dbName: postgres
+
+      responses:
+        201:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dataStore'
+              example:
+                name: polygon_part_ds
+                host: localhost
+                port: 5432
+                schema: polygon_parts
+                dbtype: postgis
+                dbName: postgres
         400:
           description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              example:
+                message: 'No such workspace'
+
+  /dataStores/{workspace}/{dataStore}:
+    get:
+      operationId: getDataStoreEntity
+      tags:
+        - dataStores
+      summary: gets the dataStore object
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: dataStore
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dataStore'
+              example:
+                name: Some Example Data Store
+                host: http://localhost
+                port: 5432
+                schema: polygon_parts
+                dbName: postgres
+                dbType: postgis
+                sslMode: DISABLE
+    put:
+      operationId: updateDataStoreEntity
+      tags:
+        - dataStores
+      summary: update the dataStore object
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: dataStore
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: A json object containing desired data store creation
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/createDataStoreReq'
+                - $ref: '#/components/schemas/dataStore'
+            example:
+              userName: admin
+              userPass: admin
+              name: polygon_part_ds
+              host: localhost
+              port: 5432
+              schema: polygon_parts
+              dbtype: postgis
+              dbName: postgres
+      responses:
+        201:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dataStore'
+              example:
+                name: Some Example Data Store
+                host: http://localhost
+                port: 5432
+                schema: polygon_parts
+                dbName: postgres
+                dbType: postgis
+                sslMode: DISABLE
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              example:
+                message: 'No such workspace'
+
+    delete:
+      operationId: deleteDataStoreEntity
+      tags:
+        - dataStores
+      summary: delete the dataStore object
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: dataStore
+          schema:
+            type: string
+          required: true
+      responses:
+        204:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: 'OK'
+
+  /featuresTypes/{workspace}/{dataStore}:
+    get:
+      operationId: getAllfeaturesTypesNames
+      tags:
+        - featuresTypes (Layer publishing)
+      summary: Get List of all feature types names
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: dataStore
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example: [bluemarble-Orthophoto, best-OrthophotoBest]
+    post:
+      operationId: createFeatureTypes
+      tags:
+        - featuresTypes (Layer publishing)
+      summary: Publishing new feature
+      requestBody:
+        description: A json object containing desired details to update on layer
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/featureType'
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: dataStore
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example: [bluemarble-Orthophoto, best-OrthophotoBest]
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              example:
+                message: 'No such workspace'
+
+  /featuresTypes/{workspace}/{dataStore}/{featureType}:
+    get:
+      operationId: getFeatureType
+      tags:
+        - featuresTypes (Layer publishing)
+      summary: get feature type if exist
+      parameters:
+        - in: path
+          name: featureType
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: dataStore
+          schema:
+            type: string
+          required: true
+      responses:
+        201:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/featureType'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              example:
+                message: 'No such workspace'
+
+    put:
+      operationId: updateFeatureType
+      tags:
+        - featuresTypes (Layer publishing)
+      summary: update feature type
+      requestBody:
+        description: A json object containing desired details to update on layer
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/featureType'
+            example:
+              name: newExample-layerOrthophotoExample
+              tableName: same_table_name
+              maxFeatures: 20
+              attributes:
+                - name: editedName
+                  nillable: true
+                  binding: string
+                  source: orig_name
+      parameters:
+        - in: path
+          name: featureType
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: dataStore
+          schema:
+            type: string
+          required: true
+      responses:
+        201:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/featureType'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              example:
+                message: 'No such workspace'
+
+    delete:
+      operationId: deleteFeatureType
+      tags:
+        - featuresTypes (Layer publishing)
+      summary: delete feature type
+      parameters:
+        - in: path
+          name: featureType
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: dataStore
+          schema:
+            type: string
+          required: true
+
+      responses:
+        204:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: 'OK'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              example:
+                message: 'No such workspace'
+  /wfsMode:
+    get:
+      operationId: wfsMode
+      tags:
+        - wfsMode
+      summary: Current mode of WFS serving
+      responses:
+        200:
+          description: Current mode of wfs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/wfsMode'
+    put:
+      operationId: updateWfsMode
+      tags:
+        - wfsMode
+      summary: Change mode of WFS serving
+      requestBody:
+        description: A json object containing desired details to update on layer
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/wfsMode'
+            example:
+              mode: TRANSACTIONAL
+
+      responses:
+        201:
+          description: Current mode of wfs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: 'OK'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              example:
+                message: 'OK'
+
 components:
   schemas:
+    workspaces:
+      type: array
+      items:
+        $ref: '#/components/schemas/workspace'
+    workspace:
+      type: object
+      properties:
+        name:
+          type: string
+        link:
+          type: string
+    workspaceInfo:
+      type: object
+      properties:
+        name:
+          type: string
+        dateCreated:
+          type: string
+    extraDataStoreConnectionParams:
+      type: object
+    dataStores:
+      type: array
+      items:
+        $ref: '#/components/schemas/dataStore'
+    dataStore:
+      type: object
+      properties:
+        name:
+          type: string
+        host:
+          type: string
+        port:
+          type: number
+        schema:
+          type: string
+        dbtype:
+          type: string
+          enum: [postgis]
+        dbName:
+          type: string
+    createDataStoreReq:
+      type: object
+      properties:
+        userName:
+          type: string
+        userPass:
+          type: string
+          format: password
+        sslMode:
+          type: string
+          enum: [DISABLE, ALLOW, PREFER, REQUIRE, VERIFY_CA, VERIFY_FULL]
+    featureType:
+      type: object
+      properties:
+        name:
+          type: string
+        tableName:
+          type: string
+        crs:
+          type: string
+        maxFeatures:
+          type: number
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/attribute'
+
+    attribute:
+      type: object
+      properties:
+        name:
+          type: string
+        minOccurs:
+          type: number
+        maxOccurs:
+          type: number
+        nillable:
+          type: boolean
+        binding:
+          type: string
+        source:
+          type: string
+
+    wfsMode:
+      type: object
+      properties:
+        mode:
+          type: string
+          enum: [BASIC, TRANSACTIONAL, COMPLETE]
     error:
       type: object
       required:
@@ -60,27 +742,3 @@ components:
       properties:
         message:
           type: string
-    resource:
-      type: object
-      required:
-        - id
-        - name
-        - description
-      properties:
-        id:
-          type: number
-          format: int64
-        name:
-          type: string
-        description:
-          type: string
-    anotherResource:
-      type: object
-      required:
-        - kind
-        - isAlive
-      properties:
-        kind:
-          type: string
-        isAlive:
-          type: boolean
