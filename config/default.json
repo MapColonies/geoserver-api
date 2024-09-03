@@ -24,5 +24,20 @@
         "options": null
       }
     }
-  }
+  },
+  "services": {
+    "geoserverUrl": ""
+  },
+  "geoserver": {
+    "auth": {
+      "username": "",
+      "password": ""
+    }
+  },
+  "httpRetry": {
+    "attempts": 5,
+    "delay": "exponential",
+    "shouldResetTimeout": true
+  },
+  "disableHttpClientLogs": false
 }
