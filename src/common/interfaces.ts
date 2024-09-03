@@ -9,3 +9,31 @@ export interface OpenApiConfig {
   jsonPath: string;
   uiPath: string;
 }
+
+export interface Workspace {
+  name: string;
+  link: string;
+}
+
+export interface WorkspaceRequest {
+  name: string;
+}
+
+export interface GetWorkspaceResponse {
+  name: string;
+  dateCreated: string;
+}
+
+export interface MessageResponse {
+  message: string;
+}
+
+export interface DeleteWorkspaceQueryParams {
+  recurse?: boolean;
+}
+
+export type GetWorkspacesResponse = Workspace[];
+
+export interface UpdateWorkspaceRequest extends WorkspaceRequest {
+  newName: string;
+}
