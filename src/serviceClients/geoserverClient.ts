@@ -7,6 +7,7 @@ import { AxiosBasicCredentials } from 'axios';
 import { IConfig } from '../common/interfaces';
 import { SERVICES } from '../common/constants';
 import { LogContext } from '../utils/logger/logContext';
+import { asyncCallWithSpan } from '@map-colonies/telemetry';
 
 interface RequestOptions {
   queryParams?: Record<string, unknown>;
