@@ -7,7 +7,7 @@ import { AxiosBasicCredentials } from 'axios';
 import { IConfig } from '../common/interfaces';
 import { SERVICES } from '../common/constants';
 import { LogContext } from '../utils/logger/logContext';
-import { asyncCallWithSpan } from '@map-colonies/telemetry';
+import { withSpanAsyncV4 } from '../common/test';
 
 interface RequestOptions {
   queryParams?: Record<string, unknown>;
@@ -41,7 +41,9 @@ export class GeoserverClient extends HttpClient {
     };
   }
 
+  @withSpanAsyncV4
   public async getRequest<T>(endpoint: string, options?: RequestOptions): Promise<T> {
+    //asyncCallWithSpan()
     const logCtx: LogContext = { ...this.logContext, function: this.getRequest.name };
     const url = `${this.baseUrl}/${endpoint}`;
     try {
@@ -56,6 +58,7 @@ export class GeoserverClient extends HttpClient {
     }
   }
 
+  @withSpanAsyncV4
   public async postRequest<T>(endpoint: string, body?: unknown, options?: RequestOptions): Promise<T> {
     const logCtx: LogContext = { ...this.logContext, function: this.postRequest.name };
     const url = `${this.baseUrl}/${endpoint}`;
@@ -68,6 +71,7 @@ export class GeoserverClient extends HttpClient {
     }
   }
 
+  @withSpanAsyncV4
   public async deleteRequest(endpoint: string, options?: RequestOptions): Promise<void> {
     const logCtx: LogContext = { ...this.logContext, function: this.deleteRequest.name };
     const url = `${this.baseUrl}/${endpoint}`;
@@ -82,6 +86,7 @@ export class GeoserverClient extends HttpClient {
     }
   }
 
+  @withSpanAsyncV4
   public async putRequest<T>(endpoint: string, body?: unknown, options?: RequestOptions): Promise<T> {
     const logCtx: LogContext = { ...this.logContext, function: this.putRequest.name };
     const url = `${this.baseUrl}/${endpoint}`;
