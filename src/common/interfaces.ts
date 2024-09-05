@@ -29,7 +29,7 @@ export interface MessageResponse {
 }
 
 export interface DeleteWorkspaceQueryParams {
-  recurse?: boolean;
+  isRecursive?: boolean;
 }
 
 export type GetWorkspacesResponse = Workspace[];

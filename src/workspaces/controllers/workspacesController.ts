@@ -46,9 +46,9 @@ export class WorkspacesController {
 
   public deleteWorkspace: DeleteWorkspaceHandler = async (req, res, next) => {
     try {
-      const recurse = req.query.recurse ?? false;
+      const isRecursive = req.query.isRecursive ?? false;
       const workspaceName = req.params.name;
-      await this.workspacesManager.deleteWorkspace(workspaceName, recurse);
+      await this.workspacesManager.deleteWorkspace(workspaceName, isRecursive);
       res.status(StatusCodes.OK).send({ message: 'OK' });
     } catch (error) {
       if (error instanceof NotFoundError) {

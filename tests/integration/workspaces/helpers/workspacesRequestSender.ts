@@ -21,7 +21,7 @@ export class WorkspaceRequestSender {
   }
 
   public async deleteWorkspace(name: string, isRecursive?: boolean): Promise<supertest.Response> {
-    return supertest.agent(this.app).delete(`/workspaces/${name}`).query({ recurse: isRecursive }).set('Content-Type', 'application/json');
+    return supertest.agent(this.app).delete(`/workspaces/${name}`).query({ isRecursive: isRecursive }).set('Content-Type', 'application/json');
   }
 
   // public async createResource(): Promise<supertest.Response> {

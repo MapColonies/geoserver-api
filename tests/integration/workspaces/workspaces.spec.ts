@@ -167,7 +167,7 @@ describe('Workspaces', function () {
     });
 
     describe('Sad Path', function () {
-      it('should return 403 status code when recursive is set to false and workspace is not empty', async function () {
+      it('should return 403 status code when isRecursive is set to false and workspace is not empty', async function () {
         nock(geoserverUrl).delete('/workspaces/test').query({ recurse: false }).basicAuth({ user: username, pass: password }).reply(403);
 
         const response = await requestSender.deleteWorkspace('test', false);
