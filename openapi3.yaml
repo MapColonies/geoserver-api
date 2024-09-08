@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Polygon Parts Geoserver API
-  description: Unified REST API access to geoserver adminstarion
+  description: Unified REST API access to geoserver administration
   version: 1.0.0
   license:
     name: MIT
@@ -12,7 +12,7 @@ paths:
       operationId: getAllWorkspacesNames
       tags:
         - workspaces
-      summary: Get List of all workspaces name
+      summary: Get list of all workspace names
       responses:
         200:
           description: OK

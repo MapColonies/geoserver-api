@@ -23,7 +23,7 @@ type UpdateWorkspaceHandler = RequestHandler<UpdateWorkspaceRequest, undefined, 
 
 @injectable()
 export class WorkspacesController {
-  public constructor(@inject(SERVICES.LOGGER) private readonly logger: Logger, private readonly workspacesManager: WorkspacesManager) {}
+  public constructor(private readonly workspacesManager: WorkspacesManager) {}
 
   public getWorkspaces: GetWorkspacesHandler = async (req, res, next) => {
     try {
