@@ -48,15 +48,15 @@ export class GeoserverClient extends HttpClient {
    * It authenticates the request using basic credentials from the GeoServer configuration.
    *
    * @template T The expected response type from the GeoServer.
+   * @template P The type of the query parameters object, which extends `Record<string, unknown>`. Defaults to an empty object.
    * @param {string} endpoint - The specific endpoint within the GeoServer to which the request is sent (e.g., "workspaces/default/layers").
-   * @param {RequestOptions} [options] - Optional configuration for the request, which may include:
-   *   - `queryParams`: A record of key-value pairs to be appended as query parameters.
+   * @param {RequestOptions<P>} [options] - Optional configuration for the request, which may include:
+   *   - `queryParams`: A record of key-value pairs to be appended as query parameters, typed as `P`.
    *   - `headers`: A record of custom headers for the request, such as `Authorization`, `Accept`, or `Content-Type`.
    *
    * @returns {Promise<T>} A promise resolving to the response data of type `T` from the GeoServer.
    *
    * @throws Will throw an error if the request fails. If the resource is not found, it throws a `NotFoundError` with an updated message containing the endpoint.
-   *
    */
   @withSpanAsyncV4
   public async getRequest<T, P extends Record<string, unknown> = Record<string, unknown>>(endpoint: string, options?: RequestOptions<P>): Promise<T> {
@@ -75,17 +75,17 @@ export class GeoserverClient extends HttpClient {
   }
 
   /**
-   *
    * Executes an HTTP POST request to the specified GeoServer endpoint.
    *
    * This method sends a request to the provided endpoint, including an optional request body and any optional query parameters and headers.
    * It uses basic authentication credentials retrieved from the GeoServer configuration.
    *
    * @template T The expected response type from the GeoServer.
+   * @template P The type of the query parameters object, which extends `Record<string, unknown>`.
    * @param {string} endpoint - The specific endpoint within the GeoServer to which the request is sent (e.g., "workspaces/default/layers").
    * @param {unknown} [body] - The body of the POST request, if applicable. This can be used to send data (e.g., JSON objects).
-   * @param {RequestOptions} [options] - Optional request settings, including:
-   *   - `queryParams`: Key-value pairs to append as query parameters.
+   * @param {RequestOptions<P>} [options] - Optional request settings, including:
+   *   - `queryParams`: Key-value pairs to append as query parameters, typed as `P`.
    *   - `headers`: Custom headers for the request.
    *
    * @returns {Promise<T>} A promise resolving to the response data of type `T` from the GeoServer.
@@ -111,15 +111,15 @@ export class GeoserverClient extends HttpClient {
    * This method sends a DELETE request to the provided endpoint, with optional query parameters and headers.
    * It uses basic authentication credentials from the GeoServer configuration.
    *
+   * @template T The type of the query parameters object, which extends `Record<string, unknown>`.
    * @param {string} endpoint - The specific endpoint within the GeoServer to which the request is sent (e.g., "layers/default/layerName").
-   * @param {RequestOptions} [options] - Optional settings for the request, including:
-   *   - `queryParams`: Key-value pairs to append as query parameters.
+   * @param {RequestOptions<T>} [options] - Optional settings for the request, including:
+   *   - `queryParams`: Key-value pairs to append as query parameters, typed as `T`.
    *   - `headers`: Custom headers for the request.
    *
    * @returns {Promise<void>} A promise resolving when the delete request is completed.
    *
    * @throws Will throw an error if the request fails. If the resource is not found, it throws a `NotFoundError` with an updated message containing the endpoint.
-   *
    */
   @withSpanAsyncV4
   public async deleteRequest<T extends Record<string, unknown>>(endpoint: string, options?: RequestOptions<T>): Promise<void> {
@@ -143,16 +143,16 @@ export class GeoserverClient extends HttpClient {
    * It uses basic authentication credentials from the GeoServer configuration.
    *
    * @template T The expected response type from the GeoServer.
+   * @template P The type of the query parameters object, which extends `Record<string, unknown>`.
    * @param {string} endpoint - The specific endpoint within the GeoServer to which the request is sent (e.g., "workspaces/default/layers").
    * @param {unknown} [body] - The body of the PUT request, if applicable, for updating or replacing resources.
-   * @param {RequestOptions} [options] - Optional settings for the request, including:
-   *   - `queryParams`: Key-value pairs to append as query parameters.
+   * @param {RequestOptions<P>} [options] - Optional settings for the request, including:
+   *   - `queryParams`: Key-value pairs to append as query parameters, typed as `P`.
    *   - `headers`: Custom headers for the request.
    *
    * @returns {Promise<T>} A promise resolving to the updated or replaced resource of type `T`.
    *
    * @throws Will throw an error if the request fails. If the resource is not found, it throws a `NotFoundError` with an updated message containing the endpoint.
-   *
    */
   @withSpanAsyncV4
   public async putRequest<T, P extends Record<string, unknown>>(endpoint: string, body?: unknown, options?: RequestOptions<P>): Promise<T> {
