@@ -4,10 +4,10 @@ import { HttpClient, IHttpRetryConfig } from '@map-colonies/mc-utils';
 import { inject, injectable } from 'tsyringe';
 import { Tracer } from '@opentelemetry/api';
 import { AxiosBasicCredentials } from 'axios';
+import { withSpanAsyncV4 } from '@map-colonies/telemetry';
 import { IConfig } from '../common/interfaces';
 import { SERVICES } from '../common/constants';
 import { LogContext } from '../utils/logger/logContext';
-import { withSpanAsyncV4 } from '@map-colonies/telemetry';
 
 interface RequestOptions<T> {
   queryParams?: T;

@@ -1,8 +1,6 @@
-import { Logger } from '@map-colonies/js-logger';
 import { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { injectable, inject } from 'tsyringe';
-import { SERVICES } from '../../common/constants';
+import { injectable } from 'tsyringe';
 
 import { WorkspacesManager } from '../models/workspacesManager';
 import {
