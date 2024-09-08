@@ -1,58 +1,217 @@
 openapi: 3.0.1
 info:
-  title: service-name
-  description: basic template for map colonies service
+  title: Polygon Parts Geoserver API
+  description: Unified REST API access to geoserver administration
   version: 1.0.0
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
 paths:
-  /anotherResource:
+  /workspaces:
     get:
-      operationId: getAnotherResource
+      operationId: getAllWorkspacesNames
       tags:
-        - anotherResource
-      summary: gets the resource
+        - workspaces
+      summary: Get list of all workspace names
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/anotherResource'
-  /resourceName:
-    get:
-      operationId: getResourceName
-      tags:
-        - resourceName
-      summary: gets the resource
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/resource'
-    post:
-      operationId: createResource
-      tags:
-        - resourceName
-      summary: creates a new record of type resource
-      responses:
-        201:
-          description: created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/resource'
-        400:
-          description: Bad Request
+                $ref: '#/components/schemas/workspaces'
+        401:
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    post:
+      operationId: createWorkspace
+      tags:
+        - workspaces
+      summary: create new Workspace object by name
+      requestBody:
+        description: A json object containing desired workspace name
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  description: workspace name
+      responses:
+        201:
+          description: Created
+        409:
+          description: Duplication Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /workspaces/{workspace}:
+    get:
+      operationId: getWorkspaceIfExist
+      tags:
+        - workspaces
+      summary: Get Workspace object if exist by name or null
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/workspaceInfo'
+        404:
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    delete:
+      operationId: deleteWorkspace
+      tags:
+        - workspaces
+      summary: delete Workspace by name
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: isRecursive
+          schema:
+            type: boolean
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: 'OK'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              example:
+                message: 'No such workspace'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              example:
+                message: 'Workspace or related Namespace is not empty (and isRecursive not true)'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /workspaces/{workspace}/{newWorkspaceName}:
+    put:
+      operationId: updateWorkspace
+      tags:
+        - workspaces
+      summary: Update Workspace object by name
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: newWorkspaceName
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Modified
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              example:
+                message: 'No such workspace'
+        405:
+          description: Method Not Allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
 components:
   schemas:
+    workspaces:
+      type: array
+      items:
+        $ref: '#/components/schemas/workspace'
+    workspace:
+      type: object
+      properties:
+        name:
+          type: string
+        link:
+          type: string
+    workspaceInfo:
+      type: object
+      properties:
+        name:
+          type: string
+        dateCreated:
+          type: string
     error:
       type: object
       required:
@@ -60,27 +219,3 @@ components:
       properties:
         message:
           type: string
-    resource:
-      type: object
-      required:
-        - id
-        - name
-        - description
-      properties:
-        id:
-          type: number
-          format: int64
-        name:
-          type: string
-        description:
-          type: string
-    anotherResource:
-      type: object
-      required:
-        - kind
-        - isAlive
-      properties:
-        kind:
-          type: string
-        isAlive:
-          type: boolean
