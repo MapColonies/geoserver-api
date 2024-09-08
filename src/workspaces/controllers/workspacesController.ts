@@ -2,7 +2,6 @@ import { Logger } from '@map-colonies/js-logger';
 import { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { injectable, inject } from 'tsyringe';
-import { ConflictError, HttpError, NotFoundError, MethodNotAllowedError } from '@map-colonies/error-types';
 import { SERVICES } from '../../common/constants';
 
 import { WorkspacesManager } from '../models/workspacesManager';
@@ -51,10 +50,6 @@ export class WorkspacesController {
       await this.workspacesManager.deleteWorkspace(workspaceName, isRecursive);
       res.status(StatusCodes.OK).send({ message: 'OK' });
     } catch (error) {
-      if (error instanceof NotFoundError) {
-        (error as HttpError).status = StatusCodes.NOT_FOUND;
-        error.message = 'No workspace found';
-      }
       next(error);
     }
   };
@@ -65,9 +60,6 @@ export class WorkspacesController {
       await this.workspacesManager.createWorkspace(workspaceName);
       res.status(StatusCodes.CREATED).send();
     } catch (error) {
-      if (error instanceof ConflictError) {
-        (error as HttpError).status = StatusCodes.CONFLICT; //409
-      }
       next(error);
     }
   };
@@ -80,15 +72,6 @@ export class WorkspacesController {
       await this.workspacesManager.updateWorkspace(workspaceName, workspaceNewName);
       res.status(StatusCodes.OK).send();
     } catch (error) {
-      if (error instanceof ConflictError) {
-        (error as HttpError).status = StatusCodes.CONFLICT; //409
-      }
-      if (error instanceof NotFoundError) {
-        (error as HttpError).status = StatusCodes.NOT_FOUND; //404
-      }
-      if (error instanceof MethodNotAllowedError) {
-        (error as HttpError).status = StatusCodes.METHOD_NOT_ALLOWED; //405
-      }
       next(error);
     }
   };

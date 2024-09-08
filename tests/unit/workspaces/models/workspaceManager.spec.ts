@@ -18,9 +18,7 @@ describe('WorkspacesManager', () => {
   let geoserverManager: GeoserverClient;
   const testTracer = trace.getTracer('testTracer');
   registerDefaultConfig();
-  const geoserverUrl = configMock.get<string>('services.geoserverUrl');
-  const username = configMock.get<string>('geoserver.auth.username');
-  const password = configMock.get<string>('geoserver.auth.password');
+  const geoserverUrl = configMock.get<string>('geoserver.url');
 
   beforeEach(function () {
     registerDefaultConfig();
@@ -36,7 +34,7 @@ describe('WorkspacesManager', () => {
 
   describe('getWorkspaces', () => {
     it('should return an array of workspaces', async function () {
-      nock(geoserverUrl).get('/workspaces').basicAuth({ user: username, pass: password }).reply(200, geoserverWorkspacesResponseMock);
+      nock(geoserverUrl).get('/workspaces').reply(200, geoserverWorkspacesResponseMock);
       const workspaces = await workspacesManager.getWorkspaces();
 
       expect(workspaces).toEqual(getWorkspacesResponseMock);
@@ -45,14 +43,14 @@ describe('WorkspacesManager', () => {
 
   describe('getWorkspace', () => {
     it('should return a new workspace', async function () {
-      nock(geoserverUrl).get('/workspaces/test').basicAuth({ user: username, pass: password }).reply(200, geoserverGetWorkspaceResponseMock);
+      nock(geoserverUrl).get('/workspaces/test').reply(200, geoserverGetWorkspaceResponseMock);
       const workspace = await workspacesManager.getWorkspace('test');
 
       expect(workspace).toEqual(getWorkspaceResponseMock);
     });
 
     it('should throw notFound error on non existent workspace', async function () {
-      nock(geoserverUrl).get('/workspaces/test').basicAuth({ user: username, pass: password }).reply(404);
+      nock(geoserverUrl).get('/workspaces/test').reply(404);
       const action = async () => {
         await workspacesManager.getWorkspace('test');
       };
@@ -62,7 +60,7 @@ describe('WorkspacesManager', () => {
 
   describe('create Workspace', () => {
     it('should create a workspace', async function () {
-      nock(geoserverUrl).post('/workspaces', postWorkspaceRequest).basicAuth({ user: username, pass: password }).reply(201);
+      nock(geoserverUrl).post('/workspaces', postWorkspaceRequest).reply(201);
       const action = async () => {
         await workspacesManager.createWorkspace('test');
       };
@@ -70,7 +68,7 @@ describe('WorkspacesManager', () => {
     });
 
     it('should throw a conflict error on duplicate workspace creation', async function () {
-      nock(geoserverUrl).post('/workspaces', postWorkspaceRequest).basicAuth({ user: username, pass: password }).reply(409);
+      nock(geoserverUrl).post('/workspaces', postWorkspaceRequest).reply(409);
       const action = async () => {
         await workspacesManager.createWorkspace('test');
       };
@@ -80,11 +78,8 @@ describe('WorkspacesManager', () => {
 
   describe('update Workspace', () => {
     it('should update a workspace name', async function () {
-      nock(geoserverUrl).get('/workspaces/test').basicAuth({ user: username, pass: password }).reply(404);
-      nock(geoserverUrl)
-        .put('/workspaces/test1', postWorkspaceRequest)
-        .basicAuth({ user: username, pass: password })
-        .reply(201, geoserverGetWorkspaceResponseMock);
+      nock(geoserverUrl).get('/workspaces/test').reply(404);
+      nock(geoserverUrl).put('/workspaces/test1', postWorkspaceRequest).reply(201, geoserverGetWorkspaceResponseMock);
       const action = async () => {
         await workspacesManager.updateWorkspace('test1', 'test');
       };
@@ -92,8 +87,8 @@ describe('WorkspacesManager', () => {
     });
 
     it('should throw notFound Error when thw workspace doesnt exists', async function () {
-      nock(geoserverUrl).get('/workspaces/test').basicAuth({ user: username, pass: password }).reply(404);
-      nock(geoserverUrl).put('/workspaces/test1', postWorkspaceRequest).basicAuth({ user: username, pass: password }).reply(404);
+      nock(geoserverUrl).get('/workspaces/test').reply(404);
+      nock(geoserverUrl).put('/workspaces/test1', postWorkspaceRequest).reply(404);
       const action = async () => {
         await workspacesManager.updateWorkspace('test1', 'test');
       };
@@ -101,8 +96,8 @@ describe('WorkspacesManager', () => {
     });
 
     it('should throw conflict Error when there is a workspace with the new name', async function () {
-      nock(geoserverUrl).get('/workspaces/test').basicAuth({ user: username, pass: password }).reply(200, geoserverGetWorkspaceResponseMock);
-      nock(geoserverUrl).put('/workspaces/test1', postWorkspaceRequest).basicAuth({ user: username, pass: password }).reply(409);
+      nock(geoserverUrl).get('/workspaces/test').reply(200, geoserverGetWorkspaceResponseMock);
+      nock(geoserverUrl).put('/workspaces/test1', postWorkspaceRequest).reply(409);
       const action = async () => {
         await workspacesManager.updateWorkspace('test1', 'test');
       };
@@ -110,7 +105,7 @@ describe('WorkspacesManager', () => {
     });
 
     it('should throw internalServer Error when there is an unexpected error in geoserver', async function () {
-      nock(geoserverUrl).get('/workspaces/test').basicAuth({ user: username, pass: password }).reply(500);
+      nock(geoserverUrl).get('/workspaces/test').reply(500);
       const action = async () => {
         await workspacesManager.updateWorkspace('test1', 'test');
       };
@@ -120,7 +115,7 @@ describe('WorkspacesManager', () => {
 
   describe('Delete Workspace', () => {
     it('should delete a workspace with recursive is set to false', async function () {
-      nock(geoserverUrl).delete('/workspaces/test').query({ recurse: false }).basicAuth({ user: username, pass: password }).reply(200, []);
+      nock(geoserverUrl).delete('/workspaces/test').query({ recurse: false }).reply(200, []);
 
       const action = async () => {
         await workspacesManager.deleteWorkspace('test', false);
@@ -129,7 +124,7 @@ describe('WorkspacesManager', () => {
     });
 
     it('should delete a workspace with recursive is set to true', async function () {
-      nock(geoserverUrl).delete('/workspaces/test').query({ recurse: true }).basicAuth({ user: username, pass: password }).reply(200, []);
+      nock(geoserverUrl).delete('/workspaces/test').query({ recurse: true }).reply(200, []);
 
       const action = async () => {
         await workspacesManager.deleteWorkspace('test', true);
@@ -138,7 +133,7 @@ describe('WorkspacesManager', () => {
     });
 
     it('should throw notFound error when there is not such workspace', async function () {
-      nock(geoserverUrl).delete('/workspaces/test').query({ recurse: true }).basicAuth({ user: username, pass: password }).reply(404);
+      nock(geoserverUrl).delete('/workspaces/test').query({ recurse: true }).reply(404);
 
       const action = async () => {
         await workspacesManager.deleteWorkspace('test', true);

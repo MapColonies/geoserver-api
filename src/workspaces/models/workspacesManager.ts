@@ -8,7 +8,7 @@ import { LogContext } from '../../utils/logger/logContext';
 import { GetWorkspaceResponse, IConfig, Workspace } from '../../common/interfaces';
 import { GeoserverClient } from '../../serviceClients/geoserverClient';
 import { workspaceResponseConverter } from '../../utils/convertors/responseConverter';
-import { GeoserverGetWorkspaceResponse, GeoserverGetWorkspacesResponse } from '../../common/geoserverRestModels';
+import { GeoserverGetWorkspaceResponse, GeoserverGetWorkspacesResponse } from '../../common/geoserver/models/workspace';
 import { workspaceRequestConverter } from '../../utils/convertors/requestConverter';
 
 @injectable()
@@ -38,7 +38,7 @@ export class WorkspacesManager {
   @withSpanAsyncV4
   public async getWorkspace(name: string): Promise<GetWorkspaceResponse> {
     const logCtx: LogContext = { ...this.logContext, function: this.getWorkspace.name };
-    this.logger.info({ msg: 'getting workspace', workspaceName: name, logContext: logCtx });
+    this.logger.info({ msg: 'getting workspace', metadata: { name }, logContext: logCtx });
     const geoserverResponse = await this.geoserverManager.getRequest<GeoserverGetWorkspaceResponse>(`workspaces/${name}`);
     const response = { name: geoserverResponse.workspace.name, dateCreated: geoserverResponse.workspace.dateCreated };
     return response;
@@ -47,14 +47,14 @@ export class WorkspacesManager {
   @withSpanAsyncV4
   public async deleteWorkspace(name: string, isRecursive: boolean): Promise<void> {
     const logCtx: LogContext = { ...this.logContext, function: this.deleteWorkspace.name };
-    this.logger.info({ msg: 'deleteing workspace', workspaceName: name, logContext: logCtx });
-    await this.geoserverManager.deleteRequest(`workspaces/${name}`, { queryParams: { recurse: isRecursive } });
+    this.logger.info({ msg: 'deleteing workspace', metadata: { name }, logContext: logCtx });
+    await this.geoserverManager.deleteRequest<{ recurse: boolean }>(`workspaces/${name}`, { queryParams: { recurse: isRecursive } });
   }
 
   @withSpanAsyncV4
   public async createWorkspace(name: string): Promise<void> {
     const logCtx: LogContext = { ...this.logContext, function: this.createWorkspace.name };
-    this.logger.info({ msg: 'creating workspace', workspaceName: name, logContext: logCtx });
+    this.logger.info({ msg: 'creating workspace', metadata: { name }, logContext: logCtx });
     const workspaceRequest = workspaceRequestConverter(name);
     await this.geoserverManager.postRequest('workspaces', workspaceRequest);
   }
@@ -62,7 +62,7 @@ export class WorkspacesManager {
   @withSpanAsyncV4
   public async updateWorkspace(oldName: string, newName: string): Promise<void> {
     const logCtx: LogContext = { ...this.logContext, function: this.updateWorkspace.name };
-    this.logger.info({ msg: 'updating workspace', workspaceOldName: oldName, workspaceNewName: newName, logContext: logCtx });
+    this.logger.info({ msg: 'updating workspace', metadata: { oldName, newName }, logContext: logCtx });
     const doesNewNameExists = await this.workspaceExists(newName);
     if (!doesNewNameExists) {
       this.logger.debug({ msg: 'new workspace name is valid ', logContext: logCtx });

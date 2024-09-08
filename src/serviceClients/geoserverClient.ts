@@ -9,8 +9,8 @@ import { SERVICES } from '../common/constants';
 import { LogContext } from '../utils/logger/logContext';
 import { withSpanAsyncV4 } from '../common/test';
 
-interface RequestOptions {
-  queryParams?: Record<string, unknown>;
+interface RequestOptions<T> {
+  queryParams?: T;
   headers?: Record<string, string | number | boolean | null>;
 }
 
@@ -26,7 +26,7 @@ export class GeoserverClient extends HttpClient {
   ) {
     super(
       logger,
-      config.get<string>('services.geoserverUrl'),
+      config.get<string>('geoserver.url'),
       'GeoServer',
       config.get<IHttpRetryConfig>('httpRetry'),
       config.get<boolean>('disableHttpClientLogs')
@@ -41,9 +41,25 @@ export class GeoserverClient extends HttpClient {
     };
   }
 
+  /**
+   * Executes an HTTP GET request to the specified GeoServer endpoint.
+   *
+   * This method constructs a request URL using the provided endpoint and appends optional query parameters and headers.
+   * It authenticates the request using basic credentials from the GeoServer configuration.
+   *
+   * @template T The expected response type from the GeoServer.
+   * @param {string} endpoint - The specific endpoint within the GeoServer to which the request is sent (e.g., "workspaces/default/layers").
+   * @param {RequestOptions} [options] - Optional configuration for the request, which may include:
+   *   - `queryParams`: A record of key-value pairs to be appended as query parameters.
+   *   - `headers`: A record of custom headers for the request, such as `Authorization`, `Accept`, or `Content-Type`.
+   *
+   * @returns {Promise<T>} A promise resolving to the response data of type `T` from the GeoServer.
+   *
+   * @throws Will throw an error if the request fails. If the resource is not found, it throws a `NotFoundError` with an updated message containing the endpoint.
+   *
+   */
   @withSpanAsyncV4
-  public async getRequest<T>(endpoint: string, options?: RequestOptions): Promise<T> {
-    //asyncCallWithSpan()
+  public async getRequest<T, P extends Record<string, unknown> = Record<string, unknown>>(endpoint: string, options?: RequestOptions<P>): Promise<T> {
     const logCtx: LogContext = { ...this.logContext, function: this.getRequest.name };
     const url = `${this.baseUrl}/${endpoint}`;
     try {
@@ -58,8 +74,26 @@ export class GeoserverClient extends HttpClient {
     }
   }
 
+  /**
+   *
+   * Executes an HTTP POST request to the specified GeoServer endpoint.
+   *
+   * This method sends a request to the provided endpoint, including an optional request body and any optional query parameters and headers.
+   * It uses basic authentication credentials retrieved from the GeoServer configuration.
+   *
+   * @template T The expected response type from the GeoServer.
+   * @param {string} endpoint - The specific endpoint within the GeoServer to which the request is sent (e.g., "workspaces/default/layers").
+   * @param {unknown} [body] - The body of the POST request, if applicable. This can be used to send data (e.g., JSON objects).
+   * @param {RequestOptions} [options] - Optional request settings, including:
+   *   - `queryParams`: Key-value pairs to append as query parameters.
+   *   - `headers`: Custom headers for the request.
+   *
+   * @returns {Promise<T>} A promise resolving to the response data of type `T` from the GeoServer.
+   *
+   * @throws Will throw an error if the request fails.
+   */
   @withSpanAsyncV4
-  public async postRequest<T>(endpoint: string, body?: unknown, options?: RequestOptions): Promise<T> {
+  public async postRequest<T, P extends Record<string, unknown>>(endpoint: string, body?: unknown, options?: RequestOptions<P>): Promise<T> {
     const logCtx: LogContext = { ...this.logContext, function: this.postRequest.name };
     const url = `${this.baseUrl}/${endpoint}`;
     try {
@@ -71,8 +105,24 @@ export class GeoserverClient extends HttpClient {
     }
   }
 
+  /**
+   * Executes an HTTP DELETE request to the specified GeoServer endpoint.
+   *
+   * This method sends a DELETE request to the provided endpoint, with optional query parameters and headers.
+   * It uses basic authentication credentials from the GeoServer configuration.
+   *
+   * @param {string} endpoint - The specific endpoint within the GeoServer to which the request is sent (e.g., "layers/default/layerName").
+   * @param {RequestOptions} [options] - Optional settings for the request, including:
+   *   - `queryParams`: Key-value pairs to append as query parameters.
+   *   - `headers`: Custom headers for the request.
+   *
+   * @returns {Promise<void>} A promise resolving when the delete request is completed.
+   *
+   * @throws Will throw an error if the request fails. If the resource is not found, it throws a `NotFoundError` with an updated message containing the endpoint.
+   *
+   */
   @withSpanAsyncV4
-  public async deleteRequest(endpoint: string, options?: RequestOptions): Promise<void> {
+  public async deleteRequest<T extends Record<string, unknown>>(endpoint: string, options?: RequestOptions<T>): Promise<void> {
     const logCtx: LogContext = { ...this.logContext, function: this.deleteRequest.name };
     const url = `${this.baseUrl}/${endpoint}`;
     try {
@@ -86,8 +136,26 @@ export class GeoserverClient extends HttpClient {
     }
   }
 
+  /**
+   * Executes an HTTP PUT request to the specified GeoServer endpoint.
+   *
+   * This method sends a PUT request to the provided endpoint, with an optional body, query parameters, and headers.
+   * It uses basic authentication credentials from the GeoServer configuration.
+   *
+   * @template T The expected response type from the GeoServer.
+   * @param {string} endpoint - The specific endpoint within the GeoServer to which the request is sent (e.g., "workspaces/default/layers").
+   * @param {unknown} [body] - The body of the PUT request, if applicable, for updating or replacing resources.
+   * @param {RequestOptions} [options] - Optional settings for the request, including:
+   *   - `queryParams`: Key-value pairs to append as query parameters.
+   *   - `headers`: Custom headers for the request.
+   *
+   * @returns {Promise<T>} A promise resolving to the updated or replaced resource of type `T`.
+   *
+   * @throws Will throw an error if the request fails. If the resource is not found, it throws a `NotFoundError` with an updated message containing the endpoint.
+   *
+   */
   @withSpanAsyncV4
-  public async putRequest<T>(endpoint: string, body?: unknown, options?: RequestOptions): Promise<T> {
+  public async putRequest<T, P extends Record<string, unknown>>(endpoint: string, body?: unknown, options?: RequestOptions<P>): Promise<T> {
     const logCtx: LogContext = { ...this.logContext, function: this.putRequest.name };
     const url = `${this.baseUrl}/${endpoint}`;
     try {

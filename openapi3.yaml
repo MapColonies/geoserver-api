@@ -44,6 +44,8 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - name
               properties:
                 name:
                   type: string
@@ -53,6 +55,12 @@ paths:
           description: Created
         409:
           description: Duplication Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        500:
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -78,6 +86,12 @@ paths:
                 $ref: '#/components/schemas/workspaceInfo'
         404:
           description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        500:
+          description: Internal Server Error
           content:
             application/json:
               schema:
@@ -125,6 +139,12 @@ paths:
                 $ref: '#/components/schemas/error'
               example:
                 message: 'Workspace or related Namespace is not empty (and isRecursive not true)'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
   /workspaces/{workspace}/{newWorkspaceName}:
     put:
       operationId: updateWorkspace
@@ -154,13 +174,19 @@ paths:
               example:
                 message: 'No such workspace'
         405:
-          description: InternalServerError
+          description: Method Not Allowed
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
         409:
           description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        500:
+          description: Internal Server Error
           content:
             application/json:
               schema:

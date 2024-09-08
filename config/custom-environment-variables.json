@@ -39,10 +39,8 @@
       }
     }
   },
-  "services": {
-    "geoserverUrl": "GEOSERVER_URL"
-  },
   "geoserver": {
+    "url": "GEOSERVER_URL",
     "auth": {
       "username": "GEOSERVER_USER",
       "password": "GEOSERVER_PASSWORD"

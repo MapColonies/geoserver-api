@@ -1,3 +1,5 @@
+import { GeoserverGetWorkspaceResponse } from './geoserver/models/workspace';
+
 export interface IConfig {
   get: <T>(setting: string) => T;
   has: (setting: string) => boolean;
@@ -19,10 +21,7 @@ export interface WorkspaceRequest {
   name: string;
 }
 
-export interface GetWorkspaceResponse {
-  name: string;
-  dateCreated: string;
-}
+export type GetWorkspaceResponse = Pick<GeoserverGetWorkspaceResponse['workspace'], 'name' | 'dateCreated'>;
 
 export interface MessageResponse {
   message: string;

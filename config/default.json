@@ -25,10 +25,8 @@
       }
     }
   },
-  "services": {
-    "geoserverUrl": ""
-  },
   "geoserver": {
+    "url": "",
     "auth": {
       "username": "",
       "password": ""

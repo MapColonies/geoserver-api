@@ -1,4 +1,4 @@
-import { GeoserverGetWorkspacesResponse } from '../../common/geoserverRestModels';
+import { GeoserverGetWorkspacesResponse } from '../../common/geoserver/models/workspace';
 import { Workspace } from '../../common/interfaces';
 
 /* This file contains functions that converts outputs from the Geo server to the response output the api expects to receive */
