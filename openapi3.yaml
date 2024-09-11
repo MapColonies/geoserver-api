@@ -287,7 +287,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/dataStore'
+                $ref: '#/components/schemas/dataStoreInfo'
               example:
                 name: Some Example Data Store
                 host: http://localhost
@@ -296,6 +296,7 @@ paths:
                 dbName: postgres
                 dbType: postgis
                 sslMode: DISABLE
+                dateCreated: "2024-09-11 06:44:11.551 UTC"
         404:
           description: Not Found
           content:
