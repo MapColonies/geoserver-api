@@ -240,7 +240,7 @@ paths:
           application/json:
             schema:
               allOf:
-                - $ref: '#/components/schemas/createDataStoreReq'
+                - $ref: '#/components/schemas/dataStoreReq'
       responses:
         201:
           description: Created
@@ -331,7 +331,7 @@ paths:
           application/json:
             schema:
               allOf:
-                - $ref: '#/components/schemas/createDataStoreReq'
+                - $ref: '#/components/schemas/dataStoreReq'
       responses:
         201:
           description: Created
@@ -462,7 +462,7 @@ components:
         sslMode:
           type: string
           enum: [DISABLE, ALLOW, PREFER, REQUIRE, VERIFY_CA, VERIFY_FULL]
-    createDataStoreReq:
+    dataStoreReq:
       type: object
       required:
         - name
