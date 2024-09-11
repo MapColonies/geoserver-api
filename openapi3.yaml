@@ -296,7 +296,7 @@ paths:
                 dbName: postgres
                 dbType: postgis
                 sslMode: DISABLE
-                dateCreated: "2024-09-11 06:44:11.551 UTC"
+                dateCreated: '2024-09-11 06:44:11.551 UTC'
         404:
           description: Not Found
           content:
