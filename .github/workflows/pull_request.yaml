@@ -104,8 +104,8 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Test Reporters Node-${{ matrix.node-version }}
-          path: reports/${{ matrix.node-version }}/**
+          name: Test Reporters Node-${{ matrix.node }}
+          path: reports/${{ matrix.node }}/**
 
   build_image:
     name: Build Image
