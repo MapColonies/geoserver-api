@@ -3,7 +3,7 @@ import { NotFoundError } from '@map-colonies/error-types';
 import { HttpClient, IHttpRetryConfig } from '@map-colonies/mc-utils';
 import { inject, injectable } from 'tsyringe';
 import { Tracer } from '@opentelemetry/api';
-import { AxiosBasicCredentials } from 'axios';
+import type { AxiosBasicCredentials } from 'axios';
 import { withSpanAsyncV4 } from '@map-colonies/telemetry';
 import { IConfig } from '../common/interfaces';
 import { SERVICES } from '../common/constants';
@@ -93,7 +93,11 @@ export class GeoserverClient extends HttpClient {
    * @throws Will throw an error if the request fails.
    */
   @withSpanAsyncV4
-  public async postRequest<T, P extends Record<string, unknown>>(endpoint: string, body?: unknown, options?: RequestOptions<P>): Promise<T> {
+  public async postRequest<T, P extends Record<string, unknown> = Record<string, unknown>>(
+    endpoint: string,
+    body?: unknown,
+    options?: RequestOptions<P>
+  ): Promise<T> {
     const logCtx: LogContext = { ...this.logContext, function: this.postRequest.name };
     const url = `${this.baseUrl}/${endpoint}`;
     try {
@@ -155,7 +159,11 @@ export class GeoserverClient extends HttpClient {
    * @throws Will throw an error if the request fails. If the resource is not found, it throws a `NotFoundError` with an updated message containing the endpoint.
    */
   @withSpanAsyncV4
-  public async putRequest<T, P extends Record<string, unknown>>(endpoint: string, body?: unknown, options?: RequestOptions<P>): Promise<T> {
+  public async putRequest<T, P extends Record<string, unknown> = Record<string, unknown>>(
+    endpoint: string,
+    body?: unknown,
+    options?: RequestOptions<P>
+  ): Promise<T> {
     const logCtx: LogContext = { ...this.logContext, function: this.putRequest.name };
     const url = `${this.baseUrl}/${endpoint}`;
     try {

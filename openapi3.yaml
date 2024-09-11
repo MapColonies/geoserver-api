@@ -85,7 +85,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/workspaceInfo'
         404:
-          description: NOT FOUND
+          description: Not Found
           content:
             application/json:
               schema:
@@ -191,7 +191,225 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+  /dataStores/{workspace}:
+    get:
+      operationId: getAllDataStores
+      tags:
+        - dataStores
+      summary: gets the workspace's datastores
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dataStores'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    post:
+      operationId: createNewDatastore
+      tags:
+        - dataStores
+      summary: create dataStore on provided workspace
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: A json object containing desired data store creation
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/createDataStoreReq'
+      responses:
+        201:
+          description: Created
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              example:
+                message: 'No such dataStore'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /dataStores/{workspace}/{dataStore}:
+    get:
+      operationId: getDataStoreEntity
+      tags:
+        - dataStores
+      summary: gets the dataStore object
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: dataStore
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dataStore'
+              example:
+                name: Some Example Data Store
+                host: http://localhost
+                port: 5432
+                schema: polygon_parts
+                dbName: postgres
+                dbType: postgis
+                sslMode: DISABLE
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    put:
+      operationId: updateDataStoreEntity
+      tags:
+        - dataStores
+      summary: update the dataStore object
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: dataStore
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: A json object containing desired data store creation
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/createDataStoreReq'
+      responses:
+        201:
+          description: Created
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              example:
+                message: 'No such dataStore'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 
+    delete:
+      operationId: deleteDataStoreEntity
+      tags:
+        - dataStores
+      summary: delete the dataStore object
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: dataStore
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: isRecursive
+          schema:
+            type: boolean
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: 'OK'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              example:
+                message: 'No such workspace'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+              example:
+                message: 'Workspace or related Namespace is not empty (and isRecursive not true)'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 components:
   schemas:
     workspaces:
@@ -211,6 +429,45 @@ components:
         name:
           type: string
         dateCreated:
+          type: string
+    dataStores:
+      type: array
+      items:
+        $ref: '#/components/schemas/dataStore'
+    dataStore:
+      type: object
+      properties:
+        name:
+          type: string
+        link:
+          type: string
+    dataStoreInfo:
+      type: object
+      properties:
+        name:
+          type: string
+        dateCreated:
+          type: string
+        host:
+          type: string
+        port:
+          type: number
+        schema:
+          type: string
+        dbType:
+          type: string
+          enum: [postgis]
+        dbName:
+          type: string
+        sslMode:
+          type: string
+          enum: [DISABLE, ALLOW, PREFER, REQUIRE, VERIFY_CA, VERIFY_FULL]
+    createDataStoreReq:
+      type: object
+      required:
+        - name
+      properties:
+        name:
           type: string
     error:
       type: object

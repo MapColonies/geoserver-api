@@ -1,4 +1,4 @@
-interface GeoserverWorkspace {
+export interface GeoserverWorkspace {
   name: string;
   href: string;
 }
