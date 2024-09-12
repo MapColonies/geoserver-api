@@ -7,7 +7,7 @@ import {
   DataStoreNameRequest,
   DataStoreRequest,
   DataStoresRequest,
-  DeleteDataStoreQueryParams,
+  DeleteQueryParams,
   GetDataStoreResponse,
   GetDataStoresResponse,
   MessageResponse,
@@ -16,7 +16,7 @@ import {
 type GetDataStoresHandler = RequestHandler<DataStoresRequest, GetDataStoresResponse, unknown>;
 type GetDataStoreHandler = RequestHandler<DataStoreRequest, GetDataStoreResponse, unknown>;
 type CreateDataStoreHandler = RequestHandler<DataStoresRequest, MessageResponse, DataStoreNameRequest>;
-type DeleteDataStoreHandler = RequestHandler<DataStoreRequest, MessageResponse, unknown, DeleteDataStoreQueryParams>;
+type DeleteDataStoreHandler = RequestHandler<DataStoreRequest, MessageResponse, unknown, DeleteQueryParams>;
 type UpdateDataStoreHandler = RequestHandler<DataStoreRequest, MessageResponse, DataStoreNameRequest>;
 
 @injectable()

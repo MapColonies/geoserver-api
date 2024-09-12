@@ -28,7 +28,7 @@ export interface MessageResponse {
   message: string;
 }
 
-export interface DeleteWorkspaceQueryParams {
+export interface DeleteQueryParams {
   isRecursive?: boolean;
 }
 
@@ -58,8 +58,6 @@ export type GetDataStoreResponse = Pick<GeoserverGetDataStoreResponse['dataStore
   dbName: string;
   sslMode: string;
 };
-
-export interface DeleteDataStoreQueryParams extends DeleteWorkspaceQueryParams {}
 
 export interface DataStoreNameRequest {
   name: string;

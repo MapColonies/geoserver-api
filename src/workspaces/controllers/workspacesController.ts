@@ -4,7 +4,7 @@ import { injectable } from 'tsyringe';
 
 import { WorkspacesManager } from '../models/workspacesManager';
 import {
-  DeleteWorkspaceQueryParams,
+  DeleteQueryParams,
   GetWorkspaceResponse,
   GetWorkspacesResponse,
   MessageResponse,
@@ -16,7 +16,7 @@ import {
 type CreateWorkspaceHandler = RequestHandler<undefined, undefined, WorkspaceRequest>;
 type GetWorkspacesHandler = RequestHandler<undefined, GetWorkspacesResponse, unknown>;
 type GetWorkspaceHandler = RequestHandler<WorkspaceRequest, GetWorkspaceResponse, unknown>;
-type DeleteWorkspaceHandler = RequestHandler<WorkspaceRequest, MessageResponse, unknown, DeleteWorkspaceQueryParams>;
+type DeleteWorkspaceHandler = RequestHandler<WorkspaceRequest, MessageResponse, unknown, DeleteQueryParams>;
 type UpdateWorkspaceHandler = RequestHandler<UpdateWorkspaceRequest, undefined, unknown>;
 
 @injectable()
