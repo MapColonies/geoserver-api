@@ -7,7 +7,6 @@ import type { AxiosBasicCredentials } from 'axios';
 import { withSpanAsyncV4 } from '@map-colonies/telemetry';
 import { IConfig } from '../common/interfaces';
 import { SERVICES } from '../common/constants';
-import { LogContext } from '../utils/logger/logContext';
 
 interface RequestOptions<T> {
   queryParams?: T;
@@ -17,7 +16,6 @@ interface RequestOptions<T> {
 @injectable()
 export class GeoserverClient extends HttpClient {
   private readonly auth: AxiosBasicCredentials;
-  private readonly logContext: LogContext;
 
   public constructor(
     @inject(SERVICES.CONFIG) private readonly config: IConfig,
@@ -34,10 +32,6 @@ export class GeoserverClient extends HttpClient {
     this.auth = {
       username: config.get<string>('geoserver.auth.username'),
       password: config.get<string>('geoserver.auth.password'),
-    };
-    this.logContext = {
-      fileName: __filename,
-      class: GeoserverClient.name,
     };
   }
 
@@ -60,13 +54,12 @@ export class GeoserverClient extends HttpClient {
    */
   @withSpanAsyncV4
   public async getRequest<T, P extends Record<string, unknown> = Record<string, unknown>>(endpoint: string, options?: RequestOptions<P>): Promise<T> {
-    const logCtx: LogContext = { ...this.logContext, function: this.getRequest.name };
     const url = `${this.baseUrl}/${endpoint}`;
     try {
       const response = await this.get<T>(url, options?.queryParams, undefined, this.auth, options?.headers);
       return response;
     } catch (error) {
-      this.logger.error({ msg: `Failed to perform GET request to ${url}`, logContext: logCtx, error: error });
+      this.logger.error({ msg: `Failed to perform GET request to ${url}`, error: error });
       if (error instanceof NotFoundError) {
         error.message = `No resource was found for get of ${endpoint}`;
       }
@@ -98,13 +91,12 @@ export class GeoserverClient extends HttpClient {
     body?: unknown,
     options?: RequestOptions<P>
   ): Promise<T> {
-    const logCtx: LogContext = { ...this.logContext, function: this.postRequest.name };
     const url = `${this.baseUrl}/${endpoint}`;
     try {
       const response = await this.post<T>(url, body, options?.queryParams, undefined, this.auth, options?.headers);
       return response;
     } catch (error) {
-      this.logger.error({ msg: `Failed to perform POST request to ${url}`, logContext: logCtx, error: error });
+      this.logger.error({ msg: `Failed to perform POST request to ${url}`, error: error });
       throw error;
     }
   }
@@ -127,12 +119,11 @@ export class GeoserverClient extends HttpClient {
    */
   @withSpanAsyncV4
   public async deleteRequest<T extends Record<string, unknown>>(endpoint: string, options?: RequestOptions<T>): Promise<void> {
-    const logCtx: LogContext = { ...this.logContext, function: this.deleteRequest.name };
     const url = `${this.baseUrl}/${endpoint}`;
     try {
       await this.delete(url, options?.queryParams, undefined, this.auth, options?.headers);
     } catch (error) {
-      this.logger.error({ msg: `Failed to perform DELETE request to ${url}`, logContext: logCtx, error: error });
+      this.logger.error({ msg: `Failed to perform DELETE request to ${url}`, error: error });
       if (error instanceof NotFoundError) {
         error.message = `No resource was found for delete of ${endpoint}`;
       }
@@ -164,13 +155,12 @@ export class GeoserverClient extends HttpClient {
     body?: unknown,
     options?: RequestOptions<P>
   ): Promise<T> {
-    const logCtx: LogContext = { ...this.logContext, function: this.putRequest.name };
     const url = `${this.baseUrl}/${endpoint}`;
     try {
       const response = await this.put<T>(url, body, options?.queryParams, undefined, this.auth, options?.headers);
       return response;
     } catch (error) {
-      this.logger.error({ msg: `Failed to perform PUT request to ${url}`, logContext: logCtx, error: error });
+      this.logger.error({ msg: `Failed to perform PUT request to ${url}`, error: error });
       if (error instanceof NotFoundError) {
         error.message = `No resource was found for put of ${endpoint}`;
       }
