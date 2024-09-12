@@ -36,3 +36,5 @@ export type GetWorkspacesResponse = Workspace[];
 export interface UpdateWorkspaceRequest extends WorkspaceRequest {
   newName: string;
 }
+
+export interface
