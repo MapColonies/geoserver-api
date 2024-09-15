@@ -72,6 +72,16 @@ const registerDefaultConfig = (): void => {
         username: 'kartoza',
         password: 'myawesomegeoserver',
       },
+      dataStore: {
+        username: 'postgres',
+        password: 'mysecretpassword',
+        host: 'localhost',
+        port: '5432',
+        schema: 'polygon_parts',
+        dbName: 'postgres',
+        dbType: 'postgis',
+        sslMode: 'DISABLE',
+      },
     },
     httpRetry: {
       attempts: 5,

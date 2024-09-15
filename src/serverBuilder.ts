@@ -11,6 +11,7 @@ import { collectMetricsExpressMiddleware, getTraceContexHeaderMiddleware } from 
 import { SERVICES } from './common/constants';
 import { IConfig } from './common/interfaces';
 import { WORKSPACES_ROUTER_SYMBOL } from './workspaces/routes/workspacesRouter';
+import { DATASTORES_ROUTER_SYMBOL } from './dataStores/routes/dataStoresRouter';
 
 @injectable()
 export class ServerBuilder {
@@ -19,7 +20,8 @@ export class ServerBuilder {
   public constructor(
     @inject(SERVICES.CONFIG) private readonly config: IConfig,
     @inject(SERVICES.LOGGER) private readonly logger: Logger,
-    @inject(WORKSPACES_ROUTER_SYMBOL) private readonly workspacesRouter: Router
+    @inject(WORKSPACES_ROUTER_SYMBOL) private readonly workspacesRouter: Router,
+    @inject(DATASTORES_ROUTER_SYMBOL) private readonly dataStoresRouter: Router
   ) {
     this.serverInstance = express();
   }
@@ -43,6 +45,7 @@ export class ServerBuilder {
 
   private buildRoutes(): void {
     this.serverInstance.use('/workspaces', this.workspacesRouter);
+    this.serverInstance.use('/dataStores', this.dataStoresRouter);
     this.buildDocsRoutes();
   }
 

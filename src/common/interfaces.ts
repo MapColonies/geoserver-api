@@ -1,3 +1,4 @@
+import { GeoserverGetDataStoreResponse } from './geoserver/models/dataStore';
 import { GeoserverGetWorkspaceResponse } from './geoserver/models/workspace';
 
 export interface IConfig {
@@ -27,8 +28,8 @@ export interface MessageResponse {
   message: string;
 }
 
-export interface DeleteWorkspaceQueryParams {
-  isRecursive?: boolean;
+export interface DeleteQueryParams {
+  isRecursive: boolean;
 }
 
 export type GetWorkspacesResponse = Workspace[];
@@ -37,4 +38,42 @@ export interface UpdateWorkspaceRequest extends WorkspaceRequest {
   newName: string;
 }
 
-export interface
+export interface DataStoresRequest {
+  workspaceName: string;
+}
+
+export interface DataStore extends Workspace {}
+
+export type GetDataStoresResponse = DataStore[];
+
+export interface DataStoreRequest extends DataStoresRequest {
+  dataStoreName: string;
+}
+
+export type GetDataStoreResponse = Pick<GeoserverGetDataStoreResponse['dataStore'], 'name' | 'dateCreated'> & {
+  host: string;
+  port: string;
+  schema: string;
+  dbType: string;
+  dbName: string;
+  sslMode: string;
+};
+
+export interface DataStoreBodyRequest {
+  name: string;
+}
+
+export interface ConnectionParams {
+  username: string;
+  password?: string;
+  host: string;
+  port: string;
+  schema: string;
+  dbType: string;
+  dbName: string;
+  sslMode: string;
+}
+
+export interface IRecurse extends Record<string, unknown> {
+  recurse: boolean;
+}

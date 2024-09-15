@@ -44,6 +44,16 @@
     "auth": {
       "username": "GEOSERVER_USER",
       "password": "GEOSERVER_PASSWORD"
+    },
+    "dataStore": {
+      "username": "DATASTORE_USERNAME",
+      "password": "DATASTORE_PASSWORD",
+      "host": "DATASTORE_HOST",
+      "port": "DATASTORE_PORT",
+      "schema": "DATASTORE_SCHEMA",
+      "dbName": "DATASTORE_NAME",
+      "dbType": "DATASTORE_TYPE",
+      "sslMode": "DATASTORE_SSL_MODE"
     }
   },
   "httpRetry": {

@@ -8,6 +8,8 @@ import config from 'config';
 import { DEFAULT_SERVER_PORT, SERVICES } from './common/constants';
 
 import { getApp } from './app';
+import { ConnectionParams } from './common/interfaces';
+import { validateConfig } from './utils/validations';
 
 const port: number = config.get<number>('server.port') || DEFAULT_SERVER_PORT;
 
@@ -17,6 +19,9 @@ const logger = container.resolve<Logger>(SERVICES.LOGGER);
 const stubHealthCheck = async (): Promise<void> => Promise.resolve();
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const server = createTerminus(createServer(app), { healthChecks: { '/liveness': stubHealthCheck, onSignal: container.resolve('onSignal') } });
+
+const connectionParams = config.get<ConnectionParams>('geoserver.dataStore');
+validateConfig(connectionParams);
 
 server.listen(port, () => {
   logger.info(`app started on port ${port}`);
