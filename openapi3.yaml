@@ -19,19 +19,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/workspaces'
+                $ref: '#/components/schemas/Workspaces'
         401:
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
     post:
       operationId: createWorkspace
       tags:
@@ -58,13 +58,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
   /workspaces/{workspace}:
     get:
       operationId: getWorkspaceIfExist
@@ -83,19 +83,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/workspaceInfo'
+                $ref: '#/components/schemas/WorkspaceInfo'
         404:
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
     delete:
       operationId: deleteWorkspace
       tags:
@@ -111,6 +111,7 @@ paths:
           name: isRecursive
           schema:
             type: boolean
+            default: false
       responses:
         200:
           description: OK
@@ -128,7 +129,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
               example:
                 message: 'No such workspace'
         403:
@@ -136,15 +137,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
               example:
-                message: 'Workspace or related Namespace is not empty (and isRecursive not true)'
+                message: 'Workspace or is not empty'
         500:
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
   /workspaces/{workspace}/{newWorkspaceName}:
     put:
       operationId: updateWorkspace
@@ -170,7 +171,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
               example:
                 message: 'No such workspace'
         405:
@@ -178,19 +179,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
         409:
           description: Conflict
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
   /dataStores/{workspace}:
     get:
       operationId: getAllDataStores
@@ -209,19 +210,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/dataStores'
+                $ref: '#/components/schemas/DataStores'
         404:
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
     post:
       operationId: createNewDatastore
       tags:
@@ -240,7 +241,7 @@ paths:
           application/json:
             schema:
               allOf:
-                - $ref: '#/components/schemas/dataStoreReq'
+                - $ref: '#/components/schemas/DataStoreReq'
       responses:
         201:
           description: Created
@@ -249,13 +250,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
         404:
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
               example:
                 message: 'No such dataStore'
         500:
@@ -263,7 +264,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
   /dataStores/{workspace}/{dataStore}:
     get:
       operationId: getDataStoreEntity
@@ -287,7 +288,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/dataStoreInfo'
+                $ref: '#/components/schemas/DataStoreInfo'
               example:
                 name: Some Example Data Store
                 host: http://localhost
@@ -302,13 +303,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
     put:
       operationId: updateDataStoreEntity
       tags:
@@ -332,22 +333,22 @@ paths:
           application/json:
             schema:
               allOf:
-                - $ref: '#/components/schemas/dataStoreReq'
+                - $ref: '#/components/schemas/DataStoreReq'
       responses:
-        201:
-          description: Created
+        200:
+          description: Modified
         400:
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
         404:
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
               example:
                 message: 'No such dataStore'
         500:
@@ -355,7 +356,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
 
     delete:
       operationId: deleteDataStoreEntity
@@ -377,6 +378,7 @@ paths:
           name: isRecursive
           schema:
             type: boolean
+            default: false
       responses:
         200:
           description: OK
@@ -394,55 +396,55 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
               example:
-                message: 'No such workspace'
+                message: 'No such dataStore'
         403:
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
               example:
-                message: 'Workspace or related Namespace is not empty (and isRecursive not true)'
+                message: 'dataStore is not empty '
         500:
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
-    workspaces:
+    Workspaces:
       type: array
       items:
-        $ref: '#/components/schemas/workspace'
-    workspace:
+        $ref: '#/components/schemas/Workspace'
+    Workspace:
       type: object
       properties:
         name:
           type: string
         link:
           type: string
-    workspaceInfo:
+    WorkspaceInfo:
       type: object
       properties:
         name:
           type: string
         dateCreated:
           type: string
-    dataStores:
+    DataStores:
       type: array
       items:
-        $ref: '#/components/schemas/dataStore'
-    dataStore:
+        $ref: '#/components/schemas/DataStore'
+    DataStore:
       type: object
       properties:
         name:
           type: string
         link:
           type: string
-    dataStoreInfo:
+    DataStoreInfo:
       type: object
       properties:
         name:
@@ -463,14 +465,14 @@ components:
         sslMode:
           type: string
           enum: [DISABLE, ALLOW, PREFER, REQUIRE, VERIFY_CA, VERIFY_FULL]
-    dataStoreReq:
+    DataStoreReq:
       type: object
       required:
         - name
       properties:
         name:
           type: string
-    error:
+    Error:
       type: object
       required:
         - message

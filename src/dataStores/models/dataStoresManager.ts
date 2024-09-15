@@ -4,7 +4,7 @@ import { Tracer } from '@opentelemetry/api';
 import { ConflictError, NotFoundError } from '@map-colonies/error-types';
 import { withSpanAsyncV4 } from '@map-colonies/telemetry';
 import { SERVICES } from '../../common/constants';
-import { DataStoreNameRequest, DataStore, GetDataStoreResponse, IConfig, ConnectionParams } from '../../common/interfaces';
+import { DataStoreBodyRequest, DataStore, GetDataStoreResponse, IConfig, ConnectionParams, IRecurse } from '../../common/interfaces';
 import { GeoserverClient } from '../../serviceClients/geoserverClient';
 import {
   GeoServerCreateDataStoreRequest,
@@ -18,7 +18,7 @@ import { WorkspacesManager } from '../../workspaces/models/workspacesManager';
 
 @injectable()
 export class DataStoresManager {
-  private readonly dataStoreConnectionParams: ConnectionParams;
+  private readonly connectionParams: ConnectionParams;
 
   public constructor(
     @inject(SERVICES.LOGGER) private readonly logger: Logger,
@@ -27,12 +27,12 @@ export class DataStoresManager {
     private readonly geoserverManager: GeoserverClient,
     private readonly workspacesManager: WorkspacesManager
   ) {
-    this.dataStoreConnectionParams = this.config.get<ConnectionParams>('geoserver.dataStore');
+    this.connectionParams = this.config.get<ConnectionParams>('geoserver.dataStore');
   }
 
   @withSpanAsyncV4
   public async getDataStores(workspaceName: string): Promise<DataStore[]> {
-    this.logger.info({ msg: 'getting dataStores', workspaceName });
+    this.logger.info({ msg: `getting dataStores from workspace: ${workspaceName}`, workspaceName });
     const geoserverResponse = await this.geoserverManager.getRequest<GeoserverGetDataStoresResponse>(`workspaces/${workspaceName}/datastores`);
     const response = dataStoresResponseConverter(geoserverResponse);
     return response;
@@ -40,7 +40,7 @@ export class DataStoresManager {
 
   @withSpanAsyncV4
   public async getDataStore(workspaceName: string, dataStoreName: string): Promise<GetDataStoreResponse> {
-    this.logger.info({ msg: 'getting dataStore', metadata: { workspaceName, dataStoreName } });
+    this.logger.info({ msg: `getting dataStore: ${dataStoreName} from workspace: ${workspaceName}`, workspaceName, dataStoreName });
     const geoserverResponse = await this.geoserverManager.getRequest<GeoserverGetDataStoreResponse>(
       `workspaces/${workspaceName}/datastores/${dataStoreName}`
     );
@@ -50,54 +50,53 @@ export class DataStoresManager {
 
   @withSpanAsyncV4
   public async deleteDataStore(workspaceName: string, dataStoreName: string, isRecursive: boolean): Promise<void> {
-    this.logger.info({ msg: 'deleteing dataStore', metadata: { workspaceName, dataStoreName, isRecursive } });
-    await this.geoserverManager.deleteRequest<{ recurse: boolean }>(`workspaces/${workspaceName}/datastores/${dataStoreName}`, {
+    this.logger.info({ msg: `deleteing dataStore: ${dataStoreName} from workspace: ${workspaceName}`, workspaceName, dataStoreName, isRecursive });
+    await this.geoserverManager.deleteRequest<IRecurse>(`workspaces/${workspaceName}/datastores/${dataStoreName}`, {
       queryParams: { recurse: isRecursive },
     });
   }
 
   @withSpanAsyncV4
-  public async createDataStore(workspaceName: string, createDataStoreBody: DataStoreNameRequest): Promise<void> {
-    this.logger.info({ msg: 'creating new dataStore', metadata: { workspaceName, createDataStoreBody } });
+  public async createDataStore(workspaceName: string, createDataStoreBody: DataStoreBodyRequest): Promise<void> {
+    this.logger.info({
+      msg: `creating new dataStore named:${createDataStoreBody.name} in workspace: ${workspaceName}`,
+      workspaceName,
+      createDataStoreBody,
+    });
     const dataStoreName = createDataStoreBody.name;
     //test if workspace exists
     await this.checkWorkspace(workspaceName);
     //test conflict
-    const doesDataStoreExist = await this.checkConflict(workspaceName, dataStoreName);
-    if (!doesDataStoreExist) {
-      const convertedCreateDataStoreBody = postDataStoreRequestConverter(createDataStoreBody, this.dataStoreConnectionParams);
-      await this.geoserverManager.postRequest<GeoServerCreateDataStoreRequest>(
-        `workspaces/${workspaceName}/datastores`,
-        convertedCreateDataStoreBody
-      );
-      //check that data store was really created, otherwise, delete it
-      //await this.validateCreationOfDataStore(workspaceName, dataStoreName);
-    } else {
+    const doesDataStoreExist = await this.checkDataStore(workspaceName, dataStoreName);
+    if (doesDataStoreExist) {
       const errorMessage = `Cant create new dataStore in ${workspaceName} named ${dataStoreName}, there is already a dataStore under this name`;
       this.logger.error({ msg: errorMessage });
       throw new ConflictError(errorMessage);
     }
+    const convertedCreateDataStoreBody = postDataStoreRequestConverter(createDataStoreBody, this.connectionParams);
+    await this.geoserverManager.postRequest<GeoServerCreateDataStoreRequest>(`workspaces/${workspaceName}/datastores`, convertedCreateDataStoreBody);
   }
 
   @withSpanAsyncV4
-  public async updateDataStore(workspaceName: string, dataStoreName: string, updateRequest: DataStoreNameRequest): Promise<void> {
-    this.logger.info({ msg: 'updating dataStore', workspaceName, dataStoreName, updateRequest });
-    const doesNewDataStoreExist = await this.checkConflict(workspaceName, updateRequest.name);
-    if (!doesNewDataStoreExist) {
-      const updatedDataStore = updateDataStoreRequestConverter(updateRequest);
-      await this.geoserverManager.putRequest<GeoServerUpdateDataStoreRequest>(
-        `workspaces/${workspaceName}/datastores/${dataStoreName}`,
-        updatedDataStore
-      );
-    } else {
+  public async updateDataStore(workspaceName: string, dataStoreName: string, updateRequest: DataStoreBodyRequest): Promise<void> {
+    this.logger.info({ msg: `updating dataStore: ${dataStoreName} from workspace: ${workspaceName}`, workspaceName, dataStoreName, updateRequest });
+    const doesNewDataStoreExist = await this.checkDataStore(workspaceName, updateRequest.name);
+    //test if workspace exists
+    await this.checkWorkspace(workspaceName);
+    if (doesNewDataStoreExist) {
       const errorMessage = `Cant change dataStore in ${workspaceName} named ${dataStoreName} to ${updateRequest.name}, there is already a dataStore under this name`;
       this.logger.error({ msg: errorMessage });
       throw new ConflictError(errorMessage);
     }
+    const updatedDataStore = updateDataStoreRequestConverter(updateRequest);
+    await this.geoserverManager.putRequest<GeoServerUpdateDataStoreRequest>(
+      `workspaces/${workspaceName}/datastores/${dataStoreName}`,
+      updatedDataStore
+    );
   }
 
   @withSpanAsyncV4
-  private async checkConflict(workspaceName: string, dataStoreName: string): Promise<boolean> {
+  private async checkDataStore(workspaceName: string, dataStoreName: string): Promise<boolean> {
     try {
       await this.getDataStore(workspaceName, dataStoreName);
       return true;
@@ -112,7 +111,7 @@ export class DataStoresManager {
       await this.workspacesManager.getWorkspace(workspaceName);
     } catch (e) {
       if (e instanceof NotFoundError) {
-        e.message = `There is no workspace named ${workspaceName}`;
+        e.message = `There is no workspace: ${workspaceName}`;
       }
       throw e;
     }

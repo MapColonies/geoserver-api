@@ -59,7 +59,7 @@ export class GeoserverClient extends HttpClient {
       const response = await this.get<T>(url, options?.queryParams, undefined, this.auth, options?.headers);
       return response;
     } catch (error) {
-      this.logger.error({ msg: `Failed to perform GET request to ${url}`, error: error });
+      this.logger.error({ msg: `Failed to perform GET request to ${url}`, error });
       if (error instanceof NotFoundError) {
         error.message = `No resource was found for get of ${endpoint}`;
       }
@@ -96,7 +96,7 @@ export class GeoserverClient extends HttpClient {
       const response = await this.post<T>(url, body, options?.queryParams, undefined, this.auth, options?.headers);
       return response;
     } catch (error) {
-      this.logger.error({ msg: `Failed to perform POST request to ${url}`, error: error });
+      this.logger.error({ msg: `Failed to perform POST request to ${url}`, error });
       throw error;
     }
   }
@@ -123,7 +123,7 @@ export class GeoserverClient extends HttpClient {
     try {
       await this.delete(url, options?.queryParams, undefined, this.auth, options?.headers);
     } catch (error) {
-      this.logger.error({ msg: `Failed to perform DELETE request to ${url}`, error: error });
+      this.logger.error({ msg: `Failed to perform DELETE request to ${url}`, error });
       if (error instanceof NotFoundError) {
         error.message = `No resource was found for delete of ${endpoint}`;
       }
@@ -160,7 +160,7 @@ export class GeoserverClient extends HttpClient {
       const response = await this.put<T>(url, body, options?.queryParams, undefined, this.auth, options?.headers);
       return response;
     } catch (error) {
-      this.logger.error({ msg: `Failed to perform PUT request to ${url}`, error: error });
+      this.logger.error({ msg: `Failed to perform PUT request to ${url}`, error });
       if (error instanceof NotFoundError) {
         error.message = `No resource was found for put of ${endpoint}`;
       }

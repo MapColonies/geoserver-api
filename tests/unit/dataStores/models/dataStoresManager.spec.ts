@@ -5,13 +5,6 @@ import { ConflictError, NotFoundError } from '@map-colonies/error-types';
 import { DataStoresManager } from '../../../../src/dataStores/models/dataStoresManager';
 import { GeoserverClient } from '../../../../src/serviceClients/geoserverClient';
 import { configMock, registerDefaultConfig, clear as clearConfig } from '../../../mocks/configMock';
-// import {
-//   geoserverGetWorkspaceResponseMock,
-//   geoserverWorkspacesResponseMock,
-//   getWorkspaceResponseMock,
-//   getWorkspacesResponseMock,
-//   postWorkspaceRequest,
-// } from '../../../mocks/workspacesMocks';
 import { WorkspacesManager } from '../../../../src/workspaces/models/workspacesManager';
 import {
   createDataStoreBody,
@@ -63,7 +56,7 @@ describe('DataStoresManager', () => {
       expect(datsStore).toEqual(getDataStoreResponseMock);
     });
 
-    it('should throw notFound error on non existent workspace or dataStore', async function () {
+    it('should throw not found error on non existent workspace or dataStore', async function () {
       nock(geoserverUrl).get('/workspaces/test/datastores/polygon_parts').reply(404);
       const action = async () => {
         await dataStoresManager.getDataStore('test', 'polygon_parts');
@@ -128,16 +121,18 @@ describe('DataStoresManager', () => {
 
   describe('update dataStore', () => {
     it('should update a dataStore name', async function () {
-      nock(geoserverUrl).put('/workspaces/test/datastores/polygon_parts', putDataStoreRequest).reply(201);
+      nock(geoserverUrl).get('/workspaces/test').reply(200, geoserverGetWorkspaceResponseMock);
+      nock(geoserverUrl).get('/workspaces/test').reply(404);
+      nock(geoserverUrl).get('/workspaces/test/datastores/polygon_parts1').reply(404);
+      nock(geoserverUrl).put('/workspaces/test/datastores/polygon_parts', putDataStoreRequest).reply(200);
       const action = async () => {
         await dataStoresManager.updateDataStore('test', 'polygon_parts', updateDataStoreBody);
       };
       await expect(action()).resolves.not.toThrow();
     });
 
-    it('should throw a notFound error when workspace doesnt exists', async function () {
-      nock(geoserverUrl).get('/workspaces/test/datastores/polygon_parts1').reply(404);
-      nock(geoserverUrl).put('/workspaces/test/datastores/polygon_parts', putDataStoreRequest).reply(404);
+    it('should throw a not found error when workspace doesnt exists', async function () {
+      nock(geoserverUrl).get('/workspaces/test').reply(404);
       const action = async () => {
         await dataStoresManager.updateDataStore('test', 'polygon_parts', updateDataStoreBody);
       };
@@ -145,6 +140,7 @@ describe('DataStoresManager', () => {
     });
 
     it('should throw a conflict error when a dataStore under the new name already exists', async function () {
+      nock(geoserverUrl).get('/workspaces/test').reply(200, geoserverGetWorkspaceResponseMock);
       nock(geoserverUrl).get('/workspaces/test/datastores/polygon_parts1').reply(200, geoserverGetDataStoreResponseMock);
       const action = async () => {
         await dataStoresManager.updateDataStore('test', 'polygon_parts', updateDataStoreBody);

@@ -53,7 +53,7 @@
       "schema": "DATASTORE_SCHEMA",
       "dbName": "DATASTORE_NAME",
       "dbType": "DATASTORE_TYPE",
-      "sslMode": "DATASTORE_SSLMODE"
+      "sslMode": "DATASTORE_SSL_MODE"
     }
   },
   "httpRetry": {

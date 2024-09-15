@@ -4,7 +4,7 @@ import { injectable } from 'tsyringe';
 
 import { DataStoresManager } from '../models/dataStoresManager';
 import {
-  DataStoreNameRequest,
+  DataStoreBodyRequest,
   DataStoreRequest,
   DataStoresRequest,
   DeleteQueryParams,
@@ -15,9 +15,9 @@ import {
 
 type GetDataStoresHandler = RequestHandler<DataStoresRequest, GetDataStoresResponse, unknown>;
 type GetDataStoreHandler = RequestHandler<DataStoreRequest, GetDataStoreResponse, unknown>;
-type CreateDataStoreHandler = RequestHandler<DataStoresRequest, MessageResponse, DataStoreNameRequest>;
+type CreateDataStoreHandler = RequestHandler<DataStoresRequest, MessageResponse, DataStoreBodyRequest>;
 type DeleteDataStoreHandler = RequestHandler<DataStoreRequest, MessageResponse, unknown, DeleteQueryParams>;
-type UpdateDataStoreHandler = RequestHandler<DataStoreRequest, MessageResponse, DataStoreNameRequest>;
+type UpdateDataStoreHandler = RequestHandler<DataStoreRequest, MessageResponse, DataStoreBodyRequest>;
 
 @injectable()
 export class DataStoresController {
@@ -35,8 +35,7 @@ export class DataStoresController {
 
   public getDataStore: GetDataStoreHandler = async (req, res, next) => {
     try {
-      const workspaceName = req.params.workspaceName;
-      const dataStoreName = req.params.dataStoreName;
+      const { workspaceName, dataStoreName } = req.params;
       const dataStoreInfo = await this.dataStoresManager.getDataStore(workspaceName, dataStoreName);
       res.status(StatusCodes.OK).send(dataStoreInfo);
     } catch (error) {
@@ -46,9 +45,8 @@ export class DataStoresController {
 
   public deleteDataStore: DeleteDataStoreHandler = async (req, res, next) => {
     try {
-      const isRecursive = req.query.isRecursive ?? false;
-      const workspaceName = req.params.workspaceName;
-      const dataStoreName = req.params.dataStoreName;
+      const isRecursive = req.query.isRecursive;
+      const { workspaceName, dataStoreName } = req.params;
       await this.dataStoresManager.deleteDataStore(workspaceName, dataStoreName, isRecursive);
       res.status(StatusCodes.OK).send({ message: 'OK' });
     } catch (error) {
@@ -69,8 +67,7 @@ export class DataStoresController {
 
   public updateDataStore: UpdateDataStoreHandler = async (req, res, next) => {
     try {
-      const workspaceName = req.params.workspaceName;
-      const dataStoreName = req.params.dataStoreName;
+      const { workspaceName, dataStoreName } = req.params;
       await this.dataStoresManager.updateDataStore(workspaceName, dataStoreName, req.body);
       res.status(StatusCodes.OK).send({ message: 'OK' });
     } catch (error) {

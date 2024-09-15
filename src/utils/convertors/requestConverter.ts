@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { GeoServerCreateDataStoreRequest, GeoServerUpdateDataStoreRequest } from '../../common/geoserver/models/dataStore';
 import { GeoserverWorkspaceRequest } from '../../common/geoserver/models/workspace';
-import { ConnectionParams, DataStoreNameRequest } from '../../common/interfaces';
+import { ConnectionParams, DataStoreBodyRequest } from '../../common/interfaces';
 
 /* This file contains functions that converts inputs from the geoserver-api to the request input the GeoServer itself expects to receive */
 export const workspaceRequestConverter = (workspaceName: string): GeoserverWorkspaceRequest => {
@@ -10,7 +10,7 @@ export const workspaceRequestConverter = (workspaceName: string): GeoserverWorks
   };
 };
 
-export const postDataStoreRequestConverter = (request: DataStoreNameRequest, connectionParams: ConnectionParams): GeoServerCreateDataStoreRequest => {
+export const postDataStoreRequestConverter = (request: DataStoreBodyRequest, connectionParams: ConnectionParams): GeoServerCreateDataStoreRequest => {
   const connectionParameters = [
     { '@key': 'host', $: connectionParams.host },
     { '@key': 'port', $: connectionParams.port.toString() },
@@ -38,7 +38,7 @@ export const postDataStoreRequestConverter = (request: DataStoreNameRequest, con
   };
 };
 
-export const updateDataStoreRequestConverter = (updateRequest: DataStoreNameRequest): GeoServerUpdateDataStoreRequest => {
+export const updateDataStoreRequestConverter = (updateRequest: DataStoreBodyRequest): GeoServerUpdateDataStoreRequest => {
   return {
     dataStore: {
       name: updateRequest.name,

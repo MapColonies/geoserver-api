@@ -43,7 +43,7 @@ export class WorkspacesController {
 
   public deleteWorkspace: DeleteWorkspaceHandler = async (req, res, next) => {
     try {
-      const isRecursive = req.query.isRecursive ?? false;
+      const isRecursive = req.query.isRecursive;
       const workspaceName = req.params.name;
       await this.workspacesManager.deleteWorkspace(workspaceName, isRecursive);
       res.status(StatusCodes.OK).send({ message: 'OK' });
@@ -64,10 +64,8 @@ export class WorkspacesController {
 
   public updateWorkspace: UpdateWorkspaceHandler = async (req, res, next) => {
     try {
-      const workspaceName = req.params.name;
-      const workspaceNewName = req.params.newName;
-
-      await this.workspacesManager.updateWorkspace(workspaceName, workspaceNewName);
+      const { name: workspaceName, newName: newWorkspaceName } = req.params;
+      await this.workspacesManager.updateWorkspace(workspaceName, newWorkspaceName);
       res.status(StatusCodes.OK).send();
     } catch (error) {
       next(error);
