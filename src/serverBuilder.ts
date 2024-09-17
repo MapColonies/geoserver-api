@@ -12,6 +12,7 @@ import { SERVICES } from './common/constants';
 import { IConfig } from './common/interfaces';
 import { WORKSPACES_ROUTER_SYMBOL } from './workspaces/routes/workspacesRouter';
 import { DATASTORES_ROUTER_SYMBOL } from './dataStores/routes/dataStoresRouter';
+import { FEATURETYPES_ROUTER_SYMBOL } from './featureTypes/routes/featureTypesRouter';
 
 @injectable()
 export class ServerBuilder {
@@ -21,7 +22,8 @@ export class ServerBuilder {
     @inject(SERVICES.CONFIG) private readonly config: IConfig,
     @inject(SERVICES.LOGGER) private readonly logger: Logger,
     @inject(WORKSPACES_ROUTER_SYMBOL) private readonly workspacesRouter: Router,
-    @inject(DATASTORES_ROUTER_SYMBOL) private readonly dataStoresRouter: Router
+    @inject(DATASTORES_ROUTER_SYMBOL) private readonly dataStoresRouter: Router,
+    @inject(FEATURETYPES_ROUTER_SYMBOL) private readonly featureTypesRouter: Router
   ) {
     this.serverInstance = express();
   }
@@ -46,6 +48,7 @@ export class ServerBuilder {
   private buildRoutes(): void {
     this.serverInstance.use('/workspaces', this.workspacesRouter);
     this.serverInstance.use('/dataStores', this.dataStoresRouter);
+    this.serverInstance.use('/featureTypes', this.featureTypesRouter);
     this.buildDocsRoutes();
   }
 

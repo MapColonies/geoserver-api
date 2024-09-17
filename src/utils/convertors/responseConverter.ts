@@ -1,6 +1,7 @@
 import { GeoserverGetDataStoreResponse, GeoserverGetDataStoresResponse } from '../../common/geoserver/models/dataStore';
+import { GeoserverGetFeatureTypesResponse } from '../../common/geoserver/models/featureType';
 import { GeoserverGetWorkspacesResponse } from '../../common/geoserver/models/workspace';
-import { DataStore, GetDataStoreResponse, Workspace } from '../../common/interfaces';
+import { DataStore, GetDataStoreResponse, GetFeatureTypesResponse, Workspace } from '../../common/interfaces';
 
 /* This file contains functions that converts outputs from the Geo server to the response output the api expects to receive */
 export const workspaceResponseConverter = (geoserverResponse: GeoserverGetWorkspacesResponse): Workspace[] => {
@@ -16,6 +17,10 @@ export const dataStoresResponseConverter = (geoserverResponse: GeoserverGetDataS
     link: ds.href,
   }));
 };
+
+export const featureTypesResponseConverter = (geoserverResponse: GeoserverGetFeatureTypesResponse): GetFeatureTypesResponse => {
+  return geoserverResponse.list.string;
+}
 
 export const dataStoreResponseConverter = (dataStore: GeoserverGetDataStoreResponse['dataStore']): GetDataStoreResponse => {
   const connectionParams = dataStore.connectionParameters.entry.reduce((acc, param) => {

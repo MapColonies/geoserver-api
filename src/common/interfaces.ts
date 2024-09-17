@@ -77,3 +77,20 @@ export interface ConnectionParams {
 export interface IRecurse extends Record<string, unknown> {
   recurse: boolean;
 }
+
+export interface FeatureTypesRequest extends DataStoreRequest {}
+
+export interface FeatureTypeRequest extends FeatureTypesRequest {
+  featureTypeName: string
+}
+
+
+export interface GetFeatureTypesQueryParams {
+  list: string;
+}
+
+// export interface FeatureTypes{
+//   name
+// }
+
+export type GetFeatureTypesResponse = string[];

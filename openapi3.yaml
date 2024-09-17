@@ -413,6 +413,138 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /featureTypes/{workspace}/{dataStore}:
+    get:
+      operationId: getAllfeatureTypesNames
+      tags:
+        - featureTypes (Layer publishing)
+      summary: Get List of all feature type names
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: dataStore
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: list
+          schema:
+            type: string
+            enum: [all, configured, available, available_with_geom]
+            default: all
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example: [bluemarble-Orthophoto, best-OrthophotoBest]
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      operationId: createFeatureType
+      tags:
+        - featuresTypes (Layer publishing)
+      summary: Publish new feature
+      requestBody:
+        description: A json object containing desired details to update on layer
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/featureType'
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: dataStore
+          schema:
+            type: string
+          required: true
+      responses:
+        201:
+          description: Created
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'      
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'               
+  /featureTypes/{workspace}/{dataStore}/{featureType}:
+    get:
+      operationId: getAllfeatureTypesNames
+      tags:
+        - featureTypes (Layer publishing)
+      summary: Get List of all feature type names
+      parameters:
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: dataStore
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: featureType
+          schema:
+            type: string
+          required: true 
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'                
 components:
   schemas:
     Workspaces:
