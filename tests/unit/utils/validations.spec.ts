@@ -36,7 +36,7 @@ describe('Validation', () => {
       const action = () => {
         validateConfig(connectionParams);
       };
-      expect(action).toThrow(BadRequestError);
+      expect(action).toThrow(Error);
     });
 
     it('should throw bad request error when sslMode is not supported', function () {
@@ -48,7 +48,7 @@ describe('Validation', () => {
       const action = () => {
         validateConfig(connectionParams);
       };
-      expect(action).toThrow(BadRequestError);
+      expect(action).toThrow(Error);
     });
   });
 });

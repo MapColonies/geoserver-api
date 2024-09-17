@@ -4,7 +4,7 @@ import { Tracer } from '@opentelemetry/api';
 import { ConflictError, NotFoundError } from '@map-colonies/error-types';
 import { withSpanAsyncV4 } from '@map-colonies/telemetry';
 import { SERVICES } from '../../common/constants';
-import { GetWorkspaceResponse, IConfig, IRecurse, Workspace } from '../../common/interfaces';
+import { GetWorkspaceResponse, IConfig, GeoServerDeleteReqParams, Workspace } from '../../common/interfaces';
 import { GeoserverClient } from '../../serviceClients/geoserverClient';
 import { workspaceResponseConverter } from '../../utils/convertors/responseConverter';
 import { GeoserverGetWorkspaceResponse, GeoserverGetWorkspacesResponse } from '../../common/geoserver/models/workspace';
@@ -38,7 +38,7 @@ export class WorkspacesManager {
   @withSpanAsyncV4
   public async deleteWorkspace(name: string, isRecursive: boolean): Promise<void> {
     this.logger.info({ msg: `deleting workspace: ${name}`, workspace: name, isRecursive });
-    await this.geoserverManager.deleteRequest<IRecurse>(`workspaces/${name}`, { queryParams: { recurse: isRecursive } });
+    await this.geoserverManager.deleteRequest<GeoServerDeleteReqParams>(`workspaces/${name}`, { queryParams: { recurse: isRecursive } });
   }
 
   @withSpanAsyncV4

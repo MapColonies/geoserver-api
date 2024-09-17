@@ -4,7 +4,7 @@ import { Tracer } from '@opentelemetry/api';
 import { ConflictError, NotFoundError } from '@map-colonies/error-types';
 import { withSpanAsyncV4 } from '@map-colonies/telemetry';
 import { SERVICES } from '../../common/constants';
-import { DataStoreBodyRequest, DataStore, GetDataStoreResponse, IConfig, ConnectionParams, IRecurse } from '../../common/interfaces';
+import { DataStoreBodyRequest, DataStore, GetDataStoreResponse, IConfig, ConnectionParams, GeoServerDeleteReqParams } from '../../common/interfaces';
 import { GeoserverClient } from '../../serviceClients/geoserverClient';
 import {
   GeoServerCreateDataStoreRequest,
@@ -51,7 +51,7 @@ export class DataStoresManager {
   @withSpanAsyncV4
   public async deleteDataStore(workspaceName: string, dataStoreName: string, isRecursive: boolean): Promise<void> {
     this.logger.info({ msg: `deleteing dataStore: ${dataStoreName} from workspace: ${workspaceName}`, workspaceName, dataStoreName, isRecursive });
-    await this.geoserverManager.deleteRequest<IRecurse>(`workspaces/${workspaceName}/datastores/${dataStoreName}`, {
+    await this.geoserverManager.deleteRequest<GeoServerDeleteReqParams>(`workspaces/${workspaceName}/datastores/${dataStoreName}`, {
       queryParams: { recurse: isRecursive },
     });
   }
@@ -80,9 +80,9 @@ export class DataStoresManager {
   @withSpanAsyncV4
   public async updateDataStore(workspaceName: string, dataStoreName: string, updateRequest: DataStoreBodyRequest): Promise<void> {
     this.logger.info({ msg: `updating dataStore: ${dataStoreName} from workspace: ${workspaceName}`, workspaceName, dataStoreName, updateRequest });
-    const doesNewDataStoreExist = await this.checkDataStore(workspaceName, updateRequest.name);
     //test if workspace exists
     await this.checkWorkspace(workspaceName);
+    const doesNewDataStoreExist = await this.checkDataStore(workspaceName, updateRequest.name);
     if (doesNewDataStoreExist) {
       const errorMessage = `Cant change dataStore in ${workspaceName} named ${dataStoreName} to ${updateRequest.name}, there is already a dataStore under this name`;
       this.logger.error({ msg: errorMessage });

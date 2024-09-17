@@ -1,4 +1,3 @@
-import { BadRequestError } from '@map-colonies/error-types';
 import { container } from 'tsyringe';
 import { Logger } from '@map-colonies/js-logger';
 import { ConnectionParams } from '../common/interfaces';
@@ -10,11 +9,11 @@ export const validateConfig = (connectionParams: ConnectionParams): void => {
   if (!Object.values(DbType).includes(connectionParams.dbType as DbType)) {
     const errorMessage = `Provided dbType: ${connectionParams.dbType} is not supported`;
     logger.error({ msg: errorMessage });
-    throw new BadRequestError(errorMessage);
+    throw new Error(errorMessage);
   }
   if (!Object.values(SslMode).includes(connectionParams.sslMode as SslMode)) {
     const errorMessage = `Provided sslMode: ${connectionParams.sslMode} is not supported`;
     logger.error({ msg: errorMessage });
-    throw new BadRequestError(errorMessage);
+    throw new Error(errorMessage);
   }
 };
