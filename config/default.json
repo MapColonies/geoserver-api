@@ -30,6 +30,16 @@
     "auth": {
       "username": "",
       "password": ""
+    },
+    "dataStore": {
+      "username": "",
+      "password": "",
+      "host": "",
+      "port": "",
+      "schema": "",
+      "dbName": "",
+      "dbType": "",
+      "sslMode": ""
     }
   },
   "httpRetry": {
