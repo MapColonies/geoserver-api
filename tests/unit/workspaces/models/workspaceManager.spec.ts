@@ -49,7 +49,7 @@ describe('WorkspacesManager', () => {
       expect(workspace).toEqual(getWorkspaceResponseMock);
     });
 
-    it('should throw notFound error on non existent workspace', async function () {
+    it('should throw not found error on non existent workspace', async function () {
       nock(geoserverUrl).get('/workspaces/test').reply(404);
       const action = async () => {
         await workspacesManager.getWorkspace('test');
@@ -86,7 +86,7 @@ describe('WorkspacesManager', () => {
       await expect(action()).resolves.not.toThrow();
     });
 
-    it('should throw notFound Error when thw workspace doesnt exist', async function () {
+    it('should throw not found Error when thw workspace doesnt exist', async function () {
       nock(geoserverUrl).get('/workspaces/test').reply(404);
       nock(geoserverUrl).put('/workspaces/test1', postWorkspaceRequest).reply(404);
       const action = async () => {
@@ -132,7 +132,7 @@ describe('WorkspacesManager', () => {
       await expect(action()).resolves.not.toThrow();
     });
 
-    it('should throw notFound error when there is not such workspace', async function () {
+    it('should throw not found error when there is not such workspace', async function () {
       nock(geoserverUrl).delete('/workspaces/test').query({ recurse: true }).reply(404);
 
       const action = async () => {

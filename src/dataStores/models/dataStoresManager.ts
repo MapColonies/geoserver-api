@@ -67,8 +67,8 @@ export class DataStoresManager {
     //test if workspace exists
     await this.checkWorkspace(workspaceName);
     //test conflict
-    const doesDataStoreExist = await this.checkDataStore(workspaceName, dataStoreName);
-    if (doesDataStoreExist) {
+    const dataStoreExists = await this.checkDataStore(workspaceName, dataStoreName);
+    if (dataStoreExists) {
       const errorMessage = `Cant create new dataStore in ${workspaceName} named ${dataStoreName}, there is already a dataStore under this name`;
       this.logger.error({ msg: errorMessage });
       throw new ConflictError(errorMessage);
@@ -82,8 +82,8 @@ export class DataStoresManager {
     this.logger.info({ msg: `updating dataStore: ${dataStoreName} from workspace: ${workspaceName}`, workspaceName, dataStoreName, updateRequest });
     //test if workspace exists
     await this.checkWorkspace(workspaceName);
-    const doesNewDataStoreExist = await this.checkDataStore(workspaceName, updateRequest.name);
-    if (doesNewDataStoreExist) {
+    const dataStoreExists = await this.checkDataStore(workspaceName, updateRequest.name);
+    if (dataStoreExists) {
       const errorMessage = `Cant change dataStore in ${workspaceName} named ${dataStoreName} to ${updateRequest.name}, there is already a dataStore under this name`;
       this.logger.error({ msg: errorMessage });
       throw new ConflictError(errorMessage);

@@ -1,4 +1,3 @@
-import { BadRequestError } from '@map-colonies/error-types';
 import { container } from 'tsyringe';
 import jsLogger from '@map-colonies/js-logger';
 import { configMock, registerDefaultConfig, clear as clearConfig } from '../../mocks/configMock';

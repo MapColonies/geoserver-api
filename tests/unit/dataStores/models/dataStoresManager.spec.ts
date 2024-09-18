@@ -75,7 +75,7 @@ describe('DataStoresManager', () => {
       await expect(action()).resolves.not.toThrow();
     });
 
-    it('should throw notFound error when there is not such workspace or datastore', async function () {
+    it('should throw not found error when there is not such workspace or datastore', async function () {
       nock(geoserverUrl).delete('/workspaces/test/datastores/polygon_parts').query({ recurse: true }).reply(404);
 
       const action = async () => {
@@ -97,7 +97,7 @@ describe('DataStoresManager', () => {
       await expect(action()).resolves.not.toThrow();
     });
 
-    it('should throw a notFound error when workspace doesnt exist', async function () {
+    it('should throw a not found error when workspace doesnt exist', async function () {
       nock(geoserverUrl).post('/workspaces/test/datastores', postDataStoreRequest).reply(201);
       nock(geoserverUrl).get('/workspaces/test').reply(404);
 

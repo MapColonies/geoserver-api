@@ -51,8 +51,8 @@ export class WorkspacesManager {
   @withSpanAsyncV4
   public async updateWorkspace(oldName: string, newName: string): Promise<void> {
     this.logger.info({ msg: `updating workspace: ${oldName} to new name: ${newName}`, oldName, newName });
-    const doesNewNameExists = await this.workspaceExists(newName);
-    if (doesNewNameExists) {
+    const newNameExists = await this.workspaceExists(newName);
+    if (newNameExists) {
       const errorMessage = `Cant change workspace ${oldName} to ${newName} , there is already a workspace named ${newName}`;
       this.logger.error({ msg: errorMessage });
       throw new ConflictError(errorMessage);
