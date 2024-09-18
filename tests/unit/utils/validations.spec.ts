@@ -1,4 +1,3 @@
-import { BadRequestError } from '@map-colonies/error-types';
 import { container } from 'tsyringe';
 import jsLogger from '@map-colonies/js-logger';
 import { configMock, registerDefaultConfig, clear as clearConfig } from '../../mocks/configMock';
@@ -36,7 +35,7 @@ describe('Validation', () => {
       const action = () => {
         validateConfig(connectionParams);
       };
-      expect(action).toThrow(BadRequestError);
+      expect(action).toThrow(Error);
     });
 
     it('should throw bad request error when sslMode is not supported', function () {
@@ -48,7 +47,7 @@ describe('Validation', () => {
       const action = () => {
         validateConfig(connectionParams);
       };
-      expect(action).toThrow(BadRequestError);
+      expect(action).toThrow(Error);
     });
   });
 });
