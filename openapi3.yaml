@@ -469,7 +469,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/featureType'
+              $ref: '#/components/schemas/FeatureType'
       parameters:
         - in: path
           name: workspace
@@ -495,13 +495,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'      
+                $ref: '#/components/schemas/Error'
         500:
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'               
+                $ref: '#/components/schemas/Error'
   /featureTypes/{workspace}/{dataStore}/{featureType}:
     get:
       operationId: getAllfeatureTypesNames
@@ -523,16 +523,14 @@ paths:
           name: featureType
           schema:
             type: string
-          required: true 
+          required: true
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
+                $ref: '#/components/schemas/FeatureTypeInfo'
         404:
           description: Not Found
           content:
@@ -544,7 +542,63 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'                
+                $ref: '#/components/schemas/Error'
+    delete:
+      operationId: deleteFeatureType
+      tags:
+        - featuresTypes (Layer publishing)
+      summary: delete feature type
+      parameters:
+        - in: path
+          name: featureType
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: workspace
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: dataStore
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: isRecursive
+          schema:
+            type: boolean
+            default: false
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: 'OK'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     Workspaces:
@@ -604,6 +658,57 @@ components:
       properties:
         name:
           type: string
+    FeatureType:
+      type: object
+      required:
+        - nativeName
+      properties:
+        name:
+          type: string
+        nativeName:
+          type: string
+        # crs:
+        #   type: string
+        # maxFeatures:
+        #   type: number
+        # attributes:
+        #   type: array
+        #   items:
+        #     $ref: '#/components/schemas/attribute'
+    FeatureTypeInfo:
+      type: object
+      properties:
+        name:
+          type: string
+        tableName:
+          type: string
+        enabled:
+          type: boolean
+        srs:
+          type: string
+        maxFeatures:
+          type: number
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/attribute'
+
+    attribute:
+      type: object
+      properties:
+        name:
+          type: string
+        minOccurs:
+          type: number
+        maxOccurs:
+          type: number
+        nillable:
+          type: boolean
+        binding:
+          type: string
+        source:
+          type: string
+
     Error:
       type: object
       required:

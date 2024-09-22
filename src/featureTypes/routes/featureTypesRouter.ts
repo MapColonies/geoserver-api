@@ -7,10 +7,9 @@ const featureTypesRouterFactory: FactoryFunction<Router> = (dependencyContainer)
   const controller = dependencyContainer.resolve(FeatureTypesController);
 
   router.get('/:workspaceName/:dataStoreName', controller.getFeatureTypes.bind(controller));
-  // router.post('/:workspaceName/:dataStoreName', controller.createWorkspace.bind(controller));
+  router.post('/:workspaceName/:dataStoreName', controller.createFeatureType.bind(controller));
   router.get('/:workspaceName/:dataStoreName/:featureTypeName', controller.getFeatureType.bind(controller));
-  // router.delete('/:workspaceName/:dataStoreName/:featureTypeName', controller.deleteWorkspace.bind(controller));
-  // router.put('/:workspaceName/:dataStoreName/:featureTypeName', controller.updateWorkspace.bind(controller));
+  router.delete('/:workspaceName/:dataStoreName/:featureTypeName', controller.deleteFeatureType.bind(controller));
 
   return router;
 };

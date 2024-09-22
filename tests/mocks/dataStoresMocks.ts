@@ -70,6 +70,10 @@ export const geoserverGetDataStoreResponseMock = {
           '@key': 'user',
           $: 'postgres',
         },
+        {
+          '@key': 'Expose primary keys',
+          $: 'true',
+        },
       ],
     },
     dateCreated: '2024-09-11 06:44:11.551 UTC',
@@ -126,6 +130,10 @@ export const postDataStoreRequest = {
         },
         {
           '@key': 'validate connections',
+          $: 'true',
+        },
+        {
+          '@key': 'Expose primary keys',
           $: 'true',
         },
         {
