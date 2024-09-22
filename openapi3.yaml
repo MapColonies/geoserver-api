@@ -667,14 +667,6 @@ components:
           type: string
         nativeName:
           type: string
-        # crs:
-        #   type: string
-        # maxFeatures:
-        #   type: number
-        # attributes:
-        #   type: array
-        #   items:
-        #     $ref: '#/components/schemas/attribute'
     FeatureTypeInfo:
       type: object
       properties:
