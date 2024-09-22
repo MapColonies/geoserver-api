@@ -504,7 +504,7 @@ paths:
                 $ref: '#/components/schemas/Error'
   /featureTypes/{workspace}/{dataStore}/{featureType}:
     get:
-      operationId: getAllfeatureTypesNames
+      operationId: getFeatureTypeDetails
       tags:
         - featureTypes (Layer publishing)
       summary: Get List of all feature type names
