@@ -1,4 +1,6 @@
+import { ListParam } from './enums';
 import { GeoserverGetDataStoreResponse } from './geoserver/models/dataStore';
+import { GeoserverFeatureTypeResponse } from './geoserver/models/featureType';
 import { GeoserverGetWorkspaceResponse } from './geoserver/models/workspace';
 
 export interface IConfig {
@@ -76,4 +78,30 @@ export interface ConnectionParams {
 
 export interface GeoServerDeleteReqParams extends Record<string, unknown> {
   recurse: boolean;
+}
+
+export interface FeatureType {
+  name: string;
+  link?: string;
+}
+
+export interface FeatureTypesRequest extends DataStoreRequest {}
+
+export interface FeatureTypeRequest extends FeatureTypesRequest {
+  featureTypeName: string;
+}
+
+export interface GetFeatureTypesQueryParams {
+  list: ListParam;
+}
+
+export type GetFeatureTypesResponse = FeatureType[];
+
+export type GetFeatureTypeResponse = Pick<GeoserverFeatureTypeResponse['featureType'], 'name' | 'enabled' | 'srs' | 'maxFeatures' | 'attributes'> & {
+  tableName: string; //native name is table name
+};
+
+export interface FeatureTypeBodyRequest {
+  nativeName: string; // table name
+  name?: string; // display name
 }

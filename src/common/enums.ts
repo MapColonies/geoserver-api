@@ -10,3 +10,10 @@ export enum SslMode {
 export enum DbType {
   POSTGIS = 'postgis',
 }
+
+export enum ListParam {
+  ALL = 'all',
+  CONFIGURED = 'configured',
+  AVAILABLE = 'available',
+  AVAILABLE_WITH_GEOM = 'available_with_geom',
+}

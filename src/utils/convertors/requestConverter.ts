@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { GeoServerCreateDataStoreRequest, GeoServerUpdateDataStoreRequest } from '../../common/geoserver/models/dataStore';
+import { GeoServerCreateFeatureRequest } from '../../common/geoserver/models/featureType';
 import { GeoserverWorkspaceRequest } from '../../common/geoserver/models/workspace';
-import { ConnectionParams, DataStoreBodyRequest } from '../../common/interfaces';
+import { ConnectionParams, DataStoreBodyRequest, FeatureTypeBodyRequest } from '../../common/interfaces';
+import { attributesMapping, boundingBox, srs } from '../featureConstants';
 
 /* This file contains functions that converts inputs from the geoserver-api to the request input the GeoServer itself expects to receive */
 export const workspaceRequestConverter = (workspaceName: string): GeoserverWorkspaceRequest => {
@@ -20,6 +22,7 @@ export const postDataStoreRequestConverter = (request: DataStoreBodyRequest, con
     { '@key': 'schema', $: connectionParams.schema },
     { '@key': 'SSL mode', $: connectionParams.sslMode },
     { '@key': 'validate connections', $: 'true' },
+    { '@key': 'Expose primary keys', $: 'true' },
   ];
 
   if (connectionParams.password != null && connectionParams.password.trim() !== '') {
@@ -42,6 +45,19 @@ export const updateDataStoreRequestConverter = (updateRequest: DataStoreBodyRequ
   return {
     dataStore: {
       name: updateRequest.name,
+    },
+  };
+};
+
+export const postFeatureTypeRequestConverter = (request: FeatureTypeBodyRequest): GeoServerCreateFeatureRequest => {
+  return {
+    featureType: {
+      name: request.name ?? request.nativeName,
+      nativeName: request.nativeName,
+      srs: srs,
+      nativeBoundingBox: boundingBox,
+      latLonBoundingBox: boundingBox,
+      attributes: { attribute: attributesMapping },
     },
   };
 };

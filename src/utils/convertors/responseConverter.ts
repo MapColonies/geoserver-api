@@ -1,6 +1,12 @@
+import { ListParam } from '../../common/enums';
 import { GeoserverGetDataStoreResponse, GeoserverGetDataStoresResponse } from '../../common/geoserver/models/dataStore';
+import {
+  GeoserverFeatureTypeResponse,
+  GeoserverGetConfiguredFeatureTypesResponse,
+  GeoserverGetFeatureTypesResponse,
+} from '../../common/geoserver/models/featureType';
 import { GeoserverGetWorkspacesResponse } from '../../common/geoserver/models/workspace';
-import { DataStore, GetDataStoreResponse, Workspace } from '../../common/interfaces';
+import { DataStore, GetDataStoreResponse, GetFeatureTypeResponse, GetFeatureTypesResponse, Workspace } from '../../common/interfaces';
 
 /* This file contains functions that converts outputs from the Geo server to the response output the api expects to receive */
 export const workspaceResponseConverter = (geoserverResponse: GeoserverGetWorkspacesResponse): Workspace[] => {
@@ -15,6 +21,30 @@ export const dataStoresResponseConverter = (geoserverResponse: GeoserverGetDataS
     name: ds.name,
     link: ds.href,
   }));
+};
+
+export const featureTypesResponseConverter = (
+  geoserverResponse: GeoserverGetFeatureTypesResponse | GeoserverGetConfiguredFeatureTypesResponse,
+  list: ListParam
+): GetFeatureTypesResponse => {
+  if (list === ListParam.CONFIGURED) {
+    const configuredResponse = geoserverResponse as GeoserverGetConfiguredFeatureTypesResponse;
+    if (!configuredResponse.featureTypes.featureType) {
+      return [];
+    }
+    return configuredResponse.featureTypes.featureType.map((feature) => ({
+      name: feature.name,
+      link: feature.href,
+    }));
+  } else {
+    const simpleResponse = geoserverResponse as GeoserverGetFeatureTypesResponse;
+    if (!simpleResponse.list.string) {
+      return [];
+    }
+    return simpleResponse.list.string.map((featureName) => ({
+      name: featureName,
+    }));
+  }
 };
 
 export const dataStoreResponseConverter = (dataStore: GeoserverGetDataStoreResponse['dataStore']): GetDataStoreResponse => {
@@ -33,5 +63,18 @@ export const dataStoreResponseConverter = (dataStore: GeoserverGetDataStoreRespo
     dbType: connectionParams['dbtype'],
     dbName: connectionParams['database'],
     sslMode: connectionParams['SSL mode'],
+  };
+};
+
+export const featureTypeResponseConverter = (geoserverResponse: GeoserverFeatureTypeResponse): GetFeatureTypeResponse => {
+  const { name, srs, maxFeatures, attributes, nativeName, enabled } = geoserverResponse.featureType;
+
+  return {
+    name,
+    enabled,
+    srs,
+    maxFeatures,
+    attributes,
+    tableName: nativeName, // Mapping nativeName to tableName
   };
 };
