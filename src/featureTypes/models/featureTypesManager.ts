@@ -2,7 +2,7 @@ import { Logger } from '@map-colonies/js-logger';
 import { inject, injectable } from 'tsyringe';
 import { Tracer } from '@opentelemetry/api';
 import { withSpanAsyncV4 } from '@map-colonies/telemetry';
-import { BadRequestError, ConflictError } from '@map-colonies/error-types';
+import { ConflictError, UnprocessableEntityError } from '@map-colonies/error-types';
 import { SERVICES } from '../../common/constants';
 import { FeatureTypeBodyRequest, GeoServerDeleteReqParams, GetFeatureTypeResponse, GetFeatureTypesResponse, IConfig } from '../../common/interfaces';
 import { GeoserverClient } from '../../serviceClients/geoserverClient';
@@ -14,6 +14,7 @@ import {
 } from '../../common/geoserver/models/featureType';
 import { featureTypeResponseConverter, featureTypesResponseConverter } from '../../utils/convertors/responseConverter';
 import { postFeatureTypeRequestConverter } from '../../utils/convertors/requestConverter';
+import { ListEnum } from '../../common/enums';
 
 @injectable()
 export class FeatureTypesManager {
@@ -25,7 +26,7 @@ export class FeatureTypesManager {
   ) {}
 
   @withSpanAsyncV4
-  public async getFeatureTypes(workspaceName: string, dataStoreName: string, list: string): Promise<GetFeatureTypesResponse> {
+  public async getFeatureTypes(workspaceName: string, dataStoreName: string, list: ListEnum): Promise<GetFeatureTypesResponse> {
     this.logger.info({
       msg: `getting ${list} featureTypes from workspace: ${workspaceName}, dataStore: ${dataStoreName}`,
       workspaceName,
@@ -52,7 +53,6 @@ export class FeatureTypesManager {
       `workspaces/${workspaceName}/datastores/${dataStoreName}/featuretypes/${featureTypeName}`
     );
     const response = featureTypeResponseConverter(geoserverResponse);
-    //const response = dataStoreResponseConverter(geoserverResponse.dataStore);
     return response;
   }
 
@@ -83,20 +83,20 @@ export class FeatureTypesManager {
     });
     const tableName = featureTypeBodyRequest.nativeName;
     //check that there is a table under the native_name provided
-    const tableExists = await this.checkFeature(workspaceName, dataStoreName, tableName, 'all');
+    const tableExists = await this.checkFeature(workspaceName, dataStoreName, tableName, ListEnum.ALL);
     if (!tableExists) {
       const errorMessage = `there is no table name : ${tableName} in workspace: ${workspaceName} in dataStore: ${dataStoreName}`;
       this.logger.error({
         msg: errorMessage,
       });
-      throw new BadRequestError(errorMessage);
+      throw new UnprocessableEntityError(errorMessage);
     }
     const createFeatureRequestBody = postFeatureTypeRequestConverter(featureTypeBodyRequest);
     const featureName = createFeatureRequestBody.featureType.name;
     //check conflict in given layer name - not mandatory but we want to throw 409 and not general 500 as geoserver throws
-    const nameExists = await this.checkFeature(workspaceName, dataStoreName, featureName, 'configured');
+    const nameExists = await this.checkFeature(workspaceName, dataStoreName, featureName, ListEnum.CONFIGURED);
     if (nameExists) {
-      const errorMessage = `there is already a feature named: ${featureName} in workspace: ${workspaceName} in dataStore: ${dataStoreName}`;
+      const errorMessage = `there is already a configured feature named: ${featureName} in workspace: ${workspaceName} in dataStore: ${dataStoreName}`;
       this.logger.error({
         msg: errorMessage,
       });
@@ -108,7 +108,7 @@ export class FeatureTypesManager {
     );
   }
 
-  private async checkFeature(workspaceName: string, dataStoreName: string, name: string, list: string): Promise<boolean> {
+  private async checkFeature(workspaceName: string, dataStoreName: string, name: string, list: ListEnum): Promise<boolean> {
     try {
       const featureTypesList = await this.getFeatureTypes(workspaceName, dataStoreName, list);
       return featureTypesList.some((feature) => feature.name === name);

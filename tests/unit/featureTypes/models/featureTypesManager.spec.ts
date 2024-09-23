@@ -1,7 +1,7 @@
 import jsLogger from '@map-colonies/js-logger';
 import { trace } from '@opentelemetry/api';
 import nock from 'nock';
-import { BadRequestError, ConflictError, ForbiddenError, NotFoundError } from '@map-colonies/error-types';
+import { ConflictError, ForbiddenError, NotFoundError, UnprocessableEntityError } from '@map-colonies/error-types';
 import { GeoserverClient } from '../../../../src/serviceClients/geoserverClient';
 import { configMock, registerDefaultConfig, clear as clearConfig } from '../../../mocks/configMock';
 import { FeatureTypesManager } from '../../../../src/featureTypes/models/featureTypesManager';
@@ -15,6 +15,7 @@ import {
   getFeatureTypeResponseMock,
   postFeatureTypeRequestMock,
 } from '../../../mocks/featureTypesMocks';
+import { ListEnum } from '../../../../src/common/enums';
 
 describe('DataStoresManager', () => {
   let featureTypesManager: FeatureTypesManager;
@@ -39,9 +40,9 @@ describe('DataStoresManager', () => {
     it('should return a list of featureType names when list=all', async function () {
       nock(geoserverUrl)
         .get('/workspaces/test/datastores/bestStore/featuretypes')
-        .query({ list: 'all' })
+        .query({ list: ListEnum.ALL })
         .reply(200, geoserverFeatureTypesListAllResponseMock);
-      const featureTypes = await featureTypesManager.getFeatureTypes('test', 'bestStore', 'all');
+      const featureTypes = await featureTypesManager.getFeatureTypes('test', 'bestStore', ListEnum.ALL);
 
       expect(featureTypes).toEqual(featureTypesListAllResponseMock);
     });
@@ -49,18 +50,18 @@ describe('DataStoresManager', () => {
     it('should return a list of featureType names and links when list=configured', async function () {
       nock(geoserverUrl)
         .get('/workspaces/test/datastores/bestStore/featuretypes')
-        .query({ list: 'configured' })
+        .query({ list: ListEnum.CONFIGURED })
         .reply(200, geoserverFeatureTypesListConfiguredResponseMock);
-      const featureTypes = await featureTypesManager.getFeatureTypes('test', 'bestStore', 'configured');
+      const featureTypes = await featureTypesManager.getFeatureTypes('test', 'bestStore', ListEnum.CONFIGURED);
 
       expect(featureTypes).toEqual(featureTypesListConfiguredResponseMock);
     });
 
     it('should throw not found error when there is not such workspace or datastore', async function () {
-      nock(geoserverUrl).get('/workspaces/test/datastores/bestStore/featuretypes').query({ list: 'all' }).reply(404);
+      nock(geoserverUrl).get('/workspaces/test/datastores/bestStore/featuretypes').query({ list: ListEnum.ALL }).reply(404);
 
       const action = async () => {
-        await featureTypesManager.getFeatureTypes('test', 'bestStore', 'all');
+        await featureTypesManager.getFeatureTypes('test', 'bestStore', ListEnum.ALL);
       };
       await expect(action()).rejects.toThrow(NotFoundError);
     });
@@ -134,9 +135,12 @@ describe('DataStoresManager', () => {
       nock(geoserverUrl).post('/workspaces/test/datastores/bestStore/featuretypes', geoserverPostFeatureTypeRequestMock).reply(201);
       nock(geoserverUrl)
         .get('/workspaces/test/datastores/bestStore/featuretypes')
-        .query({ list: 'all' })
+        .query({ list: ListEnum.ALL })
         .reply(200, geoserverFeatureTypesListAllResponseMock);
-      nock(geoserverUrl).get('/workspaces/test/datastores/bestStore/featuretypes').query({ list: 'configured' }).reply(200, { featureTypes: {} });
+      nock(geoserverUrl)
+        .get('/workspaces/test/datastores/bestStore/featuretypes')
+        .query({ list: ListEnum.CONFIGURED })
+        .reply(200, { featureTypes: {} });
       const action = async () => {
         await featureTypesManager.createFeatureType('test', 'bestStore', postFeatureTypeRequestMock);
       };
@@ -144,21 +148,21 @@ describe('DataStoresManager', () => {
     });
 
     it('should throw not found error when tableName doesnt exist', async function () {
-      nock(geoserverUrl).get('/workspaces/test/datastores/bestStore/featuretypes').query({ list: 'all' }).reply(200, { list: {} });
+      nock(geoserverUrl).get('/workspaces/test/datastores/bestStore/featuretypes').query({ list: ListEnum.ALL }).reply(200, { list: {} });
       const action = async () => {
         await featureTypesManager.createFeatureType('test', 'bestStore', postFeatureTypeRequestMock);
       };
-      await expect(action()).rejects.toThrow(BadRequestError);
+      await expect(action()).rejects.toThrow(UnprocessableEntityError);
     });
 
     it('should throw conflict error when featureType with the same name already exists', async function () {
       nock(geoserverUrl)
         .get('/workspaces/test/datastores/bestStore/featuretypes')
-        .query({ list: 'all' })
+        .query({ list: ListEnum.ALL })
         .reply(200, geoserverFeatureTypesListAllResponseMock);
       nock(geoserverUrl)
         .get('/workspaces/test/datastores/bestStore/featuretypes')
-        .query({ list: 'configured' })
+        .query({ list: ListEnum.CONFIGURED })
         .reply(200, geoserverFeatureTypesListConfiguredResponseMock);
       const action = async () => {
         await featureTypesManager.createFeatureType('test', 'bestStore', postFeatureTypeRequestMock);
@@ -170,9 +174,12 @@ describe('DataStoresManager', () => {
       nock(geoserverUrl).post('/workspaces/test/datastores/bestStore/featuretypes', geoserverPostFeatureTypeRequestMock).reply(404);
       nock(geoserverUrl)
         .get('/workspaces/test/datastores/bestStore/featuretypes')
-        .query({ list: 'all' })
+        .query({ list: ListEnum.ALL })
         .reply(200, geoserverFeatureTypesListAllResponseMock);
-      nock(geoserverUrl).get('/workspaces/test/datastores/bestStore/featuretypes').query({ list: 'configured' }).reply(200, { featureTypes: {} });
+      nock(geoserverUrl)
+        .get('/workspaces/test/datastores/bestStore/featuretypes')
+        .query({ list: ListEnum.CONFIGURED })
+        .reply(200, { featureTypes: {} });
       const action = async () => {
         await featureTypesManager.createFeatureType('test', 'bestStore', postFeatureTypeRequestMock);
       };

@@ -1,3 +1,4 @@
+import { ListEnum } from '../../common/enums';
 import { GeoserverGetDataStoreResponse, GeoserverGetDataStoresResponse } from '../../common/geoserver/models/dataStore';
 import {
   GeoserverFeatureTypeResponse,
@@ -24,9 +25,9 @@ export const dataStoresResponseConverter = (geoserverResponse: GeoserverGetDataS
 
 export const featureTypesResponseConverter = (
   geoserverResponse: GeoserverGetFeatureTypesResponse | GeoserverGetConfiguredFeatureTypesResponse,
-  list: string
+  list: ListEnum
 ): GetFeatureTypesResponse => {
-  if (list === 'configured') {
+  if (list === ListEnum.CONFIGURED) {
     const configuredResponse = geoserverResponse as GeoserverGetConfiguredFeatureTypesResponse;
     if (!configuredResponse.featureTypes.featureType) {
       return [];

@@ -442,10 +442,9 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
-              example: [bluemarble-Orthophoto, best-OrthophotoBest]
+                oneOf:
+                  - $ref: '#/components/schemas/NameLinkObject'
+                  - $ref: '#/components/schemas/NameOnlyObject'
         404:
           description: Not Found
           content:
@@ -461,7 +460,7 @@ paths:
     post:
       operationId: createFeatureType
       tags:
-        - featuresTypes (Layer publishing)
+        - featureTypes (Layer publishing)
       summary: Publish new feature
       requestBody:
         description: A json object containing desired details to update on layer
@@ -484,8 +483,8 @@ paths:
       responses:
         201:
           description: Created
-        400:
-          description: Bad Request
+        422:
+          description: Unprocessable Content
           content:
             application/json:
               schema:
@@ -546,7 +545,7 @@ paths:
     delete:
       operationId: deleteFeatureType
       tags:
-        - featuresTypes (Layer publishing)
+        - featureTypes (Layer publishing)
       summary: delete feature type
       parameters:
         - in: path
@@ -700,6 +699,28 @@ components:
           type: string
         source:
           type: string
+    NameLinkObject:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+          link:
+            type: string
+        required:
+          - name
+          - link
+
+    NameOnlyObject:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+        required:
+          - name
 
     Error:
       type: object
