@@ -1,11 +1,34 @@
 global:
-  imageRegistry: ""
-  imagePullSecrets: []
-  deploymentFlavor: "openshift"
-  pullPolicy: "IfNotPresent"
+  cloudProvider: {}
   tracing: {}
   metrics: {}
   environment: ''
+  serviceUrls:
+    geoserverUrl: ""
+  geoserver:  
+    auth: 
+      username: ""
+      password: ""
+  db: 
+    username: ""
+    password: ""
+    host: ""
+    port: ""
+    schema: ""
+    name: ""
+    dbType: ""
+    sslMode: ""
+    sslEnabled: false
+    secrets:
+      useExternal: true
+      externalSecretName: "raster-dev-postgres-secret"
+
+  ca:    
+    secretName: ''
+    path: '/usr/local/share/ca-certificates'
+    key: 'ca.crt'  
+  ingress:
+    domain: 'apps.aroapp.io'      
 
 enabled: true
 environment: development
@@ -18,8 +41,6 @@ nameOverride: ""
 fullnameOverride: ""
 
 livenessProbe:
-  enabled: true
-  initialDelaySeconds: 10
   timeoutSeconds: 5
   failureThreshold: 6
   path: /liveness
@@ -51,11 +72,40 @@ caPath: '/usr/local/share/ca-certificates'
 caKey: 'ca.crt'
 
 image:
-  registry: ""
-  repository: ts-server-boilerplate
-  tag: 'v4.2.0'
-  digest: ""
-  pullSecrets: []
+  repository: geoserver-api
+  tag: 'latest'
+
+tracing:
+  enabled: false
+  url: ''
+
+metrics:
+  enabled: false
+  url: ''
+  prometheus:
+    scrape: true
+    port: 8080  
+
+geoserver:  
+  auth: 
+    username: ""
+    password: ""
+db: 
+  username: ""
+  password: ""
+  host: ""
+  port: ""
+  schema: ""
+  name: ""
+  dbType: ""
+  sslMode: ""
+  sslEnabled: false
+  secrets:
+      useExternal: false
+      externalSecretName: ''
+
+
+
 env:
   port: 8080
   targetPort: 8080
@@ -64,15 +114,15 @@ env:
   logPrettyPrintEnabled: false
   responseCompressionEnabled: true
   requestPayloadLimit: 1mb
-  tracing:
-    enabled: false
-    url: http://localhost:55681/v1/trace
-  metrics:
-    enabled: false
-    url: http://localhost:55681/v1/metrics
+  disableHttpClientLogs: false     
+  httpRetry:
+    attempts: 5
+    delay: exponential
+    resetTimeout: true  
+
 
 resources:
-  enabled: true
+  enabled: false
   value:
     limits:
       cpu: 100m
@@ -100,6 +150,7 @@ route:
 
 ingress:
   enabled: false
+  type: 'nginx-org' # supported values: 'nginx-org' | 'nginx-kubernetes'
   path: /
   host: 'localhost'
   cors:
