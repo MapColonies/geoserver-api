@@ -6,8 +6,12 @@
 {{- $cloudProviderFlavor := include "geoserver-api.cloudProviderFlavor" . -}}
 {{- $cloudProviderDockerRegistryUrl := include "geoserver-api.cloudProviderDockerRegistryUrl" . -}}
 {{- $cloudProviderImagePullSecretName := include "geoserver-api.cloudProviderImagePullSecretName" . -}}
-{{- $fs := (include "common.fs.merged" .) | fromYaml }}
 {{- $imageTag := include "geoserver-api.tag" . -}}
+{{- $db := (include "common.db.merged" .) | fromYaml }}
+{{- $geoserver := (include "common.geoserver.merged" .) | fromYaml }}
+{{- $postgresSecretName := ternary $db.secrets.externalSecretName (printf "%s%s" .Release.Name "-postgres-secret") $db.secrets.useExternal -}}
+{{- $geoserverSecretName := ternary $geoserver.secrets.externalSecretName (printf "%s%s" .Release.Name "-geoserver-secret") $geoserver.secrets.useExternal -}}
+
 {{- if .Values.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
@@ -56,13 +60,6 @@ spec:
           image: {{ $cloudProviderDockerRegistryUrl }}{{ .repository }}:{{ $imageTag }}
           {{- end }}
           volumeMounts:
-          {{- if $fs.ingestionSourcePvc.enabled }}
-            - name: ingestion-storage
-              mountPath: /layerSources
-              {{- if $fs.ingestionSourcePvc.subPath }}
-              subPath: {{ $fs.ingestionSourcePvc.subPath }}
-              {{- end }}
-          {{- end }}
             {{- if .Values.global.ca.secretName }}
             - mountPath: {{ printf "%s/%s" .Values.global.ca.path .Values.global.ca.key | quote }}
               name: root-ca
@@ -77,6 +74,26 @@ spec:
             - name: NODE_EXTRA_CA_CERTS
               value: {{ printf "%s/%s" .Values.global.ca.path .Values.global.ca.key | quote }}
             {{- end }}
+            - name: DATASTORE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $postgresSecretName }}
+                  key: username               
+            - name: DATASTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $postgresSecretName }}
+                  key: password
+            - name: GEOSERVER_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $geoserverSecretName }}
+                  key: GEOSERVER_USER 
+            - name: GEOSERVER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $geoserverSecretName }}
+                  key: GEOSERVER_PASS           
           envFrom:
             - configMapRef:
                 name: {{ $configmapName }}
@@ -99,10 +116,5 @@ spec:
         - name: root-ca
           secret:
             secretName: {{ .Values.global.ca.secretName }}
-        {{- end }}
-        {{- if $fs.ingestionSourcePvc.enabled }}
-        - name: ingestion-storage
-          persistentVolumeClaim:
-            claimName: {{ quote $fs.ingestionSourcePvc.name }}
         {{- end }}
 {{- end -}}

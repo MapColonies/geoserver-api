@@ -61,3 +61,7 @@ Custom definitions
 {{- define "common.metrics.merged" -}}
 {{- include "common.tplvalues.merge" ( dict "values" ( list .Values.metrics .Values.global.metrics ) "context" . ) }}
 {{- end -}}
+
+{{- define "common.geoserver.merged" -}}
+{{- include "common.tplvalues.merge" ( dict "values" ( list .Values.geoserver .Values.global.geoserver ) "context" . ) }}
+{{- end -}}

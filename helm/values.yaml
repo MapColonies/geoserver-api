@@ -5,7 +5,10 @@ global:
   environment: ''
   serviceUrls:
     geoserverUrl: ""
-  geoserver:  
+  geoserver: 
+    secrets:
+      useExternal: false
+      externalSecretName: '' 
     auth: 
       username: ""
       password: ""
@@ -20,8 +23,8 @@ global:
     sslMode: ""
     sslEnabled: false
     secrets:
-      useExternal: true
-      externalSecretName: "raster-dev-postgres-secret"
+      useExternal: false
+      externalSecretName: ''
 
   ca:    
     secretName: ''
@@ -75,6 +78,11 @@ image:
   repository: geoserver-api
   tag: 'latest'
 
+cloudProvider:
+  dockerRegistryUrl: my-registry-url.io
+  imagePullSecretName: 'my-registry-secret'
+  flavor: openshift
+
 tracing:
   enabled: false
   url: ''
@@ -87,22 +95,21 @@ metrics:
     port: 8080  
 
 geoserver:  
-  auth: 
-    username: ""
-    password: ""
+  secrets:
+      useExternal: true
+      externalSecretName: ''
 db: 
-  username: ""
-  password: ""
-  host: ""
-  port: ""
-  schema: ""
-  name: ""
-  dbType: ""
-  sslMode: ""
+  host: ''
+  port: ''
+  schema: ''
+  name: ''
+  dbType: ''
   sslEnabled: false
   secrets:
-      useExternal: false
+      useExternal: true
       externalSecretName: ''
+serviceUrls:
+  geoserverUrl: ''      
 
 
 
