@@ -14,7 +14,7 @@ import {
 } from '../../common/geoserver/models/featureType';
 import { featureTypeResponseConverter, featureTypesResponseConverter } from '../../utils/convertors/responseConverter';
 import { postFeatureTypeRequestConverter } from '../../utils/convertors/requestConverter';
-import { ListEnum } from '../../common/enums';
+import { ListParam } from '../../common/enums';
 
 @injectable()
 export class FeatureTypesManager {
@@ -26,7 +26,7 @@ export class FeatureTypesManager {
   ) {}
 
   @withSpanAsyncV4
-  public async getFeatureTypes(workspaceName: string, dataStoreName: string, list: ListEnum): Promise<GetFeatureTypesResponse> {
+  public async getFeatureTypes(workspaceName: string, dataStoreName: string, list: ListParam): Promise<GetFeatureTypesResponse> {
     this.logger.info({
       msg: `getting ${list} featureTypes from workspace: ${workspaceName}, dataStore: ${dataStoreName}`,
       workspaceName,
@@ -83,7 +83,7 @@ export class FeatureTypesManager {
     });
     const tableName = featureTypeBodyRequest.nativeName;
     //check that there is a table under the native_name provided
-    const tableExists = await this.checkFeature(workspaceName, dataStoreName, tableName, ListEnum.ALL);
+    const tableExists = await this.checkFeature(workspaceName, dataStoreName, tableName, ListParam.ALL);
     if (!tableExists) {
       const errorMessage = `there is no table name : ${tableName} in workspace: ${workspaceName} in dataStore: ${dataStoreName}`;
       this.logger.error({
@@ -94,7 +94,7 @@ export class FeatureTypesManager {
     const createFeatureRequestBody = postFeatureTypeRequestConverter(featureTypeBodyRequest);
     const featureName = createFeatureRequestBody.featureType.name;
     //check conflict in given layer name - not mandatory but we want to throw 409 and not general 500 as geoserver throws
-    const nameExists = await this.checkFeature(workspaceName, dataStoreName, featureName, ListEnum.CONFIGURED);
+    const nameExists = await this.checkFeature(workspaceName, dataStoreName, featureName, ListParam.CONFIGURED);
     if (nameExists) {
       const errorMessage = `there is already a configured feature named: ${featureName} in workspace: ${workspaceName} in dataStore: ${dataStoreName}`;
       this.logger.error({
@@ -108,7 +108,7 @@ export class FeatureTypesManager {
     );
   }
 
-  private async checkFeature(workspaceName: string, dataStoreName: string, name: string, list: ListEnum): Promise<boolean> {
+  private async checkFeature(workspaceName: string, dataStoreName: string, name: string, list: ListParam): Promise<boolean> {
     try {
       const featureTypesList = await this.getFeatureTypes(workspaceName, dataStoreName, list);
       return featureTypesList.some((feature) => feature.name === name);

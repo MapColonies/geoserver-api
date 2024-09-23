@@ -11,7 +11,7 @@ export enum DbType {
   POSTGIS = 'postgis',
 }
 
-export enum ListEnum {
+export enum ListParam {
   ALL = 'all',
   CONFIGURED = 'configured',
   AVAILABLE = 'available',

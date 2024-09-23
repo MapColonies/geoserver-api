@@ -1,4 +1,4 @@
-import { ListEnum } from './enums';
+import { ListParam } from './enums';
 import { GeoserverGetDataStoreResponse } from './geoserver/models/dataStore';
 import { GeoserverFeatureTypeResponse } from './geoserver/models/featureType';
 import { GeoserverGetWorkspaceResponse } from './geoserver/models/workspace';
@@ -92,7 +92,7 @@ export interface FeatureTypeRequest extends FeatureTypesRequest {
 }
 
 export interface GetFeatureTypesQueryParams {
-  list: ListEnum;
+  list: ListParam;
 }
 
 export type GetFeatureTypesResponse = FeatureType[];
