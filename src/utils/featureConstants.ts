@@ -1,6 +1,6 @@
 import { GeoserverPostAttribute } from '../common/geoserver/models/featureType';
 
-export const srs: string = 'EPSG:4326';
+export const srs: string = 'urn:ogc:def:crs:EPSG::4326';
 
 export const boundingBox = {
   minx: -180,
