@@ -1,115 +1,120 @@
 {{- $releaseName := .Release.Name -}}
-{{- $chartName := include "ts-server-boilerplate.name" . -}}
+{{- $chartName := include "geoserver-api.name" . -}}
+{{- $deploymentName := include "deployment.fullname" . }}
+{{- $metrics := (include "common.metrics.merged" .) | fromYaml }}
+{{- $configmapName := include "configmap.fullname" . }}
+{{- $cloudProviderFlavor := include "geoserver-api.cloudProviderFlavor" . -}}
+{{- $cloudProviderDockerRegistryUrl := include "geoserver-api.cloudProviderDockerRegistryUrl" . -}}
+{{- $cloudProviderImagePullSecretName := include "geoserver-api.cloudProviderImagePullSecretName" . -}}
+{{- $imageTag := include "geoserver-api.tag" . -}}
+{{- $db := (include "common.db.merged" .) | fromYaml }}
+{{- $geoserver := (include "common.geoserver.merged" .) | fromYaml }}
+{{- $postgresSecretName := ternary $db.secrets.externalSecretName (printf "%s%s" .Release.Name "-postgres-secret") $db.secrets.useExternal -}}
+{{- $geoserverSecretName := ternary $geoserver.secrets.externalSecretName (printf "%s%s" .Release.Name "-geoserver-secret") $geoserver.secrets.useExternal -}}
+
 {{- if .Values.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ printf "%s-deployment" (include "ts-server-boilerplate.fullname" .) }}
+  name: {{ $deploymentName }}
   labels:
     app: {{ $chartName }}
     component: {{ $chartName }}
-    environment: {{ include "ts-server-boilerplate.environment" . }}
+    environment: {{ include "geoserver-api.environment" . }}
     release: {{ $releaseName }}
-    {{- include "ts-server-boilerplate.labels" . | nindent 4 }}
+    {{- include "geoserver-api.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
-  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   selector:
     matchLabels:
       app: {{ $chartName }}
       release: {{ $releaseName }}
       run: {{ $releaseName }}-{{ $chartName }}
-      {{- include "ts-server-boilerplate.selectorLabels" . | nindent 6 }}
+      {{- include "geoserver-api.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
         app: {{ $chartName }}
         release: {{ $releaseName }}
         run: {{ $releaseName }}-{{ $chartName }}
-        {{- include "ts-server-boilerplate.selectorLabels" . | nindent 8 }}
+        {{- include "geoserver-api.selectorLabels" . | nindent 8 }}
       annotations:
-      {{- if .Values.resetOnConfigChange }}
+        {{- if .Values.resetOnConfigChange }}
         checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-      {{- end }}
-      {{- if .Values.podAnnotations }}
-      {{- toYaml .Values.podAnnotations | nindent 8 }}
-      {{- end }}
+        {{- end }}
+        {{ if $metrics.enabled }}
+        prometheus.io/port: {{ $metrics.prometheus.port | quote }}
+        prometheus.io/scrape: {{ $metrics.prometheus.scrape | quote }}
+        {{- end }}
+        {{- if .Values.podAnnotations }}
+        {{- toYaml .Values.podAnnotations | nindent 8 }}
+        {{- end }}
     spec:
-      {{- include "ts-server-boilerplate.imagePullSecrets" . | nindent 6 }}
+    {{- if $cloudProviderImagePullSecretName }}
+      imagePullSecrets:
+        - name: {{ $cloudProviderImagePullSecretName | quote }}
+    {{- end }}
       containers:
-        - name: {{ $releaseName }}-{{ $chartName }}-deployment
-          image: {{ include "ts-server-boilerplate.image" . }}
-          {{- if .Values.command }}
-          command: 
-          {{- toYaml .Values.command | nindent 12 }}
-          {{- if .Values.args }}
-          args: 
-          {{- toYaml .Values.args | nindent 12 }}
-          {{- end }}
+        - name: {{ $chartName }}
+          {{- with .Values.image }}
+          image: {{ $cloudProviderDockerRegistryUrl }}{{ .repository }}:{{ $imageTag }}
           {{- end }}
           volumeMounts:
-            {{- if .Values.caSecretName }}
-            - mountPath: {{ printf "%s/%s" .Values.caPath .Values.caKey | quote }}
+            {{- if .Values.global.ca.secretName }}
+            - mountPath: {{ printf "%s/%s" .Values.global.ca.path .Values.global.ca.key | quote }}
               name: root-ca
-              subPath: {{ quote .Values.caKey }}
-            {{- end }}
-            {{- if .Values.extraVolumeMounts -}}
-              {{ toYaml .Values.extraVolumeMounts | nindent 12 }}
+              subPath: {{ quote .Values.global.ca.key }}
             {{- end }}
           env:
             - name: SERVER_PORT
               value: {{ .Values.env.targetPort | quote }}
-            {{- if .Values.caSecretName }}
+            {{- if .Values.global.ca.secretName }}
             - name: REQUESTS_CA_BUNDLE
-              value: {{ printf "%s/%s" .Values.caPath .Values.caKey | quote }}
+              value: {{ printf "%s/%s" .Values.global.ca.path .Values.global.ca.key | quote }}
             - name: NODE_EXTRA_CA_CERTS
-              value: {{ printf "[%s/%s]" .Values.caPath .Values.caKey | quote }}
+              value: {{ printf "%s/%s" .Values.global.ca.path .Values.global.ca.key | quote }}
             {{- end }}
-            {{- if .Values.extraEnvVars }}
-            {{- toYaml .Values.extraEnvVars | nindent 12 }}
-            {{- end }}            
+            - name: DATASTORE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $postgresSecretName }}
+                  key: username               
+            - name: DATASTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $postgresSecretName }}
+                  key: password
+            - name: GEOSERVER_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $geoserverSecretName }}
+                  key: GEOSERVER_USER 
+            - name: GEOSERVER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $geoserverSecretName }}
+                  key: GEOSERVER_PASS           
           envFrom:
             - configMapRef:
-                name: {{ printf "%s-configmap" (include "ts-server-boilerplate.fullname" .) }}
+                name: {{ $configmapName }}
           ports:
             - name: http
               containerPort: {{ .Values.env.targetPort }}
               protocol: {{ .Values.env.protocol }}
-          {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
-            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
-            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
             httpGet:
               path: {{ .Values.livenessProbe.path }}
               port: {{ .Values.env.targetPort }}
-          {{- end }}
-          {{- if .Values.readinessProbe.enabled }}
-          readinessProbe:
-            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
-            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
-            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
-            httpGet:
-              path: {{ .Values.readinessProbe.path }}
-              port: {{ .Values.env.targetPort }}
-          {{- end }}        
           {{- if .Values.resources.enabled }}
           resources:
             {{- toYaml .Values.resources.value | nindent 12 }}
           {{- end }}
-        {{- if .Values.sidecars }}
-        {{ tpl (toYaml .Values.sidecars) . | nindent 8 }}
-        {{- end }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
       volumes:
-        - name: nginx-config
-          configMap:
-            name: 'nginx-extra-configmap'      
-        {{- if .Values.caSecretName }}
+        {{- if .Values.global.ca.secretName }}
         - name: root-ca
           secret:
-            secretName: {{ .Values.caSecretName }}
+            secretName: {{ .Values.global.ca.secretName }}
         {{- end }}
-        {{- if .Values.extraVolumes -}}
-          {{ tpl (toYaml .Values.extraVolumes) . | nindent 8 }}
-        {{- end }}   
 {{- end -}}

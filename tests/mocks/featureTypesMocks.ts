@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { srs } from '../../src/utils/featureConstants';
 
 export const geoserverFeatureTypesListAllResponseMock = {
   list: {
@@ -56,20 +57,20 @@ export const geoserverGetFeatureTypeResponseMock = {
     keywords: {
       string: ['features', 'polygon_parts'],
     },
-    srs: 'EPSG:4326',
+    srs: srs,
     nativeBoundingBox: {
       minx: -180,
       maxx: 180,
       miny: -90,
       maxy: 90,
-      crs: 'EPSG:4326',
+      crs: srs,
     },
     latLonBoundingBox: {
       minx: -180,
       maxx: 180,
       miny: -90,
       maxy: 90,
-      crs: 'EPSG:4326',
+      crs: srs,
     },
     projectionPolicy: 'FORCE_DECLARED',
     enabled: false,
@@ -234,12 +235,12 @@ export const geoserverGetFeatureTypeResponseMock = {
           source: 'description',
         },
         {
-          name: 'geometry',
+          name: 'footprint',
           minOccurs: 1,
           maxOccurs: 1,
           nillable: false,
           binding: 'org.locationtech.jts.geom.Polygon',
-          source: 'geometry',
+          source: 'footprint',
         },
       ],
     },
@@ -249,7 +250,7 @@ export const geoserverGetFeatureTypeResponseMock = {
 export const getFeatureTypeResponseMock = {
   name: 'bestFeature',
   enabled: false,
-  srs: 'EPSG:4326',
+  srs: srs,
   tableName: 'bestStore',
   maxFeatures: 0,
   attributes: {
@@ -398,12 +399,12 @@ export const getFeatureTypeResponseMock = {
         source: 'description',
       },
       {
-        name: 'geometry',
+        name: 'footprint',
         minOccurs: 1,
         maxOccurs: 1,
         nillable: false,
         binding: 'org.locationtech.jts.geom.Polygon',
-        source: 'geometry',
+        source: 'footprint',
       },
     ],
   },
@@ -413,20 +414,20 @@ export const geoserverPostFeatureTypeRequestMock = {
   featureType: {
     name: 'best_feature',
     nativeName: 'best_feature',
-    srs: 'EPSG:4326',
+    srs: srs,
     nativeBoundingBox: {
       minx: -180,
       maxx: 180,
       miny: -90,
       maxy: 90,
-      crs: 'EPSG:4326',
+      crs: srs,
     },
     latLonBoundingBox: {
       minx: -180,
       maxx: 180,
       miny: -90,
       maxy: 90,
-      crs: 'EPSG:4326',
+      crs: srs,
     },
     attributes: {
       attribute: [
@@ -574,12 +575,12 @@ export const geoserverPostFeatureTypeRequestMock = {
           source: 'description',
         },
         {
-          name: 'geometry',
+          name: 'footprint',
           minOccurs: 1,
           maxOccurs: 1,
           nillable: false,
           binding: 'org.locationtech.jts.geom.Polygon',
-          source: 'geometry',
+          source: 'footprint',
         },
       ],
     },

@@ -1,22 +1,36 @@
-{{- $tracingUrl := include "ts-server-boilerplate.tracingUrl" . -}}
-{{- $metricsUrl := include "ts-server-boilerplate.metricsUrl" . -}}
+{{- $chartName := include "geoserver-api.name" . -}}
+{{- $tracing := (include "common.tracing.merged" .) | fromYaml }}
+{{- $metrics := (include "common.metrics.merged" .) | fromYaml }}
+{{- $configmapName := include "configmap.fullname" . }}
+{{- $serviceUrls := (include "common.serviceUrls.merged" .) | fromYaml }}
+{{- $db := (include "common.db.merged" .) | fromYaml }}
 {{- if .Values.enabled -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ printf "%s-configmap" (include "ts-server-boilerplate.fullname" .) }}
+  name: {{ $configmapName  }}
 data:
   REQUEST_PAYLOAD_LIMIT: {{ .Values.env.requestPayloadLimit | quote }}
   RESPONSE_COMPRESSION_ENABLED: {{ .Values.env.responseCompressionEnabled | quote }}
   LOG_LEVEL: {{ .Values.env.logLevel | quote }}
   LOG_PRETTY_PRINT_ENABLED: {{ .Values.env.logPrettyPrintEnabled | quote }}
-  {{ if .Values.env.tracing.enabled }}
-  TELEMETRY_TRACING_ENABLED: 'true'
-  TELEMETRY_TRACING_URL: {{ $tracingUrl }}
+  HTTP_RETRY_ATTEMPTS: {{ .Values.env.httpRetry.attempts | quote }}
+  HTTP_RETRY_DELAY: {{ .Values.env.httpRetry.delay | quote }}
+  HTTP_RETRY_RESET_TIMEOUT: {{ .Values.env.httpRetry.resetTimeout | quote }}
+  DISABLE_HTTP_CLIENT_LOGS: {{ .Values.env.disableHttpClientLogs | quote }}
+  TELEMETRY_TRACING_ENABLED: {{ $tracing.enabled | quote }}
+  {{ if $tracing.enabled }}
+  TELEMETRY_TRACING_URL: {{ $tracing.url }}
   {{ end }}
-  {{ if .Values.env.metrics.enabled }}
-  TELEMETRY_METRICS_ENABLED: 'true'
-  TELEMETRY_METRICS_URL: {{ $metricsUrl }}
+  {{ if $metrics.enabled }}
+  TELEMETRY_METRICS_ENABLED: {{ $metrics.enabled | quote }}
+  TELEMETRY_METRICS_URL: {{ $metrics.url }}
   {{ end }}
-  npm_config_cache: /tmp/
+  GEOSERVER_URL: {{ $serviceUrls.geoserverUrl }}
+  DATASTORE_HOST: {{ $db.host }}
+  DATASTORE_PORT: {{ $db.port | quote }}
+  DATASTORE_SCHEMA: {{ $db.schema }}
+  DATASTORE_NAME: {{ $db.name }}
+  DATASTORE_TYPE: {{ $db.dbType }}
+  DATASTORE_SSL_MODE: {{ $db.sslEnabled | ternary "ALLOW" "DISABLE"}}
 {{- end }}

@@ -1,17 +1,17 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: ts-server-boilerplate
-  description: A boilerplate github repo for a REST API service in NodeJS for MapColonies
+  name: geoserver-api
+  description: A geoserver-api github repo for a REST API service in NodeJS for MapColonies
   annotations:
-    github.com/project-slug: MapColonies/ts-server-boilerplate
+    github.com/project-slug: MapColonies/geoserver-api
   tags:
     - nodejs
     - typescript
     - expressjs
-    - boilerplate
+    - geoserver-api
 spec:
   type: service
   lifecycle: production
   owner: DevInfra
-  system: boilerplate
+  system: geoserver-api
