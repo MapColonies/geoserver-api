@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: Polygon Parts Geoserver API
   description: Unified REST API access to geoserver administration
-  version: 1.0.0
+  version: 1.1.0
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
@@ -14,19 +14,19 @@ paths:
         - workspaces
       summary: Get list of all workspace names
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Workspaces'
-        401:
+        '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        500:
+        '500':
           description: Internal Server Error
           content:
             application/json:
@@ -51,15 +51,15 @@ paths:
                   type: string
                   description: workspace name
       responses:
-        201:
+        '201':
           description: Created
-        409:
+        '409':
           description: Duplication Conflict
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        500:
+        '500':
           description: Internal Server Error
           content:
             application/json:
@@ -78,19 +78,19 @@ paths:
             type: string
           required: true
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/WorkspaceInfo'
-        404:
+        '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        500:
+        '500':
           description: Internal Server Error
           content:
             application/json:
@@ -113,7 +113,7 @@ paths:
             type: boolean
             default: false
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
@@ -123,24 +123,24 @@ paths:
                   message:
                     type: string
               example:
-                message: 'OK'
-        404:
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                message: 'No such workspace'
-        403:
+                message: OK
+        '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                message: 'Workspace or is not empty'
-        500:
+                message: Workspace or is not empty
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: No such workspace
+        '500':
           description: Internal Server Error
           content:
             application/json:
@@ -164,29 +164,29 @@ paths:
             type: string
           required: true
       responses:
-        200:
+        '200':
           description: Modified
-        404:
+        '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                message: 'No such workspace'
-        405:
+                message: No such workspace
+        '405':
           description: Method Not Allowed
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        409:
+        '409':
           description: Conflict
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        500:
+        '500':
           description: Internal Server Error
           content:
             application/json:
@@ -205,19 +205,19 @@ paths:
             type: string
           required: true
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DataStores'
-        404:
+        '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        500:
+        '500':
           description: Internal Server Error
           content:
             application/json:
@@ -243,23 +243,23 @@ paths:
               allOf:
                 - $ref: '#/components/schemas/DataStoreReq'
       responses:
-        201:
+        '201':
           description: Created
-        400:
+        '400':
           description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        404:
+        '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                message: 'No such dataStore'
-        500:
+                message: No such dataStore
+        '500':
           description: Internal Server Error
           content:
             application/json:
@@ -283,7 +283,7 @@ paths:
             type: string
           required: true
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
@@ -297,14 +297,14 @@ paths:
                 dbName: postgres
                 dbType: postgis
                 sslMode: DISABLE
-                dateCreated: '2024-09-11 06:44:11.551 UTC'
-        404:
+                dateCreated: 2024-09-11 06:44:11.551 UTC
+        '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        500:
+        '500':
           description: Internal Server Error
           content:
             application/json:
@@ -335,29 +335,28 @@ paths:
               allOf:
                 - $ref: '#/components/schemas/DataStoreReq'
       responses:
-        200:
+        '200':
           description: Modified
-        400:
+        '400':
           description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        404:
+        '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                message: 'No such dataStore'
-        500:
+                message: No such dataStore
+        '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
     delete:
       operationId: deleteDataStoreEntity
       tags:
@@ -380,7 +379,7 @@ paths:
             type: boolean
             default: false
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
@@ -390,16 +389,8 @@ paths:
                   message:
                     type: string
               example:
-                message: 'OK'
-        404:
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                message: 'No such dataStore'
-        403:
+                message: OK
+        '403':
           description: Forbidden
           content:
             application/json:
@@ -407,7 +398,15 @@ paths:
                 $ref: '#/components/schemas/Error'
               example:
                 message: 'dataStore is not empty '
-        500:
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                message: No such dataStore
+        '500':
           description: Internal Server Error
           content:
             application/json:
@@ -434,10 +433,14 @@ paths:
           name: list
           schema:
             type: string
-            enum: [all, configured, available, available_with_geom]
+            enum:
+              - all
+              - configured
+              - available
+              - available_with_geom
             default: all
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
@@ -445,13 +448,13 @@ paths:
                 oneOf:
                   - $ref: '#/components/schemas/NameLinkResponse'
                   - $ref: '#/components/schemas/NameResponse'
-        404:
+        '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        500:
+        '500':
           description: Internal Server Error
           content:
             application/json:
@@ -481,21 +484,21 @@ paths:
             type: string
           required: true
       responses:
-        201:
+        '201':
           description: Created
-        422:
-          description: Unprocessable Content
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        409:
+        '409':
           description: Conflict
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        500:
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
           description: Internal Server Error
           content:
             application/json:
@@ -524,19 +527,19 @@ paths:
             type: string
           required: true
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/FeatureTypeInfo'
-        404:
+        '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        500:
+        '500':
           description: Internal Server Error
           content:
             application/json:
@@ -569,7 +572,7 @@ paths:
             type: boolean
             default: false
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
@@ -579,20 +582,20 @@ paths:
                   message:
                     type: string
               example:
-                message: 'OK'
-        404:
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        403:
+                message: OK
+        '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        500:
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
           description: Internal Server Error
           content:
             application/json:
@@ -644,12 +647,19 @@ components:
           type: string
         dbType:
           type: string
-          enum: [postgis]
+          enum:
+            - postgis
         dbName:
           type: string
         sslMode:
           type: string
-          enum: [DISABLE, ALLOW, PREFER, REQUIRE, VERIFY_CA, VERIFY_FULL]
+          enum:
+            - DISABLE
+            - ALLOW
+            - PREFER
+            - REQUIRE
+            - VERIFY_CA
+            - VERIFY_FULL
     DataStoreReq:
       type: object
       required:
@@ -683,7 +693,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/attribute'
-
     attribute:
       type: object
       properties:
@@ -711,7 +720,6 @@ components:
         required:
           - name
           - link
-
     NameResponse:
       type: array
       items:
@@ -721,7 +729,6 @@ components:
             type: string
         required:
           - name
-
     Error:
       type: object
       required:
