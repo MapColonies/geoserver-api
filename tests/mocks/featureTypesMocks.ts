@@ -56,20 +56,20 @@ export const geoserverGetFeatureTypeResponseMock = {
     keywords: {
       string: ['features', 'polygon_parts'],
     },
-    srs: 'EPSG:4326',
+    srs: 'urn:ogc:def:crs:EPSG::4326',
     nativeBoundingBox: {
       minx: -180,
       maxx: 180,
       miny: -90,
       maxy: 90,
-      crs: 'EPSG:4326',
+      crs: 'urn:ogc:def:crs:EPSG::4326',
     },
     latLonBoundingBox: {
       minx: -180,
       maxx: 180,
       miny: -90,
       maxy: 90,
-      crs: 'EPSG:4326',
+      crs: 'urn:ogc:def:crs:EPSG::4326',
     },
     projectionPolicy: 'FORCE_DECLARED',
     enabled: false,
@@ -249,7 +249,7 @@ export const geoserverGetFeatureTypeResponseMock = {
 export const getFeatureTypeResponseMock = {
   name: 'bestFeature',
   enabled: false,
-  srs: 'EPSG:4326',
+  srs: 'urn:ogc:def:crs:EPSG::4326',
   tableName: 'bestStore',
   maxFeatures: 0,
   attributes: {
@@ -413,20 +413,20 @@ export const geoserverPostFeatureTypeRequestMock = {
   featureType: {
     name: 'best_feature',
     nativeName: 'best_feature',
-    srs: 'EPSG:4326',
+    srs: 'urn:ogc:def:crs:EPSG::4326',
     nativeBoundingBox: {
       minx: -180,
       maxx: 180,
       miny: -90,
       maxy: 90,
-      crs: 'EPSG:4326',
+      crs: 'urn:ogc:def:crs:EPSG::4326',
     },
     latLonBoundingBox: {
       minx: -180,
       maxx: 180,
       miny: -90,
       maxy: 90,
-      crs: 'EPSG:4326',
+      crs: 'urn:ogc:def:crs:EPSG::4326',
     },
     attributes: {
       attribute: [
