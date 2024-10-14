@@ -120,7 +120,7 @@ export const attributesMapping = [
     maxOccurs: 1,
     nillable: false,
     binding: 'java.lang.Float',
-    source: 'horizontal_accuracy_ce_90',
+    source: 'horizontal_accuracy_ce90',
   },
   {
     name: 'sensors',
