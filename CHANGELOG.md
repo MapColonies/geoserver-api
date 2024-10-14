@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/MapColonies/geoserver-api/compare/v1.1.0...v1.1.1) (2024-10-14)
+
+
+### Bug Fixes
+
+* feature attributes ([b7d1bba](https://github.com/MapColonies/geoserver-api/commit/b7d1bbab3acc8d64d1b13a37f9cea053fa8658d6))
+* handle empty response of workspaces and dataStores ([7293dc8](https://github.com/MapColonies/geoserver-api/commit/7293dc862d2a3af4e0692ff041360e7e5297078f))
+
 ## 1.1.0 (2024-10-08)
 
 
