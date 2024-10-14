@@ -6,6 +6,7 @@ import { WorkspacesManager } from '../../../../src/workspaces/models/workspacesM
 import { GeoserverClient } from '../../../../src/serviceClients/geoserverClient';
 import { configMock, registerDefaultConfig, clear as clearConfig } from '../../../mocks/configMock';
 import {
+  geoserverEmptyWorkspacesResponseMock,
   geoserverGetWorkspaceResponseMock,
   geoserverWorkspacesResponseMock,
   getWorkspaceResponseMock,
@@ -38,6 +39,13 @@ describe('WorkspacesManager', () => {
       const workspaces = await workspacesManager.getWorkspaces();
 
       expect(workspaces).toEqual(getWorkspacesResponseMock);
+    });
+
+    it('should return an empty array of when there are no workspaces', async function () {
+      nock(geoserverUrl).get('/workspaces').reply(200, geoserverEmptyWorkspacesResponseMock);
+      const workspaces = await workspacesManager.getWorkspaces();
+
+      expect(workspaces).toEqual([]);
     });
   });
 

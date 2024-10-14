@@ -14,6 +14,10 @@ export const geoserverDataStoresResponseMock = {
   },
 };
 
+export const geoserverEmptyDataStoresResponseMock = {
+  dataStores: {},
+};
+
 export const getDataStoresResponseMock = [
   {
     name: 'test_polygon_parts',

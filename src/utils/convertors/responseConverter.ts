@@ -10,17 +10,21 @@ import { DataStore, GetDataStoreResponse, GetFeatureTypeResponse, GetFeatureType
 
 /* This file contains functions that converts outputs from the Geo server to the response output the api expects to receive */
 export const workspaceResponseConverter = (geoserverResponse: GeoserverGetWorkspacesResponse): Workspace[] => {
-  return geoserverResponse.workspaces.workspace.map((ws) => ({
-    name: ws.name,
-    link: ws.href,
-  }));
+  return geoserverResponse.workspaces.workspace
+    ? geoserverResponse.workspaces.workspace.map((ws) => ({
+        name: ws.name,
+        link: ws.href,
+      }))
+    : [];
 };
 
 export const dataStoresResponseConverter = (geoserverResponse: GeoserverGetDataStoresResponse): DataStore[] => {
-  return geoserverResponse.dataStores.dataStore.map((ds) => ({
-    name: ds.name,
-    link: ds.href,
-  }));
+  return geoserverResponse.dataStores.dataStore
+    ? geoserverResponse.dataStores.dataStore.map((ds) => ({
+        name: ds.name,
+        link: ds.href,
+      }))
+    : [];
 };
 
 export const featureTypesResponseConverter = (

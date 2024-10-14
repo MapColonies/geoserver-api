@@ -13,6 +13,10 @@ export const geoserverWorkspacesResponseMock = {
   },
 };
 
+export const geoserverEmptyWorkspacesResponseMock = {
+  workspaces: {},
+};
+
 export const getWorkspacesResponseMock = [
   {
     name: 'polygon_parts_new',
