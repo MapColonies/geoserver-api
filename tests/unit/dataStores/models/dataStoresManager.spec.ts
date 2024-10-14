@@ -9,6 +9,7 @@ import { WorkspacesManager } from '../../../../src/workspaces/models/workspacesM
 import {
   createDataStoreBody,
   geoserverDataStoresResponseMock,
+  geoserverEmptyDataStoresResponseMock,
   geoserverGetDataStoreResponseMock,
   getDataStoreResponseMock,
   getDataStoresResponseMock,
@@ -40,11 +41,18 @@ describe('DataStoresManager', () => {
   });
 
   describe('get dataStores', () => {
-    it('should return an array of dataStore', async function () {
+    it('should return an array of dataStores', async function () {
       nock(geoserverUrl).get('/workspaces/test/datastores').reply(200, geoserverDataStoresResponseMock);
       const datsStores = await dataStoresManager.getDataStores('test');
 
       expect(datsStores).toEqual(getDataStoresResponseMock);
+    });
+
+    it('should return an empty array when there are no dataStores', async function () {
+      nock(geoserverUrl).get('/workspaces/test/datastores').reply(200, geoserverEmptyDataStoresResponseMock);
+      const datsStores = await dataStoresManager.getDataStores('test');
+
+      expect(datsStores).toEqual([]);
     });
   });
 

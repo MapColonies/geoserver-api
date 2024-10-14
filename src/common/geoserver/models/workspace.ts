@@ -5,7 +5,7 @@ export interface GeoserverWorkspace {
 
 export interface GeoserverGetWorkspacesResponse {
   workspaces: {
-    workspace: GeoserverWorkspace[];
+    workspace?: GeoserverWorkspace[];
   };
 }
 

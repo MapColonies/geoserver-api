@@ -7,7 +7,7 @@ interface GeoserverDataStores {
 
 export interface GeoserverGetDataStoresResponse {
   dataStores: {
-    dataStore: GeoserverDataStores[];
+    dataStore?: GeoserverDataStores[];
   };
 }
 
