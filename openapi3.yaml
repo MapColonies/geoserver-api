@@ -601,6 +601,55 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /wfsMode:
+    get:
+      operationId: getWfsMode
+      tags:
+        - WfsMode
+      summary: Get Current Wfs Mode
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      operationId: updateWfsMode
+      tags:
+        - WfsMode
+      summary: Update Wfs Mode
+      requestBody:
+        description: A json object containing desired details to update on layer
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/wfsMode'
+      responses:
+        '200':
+          description: Modified
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 components:
   schemas:
     Workspaces:
@@ -729,6 +778,12 @@ components:
             type: string
         required:
           - name
+    wfsMode:
+      type: object
+      properties:
+        serviceLevel:
+          type: string
+          enum: [BASIC, TRANSACTIONAL, COMPLETE]
     Error:
       type: object
       required:

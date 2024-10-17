@@ -1,4 +1,4 @@
-import { ListParam } from './enums';
+import { ListParam, WfsServiceLevel } from './enums';
 import { GeoserverGetDataStoreResponse } from './geoserver/models/dataStore';
 import { GeoserverFeatureTypeResponse } from './geoserver/models/featureType';
 import { GeoserverGetWorkspaceResponse } from './geoserver/models/workspace';
@@ -104,4 +104,8 @@ export type GetFeatureTypeResponse = Pick<GeoserverFeatureTypeResponse['featureT
 export interface FeatureTypeBodyRequest {
   nativeName: string; // table name
   name?: string; // display name
+}
+
+export interface WfsMode {
+  serviceLevel: WfsServiceLevel;
 }

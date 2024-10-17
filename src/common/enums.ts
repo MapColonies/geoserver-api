@@ -17,3 +17,9 @@ export enum ListParam {
   AVAILABLE = 'available',
   AVAILABLE_WITH_GEOM = 'available_with_geom',
 }
+
+export enum WfsServiceLevel {
+  BASIC = 'BASIC',
+  TRANSACTIONAL = 'TRANSACTIONAL',
+  COMPLETE = 'COMPLETE',
+}
