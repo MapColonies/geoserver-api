@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { WfsServiceLevel } from '../../common/enums';
 import { GeoServerCreateDataStoreRequest, GeoServerUpdateDataStoreRequest } from '../../common/geoserver/models/dataStore';
 import { GeoServerCreateFeatureRequest } from '../../common/geoserver/models/featureType';
+import { GeoserverWfsModeRequest } from '../../common/geoserver/models/wfsMode';
 import { GeoserverWorkspaceRequest } from '../../common/geoserver/models/workspace';
 import { ConnectionParams, DataStoreBodyRequest, FeatureTypeBodyRequest } from '../../common/interfaces';
 import { attributesMapping, boundingBox, srs } from '../featureConstants';
@@ -58,6 +60,14 @@ export const postFeatureTypeRequestConverter = (request: FeatureTypeBodyRequest)
       nativeBoundingBox: boundingBox,
       latLonBoundingBox: boundingBox,
       attributes: { attribute: attributesMapping },
+    },
+  };
+};
+
+export const updateWfsModeRequestConverter = (mode: WfsServiceLevel): GeoserverWfsModeRequest => {
+  return {
+    wfs: {
+      serviceLevel: mode,
     },
   };
 };

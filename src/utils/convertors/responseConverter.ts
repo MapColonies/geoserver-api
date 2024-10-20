@@ -1,12 +1,13 @@
-import { ListParam } from '../../common/enums';
+import { ListParam, WfsServiceLevel } from '../../common/enums';
 import { GeoserverGetDataStoreResponse, GeoserverGetDataStoresResponse } from '../../common/geoserver/models/dataStore';
 import {
   GeoserverFeatureTypeResponse,
   GeoserverGetConfiguredFeatureTypesResponse,
   GeoserverGetFeatureTypesResponse,
 } from '../../common/geoserver/models/featureType';
+import { GeoServerGetWfsModeResponse } from '../../common/geoserver/models/wfsMode';
 import { GeoserverGetWorkspacesResponse } from '../../common/geoserver/models/workspace';
-import { DataStore, GetDataStoreResponse, GetFeatureTypeResponse, GetFeatureTypesResponse, Workspace } from '../../common/interfaces';
+import { DataStore, GetDataStoreResponse, GetFeatureTypeResponse, GetFeatureTypesResponse, WfsMode, Workspace } from '../../common/interfaces';
 
 /* This file contains functions that converts outputs from the Geo server to the response output the api expects to receive */
 export const workspaceResponseConverter = (geoserverResponse: GeoserverGetWorkspacesResponse): Workspace[] => {
@@ -80,5 +81,18 @@ export const featureTypeResponseConverter = (geoserverResponse: GeoserverFeature
     maxFeatures,
     attributes,
     tableName: nativeName, // Mapping nativeName to tableName
+  };
+};
+
+export const getWfsModeResponseConverter = (geoserverResponse: GeoServerGetWfsModeResponse): WfsMode => {
+  const { serviceLevel } = geoserverResponse.wfs;
+
+  // Validate the serviceLevel is a valid WfsServiceLevel
+  if (!Object.values(WfsServiceLevel).includes(serviceLevel as WfsServiceLevel)) {
+    throw new Error(`Invalid service level: ${serviceLevel}`);
+  }
+
+  return {
+    serviceLevel: serviceLevel as WfsServiceLevel,
   };
 };
