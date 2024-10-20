@@ -610,6 +610,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/wfsMode'
         '401':
           description: Unauthorized
           content:
