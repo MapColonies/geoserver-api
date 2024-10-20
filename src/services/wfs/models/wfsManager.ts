@@ -2,16 +2,16 @@ import { Logger } from '@map-colonies/js-logger';
 import { inject, injectable } from 'tsyringe';
 import { Tracer } from '@opentelemetry/api';
 import { withSpanAsyncV4 } from '@map-colonies/telemetry';
-import { SERVICES } from '../../common/constants';
-import { IConfig, WfsMode } from '../../common/interfaces';
-import { GeoserverClient } from '../../serviceClients/geoserverClient';
-import { WfsServiceLevel } from '../../common/enums';
-import { updateWfsModeRequestConverter } from '../../utils/convertors/requestConverter';
-import { GeoServerGetWfsModeResponse } from '../../common/geoserver/models/wfsMode';
-import { getWfsModeResponseConverter } from '../../utils/convertors/responseConverter';
+import { SERVICES } from '../../../common/constants';
+import { IConfig, WfsMode } from '../../../common/interfaces';
+import { GeoserverClient } from '../../../serviceClients/geoserverClient';
+import { WfsServiceLevel } from '../../../common/enums';
+import { updateWfsModeRequestConverter } from '../../../utils/convertors/requestConverter';
+import { GeoServerGetWfsModeResponse } from '../../../common/geoserver/models/wfsMode';
+import { getWfsModeResponseConverter } from '../../../utils/convertors/responseConverter';
 
 @injectable()
-export class WfsModeManager {
+export class WfsManager {
   public constructor(
     @inject(SERVICES.LOGGER) private readonly logger: Logger,
     @inject(SERVICES.CONFIG) private readonly config: IConfig,

@@ -13,7 +13,7 @@ import { IConfig } from './common/interfaces';
 import { WORKSPACES_ROUTER_SYMBOL } from './workspaces/routes/workspacesRouter';
 import { DATASTORES_ROUTER_SYMBOL } from './dataStores/routes/dataStoresRouter';
 import { FEATURETYPES_ROUTER_SYMBOL } from './featureTypes/routes/featureTypesRouter';
-import { WFSMODE_ROUTER_SYMBOL } from './wfsMode/routes/wfsModeRouter';
+import { WFS_ROUTER_SYMBOL } from './services/wfs/routes/wfsRouter';
 
 @injectable()
 export class ServerBuilder {
@@ -25,7 +25,7 @@ export class ServerBuilder {
     @inject(WORKSPACES_ROUTER_SYMBOL) private readonly workspacesRouter: Router,
     @inject(DATASTORES_ROUTER_SYMBOL) private readonly dataStoresRouter: Router,
     @inject(FEATURETYPES_ROUTER_SYMBOL) private readonly featureTypesRouter: Router,
-    @inject(WFSMODE_ROUTER_SYMBOL) private readonly wfsModeRouter: Router
+    @inject(WFS_ROUTER_SYMBOL) private readonly wfsModeRouter: Router
   ) {
     this.serverInstance = express();
   }
@@ -51,7 +51,7 @@ export class ServerBuilder {
     this.serverInstance.use('/workspaces', this.workspacesRouter);
     this.serverInstance.use('/dataStores', this.dataStoresRouter);
     this.serverInstance.use('/featureTypes', this.featureTypesRouter);
-    this.serverInstance.use('/wfsMode', this.wfsModeRouter);
+    this.serverInstance.use('/services', this.wfsModeRouter);
     this.buildDocsRoutes();
   }
 

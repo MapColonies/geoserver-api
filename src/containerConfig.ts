@@ -10,7 +10,7 @@ import { workspacesRouterFactory, WORKSPACES_ROUTER_SYMBOL } from './workspaces/
 import { InjectionObject, registerDependencies } from './common/dependencyRegistration';
 import { DATASTORES_ROUTER_SYMBOL, dataStoresRouterFactory } from './dataStores/routes/dataStoresRouter';
 import { FEATURETYPES_ROUTER_SYMBOL, featureTypesRouterFactory } from './featureTypes/routes/featureTypesRouter';
-import { WFSMODE_ROUTER_SYMBOL, wfsModeRouterFactory } from './wfsMode/routes/wfsModeRouter';
+import { WFS_ROUTER_SYMBOL, wfsRouterFactory } from './services/wfs/routes/wfsRouter';
 
 export interface RegisterOptions {
   override?: InjectionObject<unknown>[];
@@ -34,7 +34,7 @@ export const registerExternalValues = (options?: RegisterOptions): DependencyCon
     { token: WORKSPACES_ROUTER_SYMBOL, provider: { useFactory: workspacesRouterFactory } },
     { token: DATASTORES_ROUTER_SYMBOL, provider: { useFactory: dataStoresRouterFactory } },
     { token: FEATURETYPES_ROUTER_SYMBOL, provider: { useFactory: featureTypesRouterFactory } },
-    { token: WFSMODE_ROUTER_SYMBOL, provider: { useFactory: wfsModeRouterFactory } },
+    { token: WFS_ROUTER_SYMBOL, provider: { useFactory: wfsRouterFactory } },
     {
       token: 'onSignal',
       provider: {

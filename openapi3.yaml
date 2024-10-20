@@ -601,7 +601,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /wfsMode:
+  /services/wfs/settings:
     get:
       operationId: getWfsMode
       tags:
