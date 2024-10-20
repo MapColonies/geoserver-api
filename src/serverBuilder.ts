@@ -25,7 +25,7 @@ export class ServerBuilder {
     @inject(WORKSPACES_ROUTER_SYMBOL) private readonly workspacesRouter: Router,
     @inject(DATASTORES_ROUTER_SYMBOL) private readonly dataStoresRouter: Router,
     @inject(FEATURETYPES_ROUTER_SYMBOL) private readonly featureTypesRouter: Router,
-    @inject(WFS_ROUTER_SYMBOL) private readonly wfsModeRouter: Router
+    @inject(WFS_ROUTER_SYMBOL) private readonly wfsRouter: Router
   ) {
     this.serverInstance = express();
   }
@@ -51,7 +51,7 @@ export class ServerBuilder {
     this.serverInstance.use('/workspaces', this.workspacesRouter);
     this.serverInstance.use('/dataStores', this.dataStoresRouter);
     this.serverInstance.use('/featureTypes', this.featureTypesRouter);
-    this.serverInstance.use('/services', this.wfsModeRouter);
+    this.serverInstance.use('/services', this.wfsRouter);
     this.buildDocsRoutes();
   }
 

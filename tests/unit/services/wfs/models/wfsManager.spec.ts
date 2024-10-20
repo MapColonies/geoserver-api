@@ -1,16 +1,16 @@
 import jsLogger from '@map-colonies/js-logger';
 import { trace } from '@opentelemetry/api';
 import nock from 'nock';
-import { GeoserverClient } from '../../../../src/serviceClients/geoserverClient';
-import { configMock, registerDefaultConfig, clear as clearConfig } from '../../../mocks/configMock';
-import { WfsManager } from '../../../../src/services/wfs/models/wfsManager';
+import { GeoserverClient } from '../../../../../src/serviceClients/geoserverClient';
+import { configMock, registerDefaultConfig, clear as clearConfig } from '../../../../mocks/configMock';
+import { WfsManager } from '../../../../../src/services/wfs/models/wfsManager';
 import {
   GeoServerGetWfsModeResponse,
   GeoServerGetWfsModeResponseModified,
   getWfsModeResponse,
   putWfsModeRequest,
   updateWfsModeBody,
-} from '../../../mocks/wfsModeMocks';
+} from '../../../../mocks/wfsModeMocks';
 
 describe('wfsManager', () => {
   let wfsManager: WfsManager;
