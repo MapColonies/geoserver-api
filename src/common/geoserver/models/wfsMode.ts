@@ -10,11 +10,7 @@ export interface GeoServerGetWfsModeResponse {
   wfs: {
     enabled: boolean;
     name: string;
-    versions: {
-      'org.geotools.util.Version': {
-        version: string;
-      }[];
-    };
+    versions: Record<string, Record<string, string>[]>;
     citeCompliant: boolean;
     schemaBaseURL: string;
     verbose: boolean;
@@ -23,10 +19,7 @@ export interface GeoServerGetWfsModeResponse {
     };
     gml: {
       version: string;
-      gml: {
-        srsNameStyle: string;
-        overrideGMLAttributes: boolean;
-      };
+      gml: Record<string, string>;
     }[];
     serviceLevel: string;
     maxFeatures: number;

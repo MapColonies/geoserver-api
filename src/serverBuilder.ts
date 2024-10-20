@@ -51,6 +51,7 @@ export class ServerBuilder {
     this.serverInstance.use('/workspaces', this.workspacesRouter);
     this.serverInstance.use('/dataStores', this.dataStoresRouter);
     this.serverInstance.use('/featureTypes', this.featureTypesRouter);
+    this.serverInstance.use('/wfsMode', this.wfsModeRouter);
     this.buildDocsRoutes();
   }
 

@@ -7,6 +7,8 @@ import { IConfig, WfsMode } from '../../common/interfaces';
 import { GeoserverClient } from '../../serviceClients/geoserverClient';
 import { WfsServiceLevel } from '../../common/enums';
 import { updateWfsModeRequestConverter } from '../../utils/convertors/requestConverter';
+import { GeoServerGetWfsModeResponse } from '../../common/geoserver/models/wfsMode';
+import { getWfsModeResponseConverter } from '../../utils/convertors/responseConverter';
 
 @injectable()
 export class WfsModeManager {
@@ -20,8 +22,8 @@ export class WfsModeManager {
   @withSpanAsyncV4
   public async getWfsMode(): Promise<WfsMode> {
     this.logger.info({ msg: 'getting wfsMode' });
-    const geoserverResponse = await this.geoserverManager.getRequest<>('services/wfs/settings');
-    const response = workspaceResponseConverter(geoserverResponse);
+    const geoserverResponse = await this.geoserverManager.getRequest<GeoServerGetWfsModeResponse>('services/wfs/settings');
+    const response = getWfsModeResponseConverter(geoserverResponse);
     return response;
   }
 
