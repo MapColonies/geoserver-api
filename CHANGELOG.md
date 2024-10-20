@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/MapColonies/geoserver-api/compare/v1.1.1...v1.2.0) (2024-10-20)
+
+
+### Features
+
+* add wfs mode route ([7f1dfad](https://github.com/MapColonies/geoserver-api/commit/7f1dfadc18300b054d80b74be180c5b12729322d))
+
+
+### Bug Fixes
+
+* get response in openapi ([76bc6ae](https://github.com/MapColonies/geoserver-api/commit/76bc6ae2e9fe402489c85a40e0d1ff9e7f27a299))
+* pr change ([13c6af2](https://github.com/MapColonies/geoserver-api/commit/13c6af2bc7ab9c762efdee7152db1c480b0743ba))
+* route change ([077b61b](https://github.com/MapColonies/geoserver-api/commit/077b61b5e1252a49bc7aeb31d571340e0efb0510))
+
 ### [1.1.1](https://github.com/MapColonies/geoserver-api/compare/v1.1.0...v1.1.1) (2024-10-14)
 
 

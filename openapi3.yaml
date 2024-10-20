@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: Polygon Parts Geoserver API
   description: Unified REST API access to geoserver administration
-  version: 1.1.1
+  version: 1.2.0
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
@@ -653,7 +653,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
 components:
   schemas:
     Workspaces:
@@ -787,7 +786,10 @@ components:
       properties:
         serviceLevel:
           type: string
-          enum: [BASIC, TRANSACTIONAL, COMPLETE]
+          enum:
+            - BASIC
+            - TRANSACTIONAL
+            - COMPLETE
     Error:
       type: object
       required:
