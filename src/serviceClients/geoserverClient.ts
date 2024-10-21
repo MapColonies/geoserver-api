@@ -24,7 +24,7 @@ export class GeoserverClient extends HttpClient {
   ) {
     super(
       logger,
-      config.get<string>('geoserver.url') + '/rest',
+      `${config.get<string>('geoserver.url')}/rest`,
       'GeoServer',
       config.get<IHttpRetryConfig>('httpRetry'),
       config.get<boolean>('disableHttpClientLogs')
