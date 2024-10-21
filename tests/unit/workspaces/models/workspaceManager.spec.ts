@@ -19,7 +19,7 @@ describe('WorkspacesManager', () => {
   let geoserverManager: GeoserverClient;
   const testTracer = trace.getTracer('testTracer');
   registerDefaultConfig();
-  const geoserverUrl = configMock.get<string>('geoserver.url');
+  const geoserverUrl = `${configMock.get<string>('geoserver.url')}/rest`;
 
   beforeEach(function () {
     registerDefaultConfig();

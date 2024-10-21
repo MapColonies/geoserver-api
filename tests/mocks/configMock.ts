@@ -67,7 +67,7 @@ const registerDefaultConfig = (): void => {
       },
     },
     geoserver: {
-      url: 'http://localhost:8080/geoserver/rest',
+      url: 'http://localhost:8080/geoserver',
       auth: {
         username: 'kartoza',
         password: 'myawesomegeoserver',
