@@ -14,7 +14,7 @@ import { getTestContainerConfig, resetContainer } from './helpers/containerConfi
 describe('Workspaces', function () {
   let requestSender: WorkspaceRequestSender;
   registerDefaultConfig();
-  const geoserverUrl = configMock.get<string>('geoserver.url');
+  const geoserverUrl = `${configMock.get<string>('geoserver.url')}/rest`;
 
   beforeEach(function () {
     const app = getApp({
