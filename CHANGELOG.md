@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/MapColonies/geoserver-api/compare/v1.2.0...v1.2.1) (2024-10-22)
+
+
+### Bug Fixes
+
+* readability ([1b49251](https://github.com/MapColonies/geoserver-api/commit/1b492513a607f3b91a5e73fc46ff7e0792efa6aa))
+* rest url change ([a70277d](https://github.com/MapColonies/geoserver-api/commit/a70277db3e9b5981d5262421a1f6a6e390b7dea4))
+
 ## [1.2.0](https://github.com/MapColonies/geoserver-api/compare/v1.1.1...v1.2.0) (2024-10-20)
 
 
