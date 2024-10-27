@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.2](https://github.com/MapColonies/geoserver-api/compare/v1.2.1...v1.2.2) (2024-10-27)
+
+
+### Bug Fixes
+
+* service port changed to 80 ([b7b458c](https://github.com/MapColonies/geoserver-api/commit/b7b458cec0352ff8940fb1cef4c210e364666974))
+
 ### [1.2.1](https://github.com/MapColonies/geoserver-api/compare/v1.2.0...v1.2.1) (2024-10-22)
 
 

@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: Polygon Parts Geoserver API
   description: Unified REST API access to geoserver administration
-  version: 1.2.1
+  version: 1.2.2
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
