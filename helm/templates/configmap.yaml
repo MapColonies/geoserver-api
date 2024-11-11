@@ -33,5 +33,5 @@ data:
   DATASTORE_NAME: {{ $db.name }}
   DATASTORE_TYPE: {{ $db.dbType }}
   DATASTORE_SSL_MODE: {{ $db.sslEnabled | ternary "ALLOW" "DISABLE"}}
-  SRS: {{.Values.env.srs | quote }}
+  GEOSERVER_SRS: {{.Values.env.srs | quote }}
 {{- end }}
