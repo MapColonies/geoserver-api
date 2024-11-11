@@ -82,6 +82,7 @@ const registerDefaultConfig = (): void => {
         dbType: 'postgis',
         sslMode: 'DISABLE',
       },
+      srs: 'EPSG:4326'
     },
     httpRetry: {
       attempts: 5,
