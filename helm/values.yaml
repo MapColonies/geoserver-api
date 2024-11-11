@@ -129,7 +129,8 @@ env:
   httpRetry:
     attempts: 5
     delay: exponential
-    resetTimeout: true  
+    resetTimeout: true
+  srs: "EPSG:4326"    
 
 
 resources:

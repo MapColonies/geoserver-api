@@ -40,7 +40,8 @@
       "dbName": "",
       "dbType": "",
       "sslMode": ""
-    }
+    },
+    "srs": ""
   },
   "httpRetry": {
     "attempts": 5,

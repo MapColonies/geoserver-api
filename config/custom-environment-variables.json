@@ -54,7 +54,8 @@
       "dbName": "DATASTORE_NAME",
       "dbType": "DATASTORE_TYPE",
       "sslMode": "DATASTORE_SSL_MODE"
-    }
+    },
+    "srs": "GEOSERVER_SRS"
   },
   "httpRetry": {
     "attempts": {
