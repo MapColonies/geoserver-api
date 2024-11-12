@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.3](https://github.com/MapColonies/geoserver-api/compare/v1.2.2...v1.2.3) (2024-11-12)
+
+
+### Bug Fixes
+
+* lint ([8ddd6ab](https://github.com/MapColonies/geoserver-api/commit/8ddd6abd8e039caa89415f18333fce69f3389f4f))
+* srs is configurable ([e83720f](https://github.com/MapColonies/geoserver-api/commit/e83720f8fcb6d6b115168eb7aa4a162ab6e85efe))
+* srs name ([cd8a182](https://github.com/MapColonies/geoserver-api/commit/cd8a1827dab950ddf382c061f7a04c52beaa274d))
+
 ### [1.2.2](https://github.com/MapColonies/geoserver-api/compare/v1.2.1...v1.2.2) (2024-10-27)
 
 
