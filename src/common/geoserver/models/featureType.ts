@@ -93,5 +93,6 @@ export interface GeoServerCreateFeatureRequest {
     attributes: { attribute: GeoserverPostAttribute[] };
     nativeBoundingBox: GeoServerBoundingBox;
     latLonBoundingBox: GeoServerBoundingBox;
+    numDecimals: number;
   };
 }
