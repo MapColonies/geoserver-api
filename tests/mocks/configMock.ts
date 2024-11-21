@@ -83,6 +83,7 @@ const registerDefaultConfig = (): void => {
         sslMode: 'DISABLE',
       },
       srs: 'EPSG:4326',
+      numOfDecimals: 100,
     },
     httpRetry: {
       attempts: 5,

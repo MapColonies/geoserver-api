@@ -33,5 +33,6 @@ data:
   DATASTORE_NAME: {{ $db.name }}
   DATASTORE_TYPE: {{ $db.dbType }}
   DATASTORE_SSL_MODE: {{ $db.sslEnabled | ternary "ALLOW" "DISABLE"}}
-  GEOSERVER_SRS: {{.Values.env.srs | quote }}
+  GEOSERVER_SRS: {{ .Values.env.srs | quote }}
+  GEOSERVER_NUM_OF_DECIMALS: {{ .Values.env.numOfDecimals }}
 {{- end }}

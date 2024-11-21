@@ -3,6 +3,8 @@ import { GeoserverPostAttribute } from '../common/geoserver/models/featureType';
 
 export const srs: string = config.get<string>('geoserver.srs');
 
+export const numOfDecimals: number = config.get<number>('geoserver.numOfDecimals');
+
 export const boundingBox = {
   minx: -180,
   maxx: 180,

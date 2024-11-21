@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { srs } from '../../src/utils/featureConstants';
+import { srs, numOfDecimals } from '../../src/utils/featureConstants';
 
 const mockAttributes = [
   {
@@ -237,7 +237,7 @@ export const geoserverGetFeatureTypeResponseMock = {
     internationalTitle: '',
     internationalAbstract: '',
     maxFeatures: 0,
-    numDecimals: 0,
+    numDecimals: numOfDecimals,
     padWithZeros: false,
     forcedDecimal: false,
     overridingServiceSRS: false,
@@ -265,6 +265,7 @@ export const geoserverPostFeatureTypeRequestMock = {
     name: 'best_feature',
     nativeName: 'best_feature',
     srs: srs,
+    numDecimals: numOfDecimals,
     nativeBoundingBox: {
       minx: -180,
       maxx: 180,

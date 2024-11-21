@@ -55,7 +55,11 @@
       "dbType": "DATASTORE_TYPE",
       "sslMode": "DATASTORE_SSL_MODE"
     },
-    "srs": "GEOSERVER_SRS"
+    "srs": "GEOSERVER_SRS",
+    "numOfDecimals": {
+      "__name": "GEOSERVER_NUM_OF_DECIMALS",
+      "__format": "number"
+    }
   },
   "httpRetry": {
     "attempts": {
