@@ -50,6 +50,7 @@ Start the server
 |`DATASTORE_TYPE`                    |DB type                                                                   |postgis                      |
 |`DATASTORE_SSL_MODE`                |Postgres sslmode                                                          |DISABLE                      |
 |`GEOSERVER_SRS`                     |Coordinates srs system                                                    |EPSG:4326                    |
+|`GEOSERVER_NUM_OF_DECIMALS`         |number of decimals on float numbers                                       |100                          |
 |`HTTP_RETRY_ATTEMPTS`               |How many retries should the service make if a request fails.              |5                            |
 |`HTTP_RETRY_DELAY`                  |The delay between each http retry if a request fails.                     |exponential                  |
 |`HTTP_RETRY_RESET_TIMEOUT`          |Defines if the timeout should be reset between retries                    |true                         |
@@ -64,7 +65,7 @@ Start the server
 |`TELEMETRY_METRICS_URL`             |URL for the metrics service.	                                            |(not set)                    |
 |`TELEMETRY_METRICS_INTERVAL`        |Interval (in seconds) for sending metrics data.	                          |(not set)                    |
 
-## Running Tests
+## Running Tests GEOSERVER_NUM_OF_DECIMALS
 
 To run tests, run the following command
 
