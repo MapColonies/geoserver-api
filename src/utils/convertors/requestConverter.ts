@@ -5,7 +5,7 @@ import { GeoServerCreateFeatureRequest } from '../../common/geoserver/models/fea
 import { GeoserverWfsModeRequest } from '../../common/geoserver/models/wfsMode';
 import { GeoserverWorkspaceRequest } from '../../common/geoserver/models/workspace';
 import { ConnectionParams, DataStoreBodyRequest, FeatureTypeBodyRequest } from '../../common/interfaces';
-import { attributesMapping, boundingBox, srs } from '../featureConstants';
+import { attributesMapping, boundingBox, srs, numOfDecimals } from '../featureConstants';
 
 /* This file contains functions that converts inputs from the geoserver-api to the request input the GeoServer itself expects to receive */
 export const workspaceRequestConverter = (workspaceName: string): GeoserverWorkspaceRequest => {
@@ -59,6 +59,7 @@ export const postFeatureTypeRequestConverter = (request: FeatureTypeBodyRequest)
       srs: srs,
       nativeBoundingBox: boundingBox,
       latLonBoundingBox: boundingBox,
+      numDecimals: numOfDecimals,
       attributes: { attribute: attributesMapping },
     },
   };

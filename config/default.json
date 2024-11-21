@@ -41,7 +41,8 @@
       "dbType": "",
       "sslMode": ""
     },
-    "srs": ""
+    "srs": "",
+    "numOfDecimals": 100
   },
   "httpRetry": {
     "attempts": 5,
