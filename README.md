@@ -33,8 +33,8 @@ Start the server
 
 ## Environment Variables
 **NOTE:** All DATASTORE variables are referring to the postgres on which the polygon_parts schema is located in
-|Variable Name                       |Description                                                               |Default Value                |
-|------------------------------------|--------------------------------------------------------------------------|-----------------------------|
+|Variable Name                       |Description                                                               |Default Value                |Available Values   |
+|------------------------------------|--------------------------------------------------------------------------|-----------------------------|-----------|
 |`SERVER_PORT`                       |Port on which the server listens for incoming requests.	                  |8080                         |
 |`REQUEST_PAYLOAD_LIMIT`             |Maximum payload limit for incoming requests.	                            |1mb                          |
 |`RESPONSE_COMPRESSION_ENABLED`      |Enable or disable response compression (boolean).                         |true                         |
@@ -48,9 +48,9 @@ Start the server
 |`DATASTORE_SCHEMA`                  |Postgres DB schema                                                        |polygon_parts                |
 |`DATASTORE_NAME`                    |Postgres DB name                                                          |postgres                     |
 |`DATASTORE_TYPE`                    |DB type                                                                   |postgis                      |
-|`DATASTORE_SSL_MODE`                |Postgres sslmode                                                          |DISABLE                      |
+|`DATASTORE_SSL_MODE`                |Postgres sslmode                                                          |DISABLE                      |DISABLE, ALLOW, PREFER, REQUIRE, VERIFY_CA , VERIFY_FULL |
 |`GEOSERVER_SRS`                     |Coordinates srs system                                                    |EPSG:4326                    |
-|`GEOSERVER_NUM_OF_DECIMALS`         |number of decimals on float numbers                                       |100                          |
+|`GEOSERVER_NUM_OF_DECIMALS`         |number of decimals on float numbers like footprint coordinates, resolutionDegree etc                    |100                          |
 |`HTTP_RETRY_ATTEMPTS`               |How many retries should the service make if a request fails.              |5                            |
 |`HTTP_RETRY_DELAY`                  |The delay between each http retry if a request fails.                     |exponential                  |
 |`HTTP_RETRY_RESET_TIMEOUT`          |Defines if the timeout should be reset between retries                    |true                         |
