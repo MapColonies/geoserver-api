@@ -26,22 +26,22 @@
     }
   },
   "geoserver": {
-    "url": "",
+    "url": "http://localhost:8080/geoserver",
     "auth": {
-      "username": "",
-      "password": ""
+      "username": "admin",
+      "password": "geoserver"
     },
     "dataStore": {
-      "username": "",
-      "password": "",
-      "host": "",
-      "port": "",
-      "schema": "",
-      "dbName": "",
-      "dbType": "",
-      "sslMode": ""
+      "username": "postgres",
+      "password": "postgres",
+      "host": "localhost",
+      "port": "5432",
+      "schema": "polygon_parts",
+      "dbName": "postgres",
+      "dbType": "postgis",
+      "sslMode": "DISABLE"
     },
-    "srs": "",
+    "srs": "EPSG:4326",
     "numOfDecimals": 100
   },
   "httpRetry": {
