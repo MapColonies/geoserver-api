@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/MapColonies/geoserver-api/compare/v1.2.3...v1.3.0) (2024-11-24)
+
+
+### Features
+
+* add geoserver_num_of_decimals ([deca331](https://github.com/MapColonies/geoserver-api/commit/deca331028bd3116a99f21dbd6b6d4d3c4a4721b))
+
+
+### Bug Fixes
+
+* num of decimals ([ff0e207](https://github.com/MapColonies/geoserver-api/commit/ff0e207af29d1e6cca32df291dd13e45edcb235e))
+* pr changes ([646f77d](https://github.com/MapColonies/geoserver-api/commit/646f77d5087bd21a0af6d828c48133ec73367cd4))
+
 ### [1.2.3](https://github.com/MapColonies/geoserver-api/compare/v1.2.2...v1.2.3) (2024-11-12)
 
 
