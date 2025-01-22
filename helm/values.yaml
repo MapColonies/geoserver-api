@@ -81,7 +81,7 @@ caKey: 'ca.crt'
 image:
   repository: geoserver-api
   # If commented, appVersion will be taken. See: _helpers.tpl
-  # tag: 'latest'
+  tag: 'latest'
 
 cloudProvider:
   dockerRegistryUrl: my-registry-url.io
