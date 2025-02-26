@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.3](https://github.com/MapColonies/geoserver-api/compare/v1.3.2...v1.3.3) (2025-02-26)
+
+
+### Bug Fixes
+
+* utc to uppercase ([75fb4d8](https://github.com/MapColonies/geoserver-api/commit/75fb4d85468913179c6c62443f2f431f6ba9eced))
+
 ### [1.3.2](https://github.com/MapColonies/geoserver-api/compare/v1.3.1...v1.3.2) (2025-02-24)
 
 
