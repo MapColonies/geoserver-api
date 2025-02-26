@@ -58,7 +58,7 @@ const mockAttributes = [
     source: 'product_version',
   },
   {
-    name: 'ingestionDateUtc',
+    name: 'ingestionDateUTC',
     minOccurs: 1,
     maxOccurs: 1,
     nillable: false,
@@ -66,7 +66,7 @@ const mockAttributes = [
     source: 'ingestion_date_utc',
   },
   {
-    name: 'imagingTimeBeginUtc',
+    name: 'imagingTimeBeginUTC',
     minOccurs: 1,
     maxOccurs: 1,
     nillable: false,
@@ -74,7 +74,7 @@ const mockAttributes = [
     source: 'imaging_time_begin_utc',
   },
   {
-    name: 'imagingTimeEndUtc',
+    name: 'imagingTimeEndUTC',
     minOccurs: 1,
     maxOccurs: 1,
     nillable: false,
