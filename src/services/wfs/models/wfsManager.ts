@@ -3,11 +3,11 @@ import { inject, injectable } from 'tsyringe';
 import { Tracer } from '@opentelemetry/api';
 import { withSpanAsyncV4 } from '@map-colonies/telemetry';
 import { SERVICES } from '../../../common/constants';
-import { IConfig, WfsMode } from '../../../common/interfaces';
+import { IConfig, WfsSettings } from '../../../common/interfaces';
 import { GeoserverClient } from '../../../serviceClients/geoserverClient';
 import { WfsServiceLevel } from '../../../common/enums';
 import { updateWfsModeRequestConverter } from '../../../utils/convertors/requestConverter';
-import { GeoServerGetWfsModeResponse } from '../../../common/geoserver/models/wfsMode';
+import { GeoServerGetWfsSettingsResponse } from '../../../common/geoserver/models/wfsMode';
 import { getWfsModeResponseConverter } from '../../../utils/convertors/responseConverter';
 
 @injectable()
@@ -20,17 +20,18 @@ export class WfsManager {
   ) {}
 
   @withSpanAsyncV4
-  public async getWfsMode(): Promise<WfsMode> {
-    this.logger.info({ msg: 'getting wfsMode' });
-    const geoserverResponse = await this.geoserverManager.getRequest<GeoServerGetWfsModeResponse>('services/wfs/settings');
+  public async getWfsSettings(): Promise<WfsSettings> {
+    this.logger.info({ msg: 'getting wfsSettings' });
+    const geoserverResponse = await this.geoserverManager.getRequest<GeoServerGetWfsSettingsResponse>('services/wfs/settings');
     const response = getWfsModeResponseConverter(geoserverResponse);
     return response;
   }
 
   @withSpanAsyncV4
-  public async updateWfsMode(serviceLevel: WfsServiceLevel): Promise<void> {
-    this.logger.info({ msg: `updating wfsMode to : ${serviceLevel}` });
-    const wfsModeRequest = updateWfsModeRequestConverter(serviceLevel);
-    await this.geoserverManager.putRequest(`services/wfs/settings`, wfsModeRequest);
+  public async updateWfsMode(serviceLevel: WfsServiceLevel, maxFeatures?: number): Promise<void> {
+    const wfsMaxFeaturesToUpdate = maxFeatures ?? this.config.get<number>('geoserver.wfsMaxFeatures');
+    this.logger.info({ msg: `updating wfsMode to : ${serviceLevel} with maxFeatures: ${maxFeatures}` });
+    const wfsSettingsRequest = updateWfsModeRequestConverter(serviceLevel, wfsMaxFeaturesToUpdate);
+    await this.geoserverManager.putRequest(`services/wfs/settings`, wfsSettingsRequest);
   }
 }

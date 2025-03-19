@@ -603,17 +603,17 @@ paths:
                 $ref: '#/components/schemas/Error'
   /services/wfs/settings:
     get:
-      operationId: getWfsMode
+      operationId: getWfsSettings
       tags:
-        - WfsMode
-      summary: Get Current Wfs Mode
+        - WfsSettings
+      summary: Get Current Wfs Settings
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/wfsMode'
+                $ref: '#/components/schemas/WfsSettings'
         '401':
           description: Unauthorized
           content:
@@ -627,17 +627,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     put:
-      operationId: updateWfsMode
+      operationId: updateWfsSettings
       tags:
-        - WfsMode
-      summary: Update Wfs Mode
+        - WfsSettings
+      summary: Update Wfs Settings
       requestBody:
-        description: A json object containing desired details to update on layer
+        description: Update Wfs Settings
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/wfsMode'
+              $ref: '#/components/schemas/WfsSettings'
       responses:
         '200':
           description: Modified
@@ -781,7 +781,7 @@ components:
             type: string
         required:
           - name
-    wfsMode:
+    WfsSettings:
       type: object
       properties:
         serviceLevel:
@@ -790,6 +790,8 @@ components:
             - BASIC
             - TRANSACTIONAL
             - COMPLETE
+        maxFeatures:
+          type: number
     Error:
       type: object
       required:

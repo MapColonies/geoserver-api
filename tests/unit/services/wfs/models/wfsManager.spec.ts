@@ -31,25 +31,25 @@ describe('wfsManager', () => {
     jest.resetAllMocks();
   });
 
-  describe('get wfsMode', () => {
-    it('should return a the wfsMode of the geoserver', async function () {
+  describe('get wfsSettings', () => {
+    it('should return a the wfsSettings of the geoserver', async function () {
       nock(geoserverUrl).get('/services/wfs/settings').reply(200, GeoServerGetWfsModeResponse);
-      const wfsMode = await wfsManager.getWfsMode();
+      const wfsSettings = await wfsManager.getWfsSettings();
 
-      expect(wfsMode).toEqual(getWfsModeResponse);
+      expect(wfsSettings).toEqual(getWfsModeResponse);
     });
 
     it('should throw Error when the wfs serviceLevel is not in the enum list', async function () {
       nock(geoserverUrl).get('/services/wfs/settings').reply(200, GeoServerGetWfsModeResponseModified);
       const action = async () => {
-        await wfsManager.getWfsMode();
+        await wfsManager.getWfsSettings();
       };
       await expect(action()).rejects.toThrow(Error);
     });
   });
 
-  describe('update wfsMode', () => {
-    it('should modify wfsMode', async function () {
+  describe('update wfsSettings', () => {
+    it('should modify wfsSettings', async function () {
       nock(geoserverUrl).put('/services/wfs/settings', putWfsModeRequest).reply(200);
       const action = async () => {
         await wfsManager.updateWfsMode(updateWfsModeBody.serviceLevel);

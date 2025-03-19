@@ -3,18 +3,18 @@ import { StatusCodes } from 'http-status-codes';
 import { injectable } from 'tsyringe';
 
 import { WfsManager } from '../models/wfsManager';
-import { WfsMode } from '../../../common/interfaces';
+import { WfsSettings } from '../../../common/interfaces';
 
-type GetWfsModeHandler = RequestHandler<undefined, WfsMode, unknown>;
-type UpdateWorkspaceHandler = RequestHandler<undefined, unknown, WfsMode>;
+type GetWfsSettingsHandler = RequestHandler<undefined, WfsSettings, unknown>;
+type UpdateWorkspaceHandler = RequestHandler<undefined, unknown, WfsSettings>;
 
 @injectable()
 export class WfsController {
   public constructor(private readonly wfsManager: WfsManager) {}
 
-  public getWfsMode: GetWfsModeHandler = async (req, res, next) => {
+  public getWfsMode: GetWfsSettingsHandler = async (req, res, next) => {
     try {
-      const wfsMode = await this.wfsManager.getWfsMode();
+      const wfsMode = await this.wfsManager.getWfsSettings();
       res.status(StatusCodes.OK).send(wfsMode);
     } catch (error) {
       next(error);
@@ -23,8 +23,8 @@ export class WfsController {
 
   public updateWfsMode: UpdateWorkspaceHandler = async (req, res, next) => {
     try {
-      const { serviceLevel } = req.body;
-      await this.wfsManager.updateWfsMode(serviceLevel);
+      const { serviceLevel, maxFeatures } = req.body;
+      await this.wfsManager.updateWfsMode(serviceLevel, maxFeatures);
       res.status(StatusCodes.OK).send();
     } catch (error) {
       next(error);

@@ -42,7 +42,8 @@
       "sslMode": "DISABLE"
     },
     "srs": "EPSG:4326",
-    "numOfDecimals": 100
+    "numOfDecimals": 100,
+    "wfsMaxFeatures": 1000
   },
   "httpRetry": {
     "attempts": 5,

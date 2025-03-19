@@ -5,9 +5,9 @@ import {
   GeoserverGetConfiguredFeatureTypesResponse,
   GeoserverGetFeatureTypesResponse,
 } from '../../common/geoserver/models/featureType';
-import { GeoServerGetWfsModeResponse } from '../../common/geoserver/models/wfsMode';
+import { GeoServerGetWfsSettingsResponse } from '../../common/geoserver/models/wfsMode';
 import { GeoserverGetWorkspacesResponse } from '../../common/geoserver/models/workspace';
-import { DataStore, GetDataStoreResponse, GetFeatureTypeResponse, GetFeatureTypesResponse, WfsMode, Workspace } from '../../common/interfaces';
+import { DataStore, GetDataStoreResponse, GetFeatureTypeResponse, GetFeatureTypesResponse, WfsSettings, Workspace } from '../../common/interfaces';
 
 /* This file contains functions that converts outputs from the Geo server to the response output the api expects to receive */
 export const workspaceResponseConverter = (geoserverResponse: GeoserverGetWorkspacesResponse): Workspace[] => {
@@ -84,8 +84,8 @@ export const featureTypeResponseConverter = (geoserverResponse: GeoserverFeature
   };
 };
 
-export const getWfsModeResponseConverter = (geoserverResponse: GeoServerGetWfsModeResponse): WfsMode => {
-  const { serviceLevel } = geoserverResponse.wfs;
+export const getWfsModeResponseConverter = (geoserverResponse: GeoServerGetWfsSettingsResponse): WfsSettings => {
+  const { serviceLevel, maxFeatures } = geoserverResponse.wfs;
 
   // Validate the serviceLevel is a valid WfsServiceLevel
   if (!Object.values(WfsServiceLevel).includes(serviceLevel as WfsServiceLevel)) {
@@ -94,5 +94,6 @@ export const getWfsModeResponseConverter = (geoserverResponse: GeoServerGetWfsMo
 
   return {
     serviceLevel: serviceLevel as WfsServiceLevel,
+    maxFeatures,
   };
 };

@@ -106,6 +106,7 @@ export interface FeatureTypeBodyRequest {
   name?: string; // display name
 }
 
-export interface WfsMode {
+export interface WfsSettings {
   serviceLevel: WfsServiceLevel;
+  maxFeatures?: number;
 }
