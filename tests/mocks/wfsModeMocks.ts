@@ -53,7 +53,7 @@ export const GeoServerGetWfsModeResponse = {
       ],
     },
     serviceLevel: 'BASIC',
-    maxFeatures: 1000000,
+    maxFeatures: 1000,
     featureBounding: true,
     canonicalSchemaLocation: false,
     encodeFeatureMember: false,
@@ -67,6 +67,7 @@ export const GeoServerGetWfsModeResponse = {
 
 export const getWfsModeResponse = {
   serviceLevel: 'BASIC',
+  maxFeatures: 1000,
 };
 
 export const GeoServerGetWfsModeResponseModified = {
@@ -80,6 +81,7 @@ export const GeoServerGetWfsModeResponseModified = {
 export const putWfsModeRequest = {
   wfs: {
     serviceLevel: 'COMPLETE',
+    maxFeatures: 1000,
   },
 };
 

@@ -35,4 +35,5 @@ data:
   DATASTORE_SSL_MODE: {{ $db.sslEnabled | ternary "ALLOW" "DISABLE"}}
   GEOSERVER_SRS: {{ .Values.env.srs | quote }}
   GEOSERVER_NUM_OF_DECIMALS: {{ .Values.env.numOfDecimals | quote }}
+  WFS_MAX_FEATURES: {{ .Values.env.wfsMaxFeatures | quote }}
 {{- end }}

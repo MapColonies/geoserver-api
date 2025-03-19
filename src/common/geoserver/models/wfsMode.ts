@@ -1,12 +1,13 @@
 import { WfsServiceLevel } from '../../enums';
 
-export interface GeoserverWfsModeRequest {
+export interface GeoserverWfsSettingsRequest {
   wfs: {
     serviceLevel: WfsServiceLevel;
+    maxFeatures: number;
   };
 }
 
-export interface GeoServerGetWfsModeResponse {
+export interface GeoServerGetWfsSettingsResponse {
   wfs: {
     enabled: boolean;
     name: string;

@@ -59,6 +59,10 @@
     "numOfDecimals": {
       "__name": "GEOSERVER_NUM_OF_DECIMALS",
       "__format": "number"
+    },
+    "wfsMaxFeatures": {
+      "__name": "WFS_MAX_FEATURES",
+      "__format": "number"
     }
   },
   "httpRetry": {

@@ -132,6 +132,7 @@ env:
     resetTimeout: true
   srs: "EPSG:4326"  
   numOfDecimals: 100  
+  wfsMaxFeatures: 1000
 
 
 resources:
