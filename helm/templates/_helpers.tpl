@@ -36,6 +36,7 @@ helm.sh/chart: {{ include "geoserver-api.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "mclabels.labels" . }}
 {{- end }}
 
 {{/*
@@ -51,6 +52,7 @@ Selector labels
 {{- define "geoserver-api.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "geoserver-api.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+{{ include "mclabels.selectorLabels" . }}
 {{- end }}
 
 {{/*
