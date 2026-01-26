@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.2](https://github.com/MapColonies/geoserver-api/compare/v1.4.1...v1.4.2) (2026-01-26)
+
+
+### Bug Fixes
+
+* mclabels partOf key ([b59303a](https://github.com/MapColonies/geoserver-api/commit/b59303afe27b0caaaa6fe7ef835ec90e65c22eb1))
+
 ### [1.4.1](https://github.com/MapColonies/geoserver-api/compare/v1.4.0...v1.4.1) (2026-01-06)
 
 ## [1.4.0](https://github.com/MapColonies/geoserver-api/compare/v1.3.3...v1.4.0) (2025-03-19)

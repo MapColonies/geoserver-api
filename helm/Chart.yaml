@@ -2,8 +2,8 @@ apiVersion: v2
 name: geoserver-api
 description: A Helm chart for geoserver-api service
 type: application
-version: 1.4.1
-appVersion: 1.4.1
+version: 1.4.2
+appVersion: 1.4.2
 dependencies:
   - name: mclabels
     version: 1.0.1
