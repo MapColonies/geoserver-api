@@ -1,5 +1,4 @@
 name: pull_request
-
 on: [pull_request]
 
 jobs:
@@ -13,7 +12,7 @@ jobs:
     steps:
       - name: Run TS Project linters
         uses: MapColonies/shared-workflows/actions/eslint@eslint-v1.0.1
-        with:
+        with: 
           node_version: ${{ matrix.node }}
 
   helm-lint:
@@ -63,7 +62,7 @@ jobs:
       - name: Run tests
         run: npm run test
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: Test Reporters ${{ matrix.node }}
           path: ./reports/**
@@ -73,3 +72,4 @@ jobs:
     steps:
       - name: Build and Push Docker image
         uses: docker/build-push-action@v6
+
