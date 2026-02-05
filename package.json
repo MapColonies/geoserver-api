@@ -1,6 +1,6 @@
 {
   "name": "geoserver-api",
-  "version": "1.4.2",
+  "version": "2.0.0",
   "description": "Unified REST API access to geoserver administration",
   "main": "./src/index.ts",
   "scripts": {

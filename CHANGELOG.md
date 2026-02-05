@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/MapColonies/geoserver-api/compare/v1.4.2...v2.0.0) (2026-02-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* Requires Node.js >=24.0.0
+
+### Features
+
+* infrastructure maintenance and node upgrade to v24 (MAPCO-7225) ([4f29a39](https://github.com/MapColonies/geoserver-api/commit/4f29a39e1434c5e62b179dee4ad9ac830a98f948))
+
+
+### Bug Fixes
+
+* align config files and workflows with job-tracker template ([01cde73](https://github.com/MapColonies/geoserver-api/commit/01cde73b1a627615f4a1249cae1d472b9f894012))
+* update @redocly/cli to correct version 2.14.2 ([4434745](https://github.com/MapColonies/geoserver-api/commit/4434745369b8f1517b3725cda741ba7079e14421))
+
+
+### Miscellaneous Chores
+
+* infrastructure maintenance and node upgrade to v24 ([d183f9b](https://github.com/MapColonies/geoserver-api/commit/d183f9b16b215c16d8a3f28ef2c9d10017c32308))
+
 ### [1.4.2](https://github.com/MapColonies/geoserver-api/compare/v1.4.1...v1.4.2) (2026-01-26)
 
 
