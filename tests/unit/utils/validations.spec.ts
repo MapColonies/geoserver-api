@@ -1,14 +1,14 @@
 import { container } from 'tsyringe';
-import jsLogger from '@map-colonies/js-logger';
+import { jsLogger } from '@map-colonies/js-logger';
 import { configMock, registerDefaultConfig, clear as clearConfig } from '../../mocks/configMock';
 import { ConnectionParams } from '../../../src/common/interfaces';
 import { validateConfig } from '../../../src/utils/validations';
 import { SERVICES } from '../../../src/common/constants';
 
 describe('Validation', () => {
-  beforeEach(function () {
+  beforeEach(async function () {
     registerDefaultConfig();
-    container.registerInstance(SERVICES.LOGGER, jsLogger({ enabled: false }));
+    container.registerInstance(SERVICES.LOGGER, await jsLogger({ enabled: false }));
   });
 
   afterEach(() => {
@@ -18,7 +18,7 @@ describe('Validation', () => {
 
   describe('validation connection params', () => {
     it('should not throw errors', function () {
-      const connectionParams = configMock.get<ConnectionParams>('geoserver.dataStore');
+      const connectionParams = configMock.get('geoserver.dataStore') as unknown as ConnectionParams;
 
       const action = () => {
         validateConfig(connectionParams);
@@ -28,7 +28,7 @@ describe('Validation', () => {
 
     it('should throw bad request error when dbType is not supported', function () {
       const connectionParams = {
-        ...configMock.get<ConnectionParams>('geoserver.dataStore'),
+        ...(configMock.get('geoserver.dataStore') as unknown as ConnectionParams),
         dbType: 'post',
       };
 
@@ -40,7 +40,7 @@ describe('Validation', () => {
 
     it('should throw bad request error when sslMode is not supported', function () {
       const connectionParams = {
-        ...configMock.get<ConnectionParams>('geoserver.dataStore'),
+        ...(configMock.get('geoserver.dataStore') as unknown as ConnectionParams),
         sslMode: 'post',
       };
 

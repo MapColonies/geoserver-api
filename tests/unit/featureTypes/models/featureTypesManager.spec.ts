@@ -1,7 +1,8 @@
-import jsLogger from '@map-colonies/js-logger';
+import { deepStrictEqual } from 'node:assert';
 import { trace } from '@opentelemetry/api';
-import nock from 'nock';
+import nock, { cleanAll } from 'nock';
 import { ConflictError, ForbiddenError, NotFoundError, UnprocessableEntityError } from '@map-colonies/error-types';
+import { jsLogger } from '@map-colonies/js-logger';
 import { GeoserverClient } from '../../../../src/serviceClients/geoserverClient';
 import { configMock, registerDefaultConfig, clear as clearConfig } from '../../../mocks/configMock';
 import { FeatureTypesManager } from '../../../../src/featureTypes/models/featureTypesManager';
@@ -10,9 +11,9 @@ import {
   featureTypesListConfiguredResponseMock,
   geoserverFeatureTypesListAllResponseMock,
   geoserverFeatureTypesListConfiguredResponseMock,
-  geoserverGetFeatureTypeResponseMock,
-  geoserverPostFeatureTypeRequestMock,
-  getFeatureTypeResponseMock,
+  getGeoserverGetFeatureTypeResponseMock,
+  getGeoserverPostFeatureTypeRequestMock,
+  getGetFeatureTypeResponseMock,
   postFeatureTypeRequestMock,
 } from '../../../mocks/featureTypesMocks';
 import { ListParam } from '../../../../src/common/enums';
@@ -22,16 +23,17 @@ describe('DataStoresManager', () => {
   let geoserverManager: GeoserverClient;
   const testTracer = trace.getTracer('testTracer');
   registerDefaultConfig();
-  const geoserverUrl = `${configMock.get<string>('geoserver.url')}/rest`;
+  const geoserverUrl = `${configMock.get('geoserver.url') as unknown as string}/rest`;
 
-  beforeEach(function () {
+  beforeEach(async function () {
     registerDefaultConfig();
-    geoserverManager = new GeoserverClient(configMock, jsLogger({ enabled: false }), testTracer);
-    featureTypesManager = new FeatureTypesManager(jsLogger({ enabled: false }), configMock, testTracer, geoserverManager);
+    const logger = await jsLogger({ enabled: false });
+    geoserverManager = new GeoserverClient(configMock, logger, testTracer);
+    featureTypesManager = new FeatureTypesManager(logger, configMock, testTracer, geoserverManager);
   });
 
   afterEach(() => {
-    nock.cleanAll();
+    cleanAll();
     clearConfig();
     jest.resetAllMocks();
   });
@@ -69,10 +71,10 @@ describe('DataStoresManager', () => {
 
   describe('get featureType', () => {
     it('should return a featureType', async function () {
-      nock(geoserverUrl).get('/workspaces/test/datastores/bestStore/featuretypes/bestFeature').reply(200, geoserverGetFeatureTypeResponseMock);
+      nock(geoserverUrl).get('/workspaces/test/datastores/bestStore/featuretypes/bestFeature').reply(200, getGeoserverGetFeatureTypeResponseMock());
       const featureType = await featureTypesManager.getFeatureType('test', 'bestStore', 'bestFeature');
 
-      expect(featureType).toEqual(getFeatureTypeResponseMock);
+      expect(featureType).toEqual(getGetFeatureTypeResponseMock());
     });
 
     it('should throw not found error when featureType doesnt exist', async function () {
@@ -132,7 +134,16 @@ describe('DataStoresManager', () => {
 
   describe('create featureType', () => {
     it('should create a featureType', async function () {
-      nock(geoserverUrl).post('/workspaces/test/datastores/bestStore/featuretypes', geoserverPostFeatureTypeRequestMock).reply(201);
+      nock(geoserverUrl)
+        .post('/workspaces/test/datastores/bestStore/featuretypes', (body) => {
+          try {
+            deepStrictEqual(body, getGeoserverPostFeatureTypeRequestMock());
+            return true;
+          } catch {
+            return false;
+          }
+        })
+        .reply(201);
       nock(geoserverUrl)
         .get('/workspaces/test/datastores/bestStore/featuretypes')
         .query({ list: ListParam.ALL })
@@ -171,7 +182,16 @@ describe('DataStoresManager', () => {
     });
 
     it('should throw not found error when not such workspace or dataStore', async function () {
-      nock(geoserverUrl).post('/workspaces/test/datastores/bestStore/featuretypes', geoserverPostFeatureTypeRequestMock).reply(404);
+      nock(geoserverUrl)
+        .post('/workspaces/test/datastores/bestStore/featuretypes', (body) => {
+          try {
+            deepStrictEqual(body, getGeoserverPostFeatureTypeRequestMock());
+            return true;
+          } catch {
+            return false;
+          }
+        })
+        .reply(404);
       nock(geoserverUrl)
         .get('/workspaces/test/datastores/bestStore/featuretypes')
         .query({ list: ListParam.ALL })

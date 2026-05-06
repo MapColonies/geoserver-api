@@ -1,7 +1,7 @@
-import jsLogger from '@map-colonies/js-logger';
 import { trace } from '@opentelemetry/api';
-import nock from 'nock';
+import nock, { cleanAll } from 'nock';
 import { ConflictError, NotFoundError } from '@map-colonies/error-types';
+import { jsLogger } from '@map-colonies/js-logger';
 import { WorkspacesManager } from '../../../../src/workspaces/models/workspacesManager';
 import { GeoserverClient } from '../../../../src/serviceClients/geoserverClient';
 import { configMock, registerDefaultConfig, clear as clearConfig } from '../../../mocks/configMock';
@@ -19,16 +19,17 @@ describe('WorkspacesManager', () => {
   let geoserverManager: GeoserverClient;
   const testTracer = trace.getTracer('testTracer');
   registerDefaultConfig();
-  const geoserverUrl = `${configMock.get<string>('geoserver.url')}/rest`;
+  const geoserverUrl = `${configMock.get('geoserver.url') as unknown as string}/rest`;
 
-  beforeEach(function () {
+  beforeEach(async function () {
     registerDefaultConfig();
-    geoserverManager = new GeoserverClient(configMock, jsLogger({ enabled: false }), testTracer);
-    workspacesManager = new WorkspacesManager(jsLogger({ enabled: false }), configMock, testTracer, geoserverManager);
+    const logger = await jsLogger({ enabled: false });
+    geoserverManager = new GeoserverClient(configMock, logger, testTracer);
+    workspacesManager = new WorkspacesManager(logger, configMock, testTracer, geoserverManager);
   });
 
   afterEach(() => {
-    nock.cleanAll();
+    cleanAll();
     clearConfig();
     jest.resetAllMocks();
   });

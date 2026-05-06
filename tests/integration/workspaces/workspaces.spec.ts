@@ -1,5 +1,5 @@
 import httpStatusCodes from 'http-status-codes';
-import nock from 'nock';
+import nock, { cleanAll } from 'nock';
 import { getApp } from '../../../src/app';
 import {
   geoserverGetWorkspaceResponseMock,
@@ -8,24 +8,24 @@ import {
   postWorkspaceRequest,
 } from '../../mocks/workspacesMocks';
 import { configMock, registerDefaultConfig } from '../../mocks/configMock';
+import { getTestContainerConfig, resetContainer } from '../testContainerConfig';
 import { WorkspaceRequestSender } from './helpers/workspacesRequestSender';
-import { getTestContainerConfig, resetContainer } from './helpers/containerConfig';
 
 describe('Workspaces', function () {
   let requestSender: WorkspaceRequestSender;
   registerDefaultConfig();
-  const geoserverUrl = `${configMock.get<string>('geoserver.url')}/rest`;
+  const geoserverUrl = `${configMock.get('geoserver.url') as unknown as string}/rest`;
 
-  beforeEach(function () {
-    const app = getApp({
-      override: [...getTestContainerConfig()],
+  beforeEach(async function () {
+    const [app] = await getApp({
+      override: [...(await getTestContainerConfig())],
       useChild: true,
     });
     requestSender = new WorkspaceRequestSender(app);
   });
 
   afterEach(function () {
-    nock.cleanAll();
+    cleanAll();
     resetContainer();
     jest.restoreAllMocks();
   });

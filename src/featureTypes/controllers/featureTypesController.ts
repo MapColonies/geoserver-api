@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import { FeatureTypesManager } from '../models/featureTypesManager';
 import {
@@ -20,7 +20,7 @@ type CreateFeatureTypeHandler = RequestHandler<FeatureTypesRequest, unknown, Fea
 
 @injectable()
 export class FeatureTypesController {
-  public constructor(private readonly featureTypesManager: FeatureTypesManager) {}
+  public constructor(@inject(FeatureTypesManager) private readonly featureTypesManager: FeatureTypesManager) {}
 
   public getFeatureTypes: GetFeatureTypesHandler = async (req, res, next) => {
     try {

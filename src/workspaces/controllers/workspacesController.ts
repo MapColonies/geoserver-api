@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import { WorkspacesManager } from '../models/workspacesManager';
 import {
@@ -21,7 +21,7 @@ type UpdateWorkspaceHandler = RequestHandler<UpdateWorkspaceRequest, undefined, 
 
 @injectable()
 export class WorkspacesController {
-  public constructor(private readonly workspacesManager: WorkspacesManager) {}
+  public constructor(@inject(WorkspacesManager) private readonly workspacesManager: WorkspacesManager) {}
 
   public getWorkspaces: GetWorkspacesHandler = async (req, res, next) => {
     try {

@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import { DataStoresManager } from '../models/dataStoresManager';
 import {
@@ -21,7 +21,7 @@ type UpdateDataStoreHandler = RequestHandler<DataStoreRequest, MessageResponse, 
 
 @injectable()
 export class DataStoresController {
-  public constructor(private readonly dataStoresManager: DataStoresManager) {}
+  public constructor(@inject(DataStoresManager) private readonly dataStoresManager: DataStoresManager) {}
 
   public getDataStores: GetDataStoresHandler = async (req, res, next) => {
     try {

@@ -1,6 +1,6 @@
-import jsLogger from '@map-colonies/js-logger';
 import { trace } from '@opentelemetry/api';
-import nock from 'nock';
+import nock, { cleanAll } from 'nock';
+import { jsLogger } from '@map-colonies/js-logger';
 import { GeoserverClient } from '../../../../../src/serviceClients/geoserverClient';
 import { configMock, registerDefaultConfig, clear as clearConfig } from '../../../../mocks/configMock';
 import { WfsManager } from '../../../../../src/services/wfs/models/wfsManager';
@@ -17,16 +17,17 @@ describe('wfsManager', () => {
   let geoserverManager: GeoserverClient;
   const testTracer = trace.getTracer('testTracer');
   registerDefaultConfig();
-  const geoserverUrl = `${configMock.get<string>('geoserver.url')}/rest`;
+  const geoserverUrl = `${configMock.get('geoserver.url') as unknown as string}/rest`;
 
-  beforeEach(function () {
+  beforeEach(async function () {
     registerDefaultConfig();
-    geoserverManager = new GeoserverClient(configMock, jsLogger({ enabled: false }), testTracer);
-    wfsManager = new WfsManager(jsLogger({ enabled: false }), configMock, testTracer, geoserverManager);
+    const logger = await jsLogger({ enabled: false });
+    geoserverManager = new GeoserverClient(configMock, logger, testTracer);
+    wfsManager = new WfsManager(logger, configMock, testTracer, geoserverManager);
   });
 
   afterEach(() => {
-    nock.cleanAll();
+    cleanAll();
     clearConfig();
     jest.resetAllMocks();
   });

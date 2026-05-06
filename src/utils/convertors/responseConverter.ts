@@ -53,21 +53,26 @@ export const featureTypesResponseConverter = (
 };
 
 export const dataStoreResponseConverter = (dataStore: GeoserverGetDataStoreResponse['dataStore']): GetDataStoreResponse => {
-  const connectionParams = dataStore.connectionParameters.entry.reduce((acc, param) => {
-    const [key, value] = Object.values(param);
+  interface ConnectionEntry {
+    '@key': string;
+    $: string;
+  }
+  const entries = dataStore.connectionParameters.entry as unknown as ConnectionEntry[];
+
+  const connectionParams = entries.reduce<Record<string, string>>((acc, { '@key': key, $: value }) => {
     acc[key] = value;
     return acc;
-  }, {} as Record<string, string>);
+  }, {});
 
   return {
     name: dataStore.name,
     dateCreated: dataStore.dateCreated,
-    host: connectionParams['host'],
-    port: connectionParams['port'],
-    schema: connectionParams['schema'],
-    dbType: connectionParams['dbtype'],
-    dbName: connectionParams['database'],
-    sslMode: connectionParams['SSL mode'],
+    host: connectionParams['host'] ?? '',
+    port: connectionParams['port'] ?? '',
+    schema: connectionParams['schema'] ?? '',
+    dbType: connectionParams['dbtype'] ?? '',
+    dbName: connectionParams['database'] ?? '',
+    sslMode: connectionParams['SSL mode'] ?? '',
   };
 };
 

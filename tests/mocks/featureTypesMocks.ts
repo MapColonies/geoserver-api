@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-import { srs, numOfDecimals } from '../../src/utils/featureConstants';
+import { getNumOfDecimals, getSrs } from '../../src/utils/featureConstants';
 
 const mockAttributes = [
   {
@@ -199,91 +198,102 @@ export const featureTypesListConfiguredResponseMock = [
   },
 ];
 
-export const geoserverGetFeatureTypeResponseMock = {
-  featureType: {
+export const getGeoserverGetFeatureTypeResponseMock = (): Record<string, unknown> => {
+  const srs = getSrs();
+  const numOfDecimals = getNumOfDecimals();
+  return {
+    featureType: {
+      name: 'bestFeature',
+      nativeName: 'bestStore',
+      namespace: {
+        name: 'test',
+        href: 'http://localhost:8080/geoserver/rest/namespaces/test.json',
+      },
+      title: 'polygon_parts',
+      keywords: {
+        string: ['features', 'polygon_parts'],
+      },
+      srs,
+      nativeBoundingBox: {
+        minx: -180,
+        maxx: 180,
+        miny: -90,
+        maxy: 90,
+        crs: srs,
+      },
+      latLonBoundingBox: {
+        minx: -180,
+        maxx: 180,
+        miny: -90,
+        maxy: 90,
+        crs: srs,
+      },
+      projectionPolicy: 'FORCE_DECLARED',
+      enabled: false,
+      store: {
+        '@class': 'dataStore',
+        name: 'test:bestStore',
+        href: 'http://localhost:8080/geoserver/rest/workspaces/test/datastores/bestStore.json',
+      },
+      serviceConfiguration: false,
+      internationalTitle: '',
+      internationalAbstract: '',
+      maxFeatures: 0,
+      numDecimals: numOfDecimals,
+      padWithZeros: false,
+      forcedDecimal: false,
+      overridingServiceSRS: false,
+      skipNumberMatched: false,
+      circularArcPresent: false,
+      attributes: {
+        attribute: mockAttributes,
+      },
+    },
+  };
+};
+
+export const getGetFeatureTypeResponseMock = (): Record<string, unknown> => {
+  const srs = getSrs();
+  return {
     name: 'bestFeature',
-    nativeName: 'bestStore',
-    namespace: {
-      name: 'test',
-      href: 'http://localhost:8080/geoserver/rest/namespaces/test.json',
-    },
-    title: 'polygon_parts',
-    keywords: {
-      string: ['features', 'polygon_parts'],
-    },
-    srs: srs,
-    nativeBoundingBox: {
-      minx: -180,
-      maxx: 180,
-      miny: -90,
-      maxy: 90,
-      crs: srs,
-    },
-    latLonBoundingBox: {
-      minx: -180,
-      maxx: 180,
-      miny: -90,
-      maxy: 90,
-      crs: srs,
-    },
-    projectionPolicy: 'FORCE_DECLARED',
     enabled: false,
-    store: {
-      '@class': 'dataStore',
-      name: 'test:bestStore',
-      href: 'http://localhost:8080/geoserver/rest/workspaces/test/datastores/bestStore.json',
-    },
-    serviceConfiguration: false,
-    internationalTitle: '',
-    internationalAbstract: '',
+    srs,
+    tableName: 'bestStore',
     maxFeatures: 0,
-    numDecimals: numOfDecimals,
-    padWithZeros: false,
-    forcedDecimal: false,
-    overridingServiceSRS: false,
-    skipNumberMatched: false,
-    circularArcPresent: false,
     attributes: {
       attribute: mockAttributes,
     },
-  },
+  };
 };
 
-export const getFeatureTypeResponseMock = {
-  name: 'bestFeature',
-  enabled: false,
-  srs: srs,
-  tableName: 'bestStore',
-  maxFeatures: 0,
-  attributes: {
-    attribute: mockAttributes,
-  },
-};
-
-export const geoserverPostFeatureTypeRequestMock = {
-  featureType: {
-    name: 'best_feature',
-    nativeName: 'best_feature',
-    srs: srs,
-    numDecimals: numOfDecimals,
-    nativeBoundingBox: {
-      minx: -180,
-      maxx: 180,
-      miny: -90,
-      maxy: 90,
-      crs: srs,
+export const getGeoserverPostFeatureTypeRequestMock = (): Record<string, unknown> => {
+  const srs = getSrs();
+  const numOfDecimals = getNumOfDecimals();
+  return {
+    featureType: {
+      name: 'best_feature',
+      nativeName: 'best_feature',
+      srs,
+      numDecimals: numOfDecimals,
+      nativeBoundingBox: {
+        minx: -180,
+        maxx: 180,
+        miny: -90,
+        maxy: 90,
+        crs: srs,
+      },
+      latLonBoundingBox: {
+        minx: -180,
+        maxx: 180,
+        miny: -90,
+        maxy: 90,
+        crs: srs,
+      },
+      attributes: {
+        attribute: mockAttributes,
+      },
     },
-    latLonBoundingBox: {
-      minx: -180,
-      maxx: 180,
-      miny: -90,
-      maxy: 90,
-      crs: srs,
-    },
-    attributes: {
-      attribute: mockAttributes,
-    },
-  },
+  };
 };
 
 export const postFeatureTypeRequestMock = {
