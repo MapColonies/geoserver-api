@@ -1,5 +1,5 @@
 import { trace } from '@opentelemetry/api';
-import nock, { cleanAll } from 'nock';
+import nock from 'nock';
 import { ConflictError, NotFoundError } from '@map-colonies/error-types';
 import { jsLogger } from '@map-colonies/js-logger';
 import { WorkspacesManager } from '../../../../src/workspaces/models/workspacesManager';
@@ -29,7 +29,7 @@ describe('WorkspacesManager', () => {
   });
 
   afterEach(() => {
-    cleanAll();
+    nock.cleanAll();
     clearConfig();
     jest.resetAllMocks();
   });

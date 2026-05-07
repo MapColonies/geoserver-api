@@ -1,5 +1,5 @@
 import httpStatusCodes from 'http-status-codes';
-import nock, { cleanAll } from 'nock';
+import nock from 'nock';
 import { getApp } from '../../../src/app';
 import {
   geoserverGetWorkspaceResponseMock,
@@ -25,7 +25,7 @@ describe('Workspaces', function () {
   });
 
   afterEach(function () {
-    cleanAll();
+    nock.cleanAll();
     resetContainer();
     jest.restoreAllMocks();
   });

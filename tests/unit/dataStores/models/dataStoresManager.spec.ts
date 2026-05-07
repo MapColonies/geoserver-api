@@ -1,5 +1,5 @@
 import { trace } from '@opentelemetry/api';
-import nock, { cleanAll } from 'nock';
+import nock from 'nock';
 import { ConflictError, NotFoundError } from '@map-colonies/error-types';
 import { jsLogger } from '@map-colonies/js-logger';
 import { DataStoresManager } from '../../../../src/dataStores/models/dataStoresManager';
@@ -36,7 +36,7 @@ describe('DataStoresManager', () => {
   });
 
   afterEach(() => {
-    cleanAll();
+    nock.cleanAll();
     clearConfig();
     jest.resetAllMocks();
   });

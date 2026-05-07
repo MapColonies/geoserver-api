@@ -1,5 +1,5 @@
 import { trace } from '@opentelemetry/api';
-import nock, { cleanAll } from 'nock';
+import nock from 'nock';
 import { jsLogger } from '@map-colonies/js-logger';
 import { GeoserverClient } from '../../../../../src/serviceClients/geoserverClient';
 import { configMock, registerDefaultConfig, clear as clearConfig } from '../../../../mocks/configMock';
@@ -27,7 +27,7 @@ describe('wfsManager', () => {
   });
 
   afterEach(() => {
-    cleanAll();
+    nock.cleanAll();
     clearConfig();
     jest.resetAllMocks();
   });

@@ -3,7 +3,7 @@ const { compilerOptions } = require('../../../tsconfig.json');
 
 module.exports = {
   transform: {
-    '^.+\\.(t|j)s$': ['@swc/jest'],
+    '^.+\\.ts$': ['@swc/jest'],
   },
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
   coverageReporters: ['text', 'html'],

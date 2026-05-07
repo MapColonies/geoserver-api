@@ -1,6 +1,6 @@
 import { deepStrictEqual } from 'node:assert';
 import { trace } from '@opentelemetry/api';
-import nock, { cleanAll } from 'nock';
+import nock from 'nock';
 import { ConflictError, ForbiddenError, NotFoundError, UnprocessableEntityError } from '@map-colonies/error-types';
 import { jsLogger } from '@map-colonies/js-logger';
 import { GeoserverClient } from '../../../../src/serviceClients/geoserverClient';
@@ -33,7 +33,7 @@ describe('DataStoresManager', () => {
   });
 
   afterEach(() => {
-    cleanAll();
+    nock.cleanAll();
     clearConfig();
     jest.resetAllMocks();
   });
