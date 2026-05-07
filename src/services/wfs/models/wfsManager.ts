@@ -30,9 +30,7 @@ export class WfsManager {
 
   @withSpanAsyncV4
   public async updateWfsMode(serviceLevel: WfsServiceLevel, maxFeatures?: number): Promise<void> {
-    const wfsMaxFeaturesFromConfig = this.config.get('geoserver.wfsMaxFeatures');
-    const wfsMaxFeaturesToUpdate =
-      maxFeatures ?? (typeof wfsMaxFeaturesFromConfig === 'number' ? wfsMaxFeaturesFromConfig : Number(wfsMaxFeaturesFromConfig));
+    const wfsMaxFeaturesToUpdate = maxFeatures ?? Number(this.config.get('geoserver.wfsMaxFeatures'));
     this.logger.info({ msg: `updating wfsMode to : ${serviceLevel} with maxFeatures: ${maxFeatures}` });
     const wfsSettingsRequest = updateWfsModeRequestConverter(serviceLevel, wfsMaxFeaturesToUpdate);
     await this.geoserverManager.putRequest(`services/wfs/settings`, wfsSettingsRequest);

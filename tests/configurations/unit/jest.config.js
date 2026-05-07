@@ -3,7 +3,7 @@ const { compilerOptions } = require('../../../tsconfig.json');
 
 module.exports = {
   transform: {
-   '^.+\\.ts$': ['@swc/jest'],
+    '^.+\\.ts$': ['@swc/jest'],
   },
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
   testMatch: ['<rootDir>/tests/unit/**/*.spec.ts'],

@@ -27,6 +27,7 @@ describe('wfsManager', () => {
   });
 
   afterEach(() => {
+    // eslint-disable-next-line import-x/no-named-as-default-member -- prefer nock.cleanAll() for consistency
     nock.cleanAll();
     clearConfig();
     jest.resetAllMocks();
