@@ -32,7 +32,7 @@ const clear = (): void => {
 };
 
 const registerDefaultConfig = (): void => {
-  const cfg = {
+  const config = {
     openapiConfig: {
       filePath: './openapi3.yaml',
       basePath: '/docs',
@@ -94,7 +94,7 @@ const registerDefaultConfig = (): void => {
     disableHttpClientLogs: false,
   };
 
-  mockConfig = cfg;
+  mockConfig = config;
   init();
 };
 
