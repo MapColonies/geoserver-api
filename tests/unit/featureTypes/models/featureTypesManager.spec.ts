@@ -1,4 +1,3 @@
-import { deepStrictEqual } from 'node:assert';
 import { trace } from '@opentelemetry/api';
 import nock from 'nock';
 import { ConflictError, ForbiddenError, NotFoundError, UnprocessableEntityError } from '@map-colonies/error-types';
@@ -174,16 +173,7 @@ describe('DataStoresManager', () => {
     });
 
     it('should throw not found error when not such workspace or dataStore', async function () {
-      nock(geoserverUrl)
-        .post('/workspaces/test/datastores/bestStore/featuretypes', (body) => {
-          try {
-            deepStrictEqual(body, getGeoserverPostFeatureTypeRequestMock());
-            return true;
-          } catch {
-            return false;
-          }
-        })
-        .reply(404);
+      nock(geoserverUrl).post('/workspaces/test/datastores/bestStore/featuretypes', getGeoserverPostFeatureTypeRequestMock()).reply(404);
       nock(geoserverUrl)
         .get('/workspaces/test/datastores/bestStore/featuretypes')
         .query({ list: ListParam.ALL })
