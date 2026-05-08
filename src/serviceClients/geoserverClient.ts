@@ -1,6 +1,6 @@
 import type { Logger } from '@map-colonies/js-logger';
 import { NotFoundError } from '@map-colonies/error-types';
-import { HttpClient, type IHttpRetryConfig } from '@map-colonies/mc-utils/dist/communication/http/httpClient';
+import { HttpClient, type IHttpRetryConfig } from '@map-colonies/mc-utils';
 import { inject, injectable } from 'tsyringe';
 import type { Tracer } from '@opentelemetry/api';
 import type { AxiosBasicCredentials } from 'axios';

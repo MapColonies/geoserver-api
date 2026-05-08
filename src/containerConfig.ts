@@ -3,7 +3,6 @@ import { trace } from '@opentelemetry/api';
 import { DependencyContainer } from 'tsyringe/dist/typings/types';
 import { jsLogger } from '@map-colonies/js-logger';
 import { Registry } from 'prom-client';
-import type { ValueProvider } from 'tsyringe';
 import { SERVICES, SERVICE_NAME } from './common/constants';
 import { getTracing } from './common/tracing';
 import { workspacesRouterFactory, WORKSPACES_ROUTER_SYMBOL } from './workspaces/routes/workspacesRouter';
@@ -18,20 +17,8 @@ interface RegisterOptions {
   useChild?: boolean;
 }
 
-function isValueProvider<T>(provider: unknown): provider is ValueProvider<T> {
-  return typeof provider === 'object' && provider !== null && 'useValue' in provider;
-}
-
 export const registerExternalValues = async (options?: RegisterOptions): Promise<DependencyContainer> => {
-  const isConfigOverride = (
-    o: InjectionObject<unknown>
-  ): o is InjectionObject<ReturnType<typeof getConfig>> & { provider: ValueProvider<ReturnType<typeof getConfig>> } => {
-    return o.token === SERVICES.CONFIG && isValueProvider<ReturnType<typeof getConfig>>(o.provider);
-  };
-
-  const overrideConfig = options?.override?.find(isConfigOverride);
-
-  const configInstance = overrideConfig ? overrideConfig.provider.useValue : getConfig();
+  const configInstance = getConfig();
   const loggerConfig = configInstance.get('telemetry.logger');
   const logger = await jsLogger({ ...loggerConfig, prettyPrint: loggerConfig.prettyPrint, mixin: getOtelMixin() });
   const tracer = trace.getTracer(SERVICE_NAME);

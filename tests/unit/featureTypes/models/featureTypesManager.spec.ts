@@ -135,16 +135,7 @@ describe('DataStoresManager', () => {
 
   describe('create featureType', () => {
     it('should create a featureType', async function () {
-      nock(geoserverUrl)
-        .post('/workspaces/test/datastores/bestStore/featuretypes', (body) => {
-          try {
-            deepStrictEqual(body, getGeoserverPostFeatureTypeRequestMock());
-            return true;
-          } catch {
-            return false;
-          }
-        })
-        .reply(201);
+      nock(geoserverUrl).post('/workspaces/test/datastores/bestStore/featuretypes', getGeoserverPostFeatureTypeRequestMock()).reply(201);
       nock(geoserverUrl)
         .get('/workspaces/test/datastores/bestStore/featuretypes')
         .query({ list: ListParam.ALL })

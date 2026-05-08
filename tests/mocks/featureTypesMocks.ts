@@ -1,3 +1,4 @@
+import nock from 'nock';
 import { getNumOfDecimals, getSrs } from '../../src/utils/featureConstants';
 
 const mockAttributes = [
@@ -266,7 +267,7 @@ export const getGetFeatureTypeResponseMock = (): Record<string, unknown> => {
   };
 };
 
-export const getGeoserverPostFeatureTypeRequestMock = (): Record<string, unknown> => {
+export const getGeoserverPostFeatureTypeRequestMock = (): nock.DataMatcherMap => {
   const srs = getSrs();
   const numOfDecimals = getNumOfDecimals();
   return {

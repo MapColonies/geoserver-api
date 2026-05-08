@@ -3,12 +3,12 @@ const { compilerOptions } = require('../../../tsconfig.json');
 
 module.exports = {
   transform: {
-    '^.+\\.ts$': ['@swc/jest'],
+    '^.+\\.(t|j)sx?$': ['@swc/jest'],
   },
+  transformIgnorePatterns: ['/node_modules/(?!(@map-colonies|concaveman|rbush|quickselect|tinyqueue|robust-predicates|@turf)/)'],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
   coverageReporters: ['text', 'html'],
   collectCoverage: true,
-  transformIgnorePatterns: ['node_modules/(?!(?:@map-colonies/mc-utils|@turf|concaveman|rbush)/)'],
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
     '!*/node_modules/',
