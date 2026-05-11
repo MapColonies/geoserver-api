@@ -71,6 +71,11 @@ export interface ConnectionParams {
   sslMode: string;
 }
 
+export interface ConnectionEntry {
+  '@key': string;
+  $: string;
+}
+
 export interface GeoServerDeleteReqParams extends Record<string, unknown> {
   recurse: boolean;
 }
