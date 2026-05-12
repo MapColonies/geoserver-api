@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/MapColonies/geoserver-api/compare/v2.0.0...v2.1.0) (2026-05-12)
+
+
+### Features
+
+* boilerplate maintenance ([810f080](https://github.com/MapColonies/geoserver-api/commit/810f080041e79ff352f042a47a2437d7eba11cfe))
+* boilerplate maintenance (MAPCO-10111) ([c231136](https://github.com/MapColonies/geoserver-api/commit/c2311368f1db34f76d1d0bb02c743c3cbdb636a7))
+* changes ([b9940a4](https://github.com/MapColonies/geoserver-api/commit/b9940a43a29834321f0113fdfa6d61aed5207d90))
+
+
+### Bug Fixes
+
+* cr changes ([430fa8d](https://github.com/MapColonies/geoserver-api/commit/430fa8d84952dca371b22f96a9ff4d2265383737))
+* move connection entry interface location ([4a12f1d](https://github.com/MapColonies/geoserver-api/commit/4a12f1d96908a6d9b3015becd410d5ad51c8fdf9))
+* naming ([2005472](https://github.com/MapColonies/geoserver-api/commit/2005472a80dbb997faaff844f663b58e8b7f9283))
+* test and lint ([23d6be7](https://github.com/MapColonies/geoserver-api/commit/23d6be706577ab335d4733342b4ab265b69b5d45))
+* tests ([529cf17](https://github.com/MapColonies/geoserver-api/commit/529cf172ce902aff941ee32295c4122cfa35cde4))
+
 ## [2.0.0](https://github.com/MapColonies/geoserver-api/compare/v1.4.2...v2.0.0) (2026-02-05)
 
 
