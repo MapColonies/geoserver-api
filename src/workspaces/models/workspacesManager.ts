@@ -1,10 +1,11 @@
-import { Logger } from '@map-colonies/js-logger';
+import type { Logger } from '@map-colonies/js-logger';
 import { inject, injectable } from 'tsyringe';
-import { Tracer } from '@opentelemetry/api';
+import type { Tracer } from '@opentelemetry/api';
 import { ConflictError, NotFoundError } from '@map-colonies/error-types';
 import { withSpanAsyncV4 } from '@map-colonies/telemetry';
 import { SERVICES } from '../../common/constants';
-import { GetWorkspaceResponse, IConfig, GeoServerDeleteReqParams, Workspace } from '../../common/interfaces';
+import type { ConfigType } from '../../common/config';
+import { GetWorkspaceResponse, GeoServerDeleteReqParams, Workspace } from '../../common/interfaces';
 import { GeoserverClient } from '../../serviceClients/geoserverClient';
 import { workspaceResponseConverter } from '../../utils/convertors/responseConverter';
 import { GeoserverGetWorkspaceResponse, GeoserverGetWorkspacesResponse } from '../../common/geoserver/models/workspace';
@@ -14,9 +15,9 @@ import { workspaceRequestConverter } from '../../utils/convertors/requestConvert
 export class WorkspacesManager {
   public constructor(
     @inject(SERVICES.LOGGER) private readonly logger: Logger,
-    @inject(SERVICES.CONFIG) private readonly config: IConfig,
+    @inject(SERVICES.CONFIG) private readonly config: ConfigType,
     @inject(SERVICES.TRACER) public readonly tracer: Tracer,
-    private readonly geoserverManager: GeoserverClient
+    @inject(GeoserverClient) private readonly geoserverManager: GeoserverClient
   ) {}
 
   @withSpanAsyncV4

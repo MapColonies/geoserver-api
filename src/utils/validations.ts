@@ -1,5 +1,5 @@
 import { container } from 'tsyringe';
-import { Logger } from '@map-colonies/js-logger';
+import type { Logger } from '@map-colonies/js-logger';
 import { ConnectionParams } from '../common/interfaces';
 import { DbType, SslMode } from '../common/enums';
 import { SERVICES } from '../common/constants';

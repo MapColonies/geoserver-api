@@ -7,7 +7,15 @@ import {
 } from '../../common/geoserver/models/featureType';
 import { GeoServerGetWfsSettingsResponse } from '../../common/geoserver/models/wfsMode';
 import { GeoserverGetWorkspacesResponse } from '../../common/geoserver/models/workspace';
-import { DataStore, GetDataStoreResponse, GetFeatureTypeResponse, GetFeatureTypesResponse, WfsSettings, Workspace } from '../../common/interfaces';
+import {
+  ConnectionEntry,
+  DataStore,
+  GetDataStoreResponse,
+  GetFeatureTypeResponse,
+  GetFeatureTypesResponse,
+  WfsSettings,
+  Workspace,
+} from '../../common/interfaces';
 
 /* This file contains functions that converts outputs from the Geo server to the response output the api expects to receive */
 export const workspaceResponseConverter = (geoserverResponse: GeoserverGetWorkspacesResponse): Workspace[] => {
@@ -53,21 +61,22 @@ export const featureTypesResponseConverter = (
 };
 
 export const dataStoreResponseConverter = (dataStore: GeoserverGetDataStoreResponse['dataStore']): GetDataStoreResponse => {
-  const connectionParams = dataStore.connectionParameters.entry.reduce((acc, param) => {
-    const [key, value] = Object.values(param);
+  const entries = dataStore.connectionParameters.entry as unknown as ConnectionEntry[];
+
+  const connectionParams = entries.reduce<Record<string, string>>((acc, { '@key': key, $: value }) => {
     acc[key] = value;
     return acc;
-  }, {} as Record<string, string>);
+  }, {});
 
   return {
     name: dataStore.name,
     dateCreated: dataStore.dateCreated,
-    host: connectionParams['host'],
-    port: connectionParams['port'],
-    schema: connectionParams['schema'],
-    dbType: connectionParams['dbtype'],
-    dbName: connectionParams['database'],
-    sslMode: connectionParams['SSL mode'],
+    host: connectionParams['host'] ?? '',
+    port: connectionParams['port'] ?? '',
+    schema: connectionParams['schema'] ?? '',
+    dbType: connectionParams['dbtype'] ?? '',
+    dbName: connectionParams['database'] ?? '',
+    sslMode: connectionParams['SSL mode'] ?? '',
   };
 };
 

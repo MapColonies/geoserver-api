@@ -3,11 +3,6 @@ import { GeoserverGetDataStoreResponse } from './geoserver/models/dataStore';
 import { GeoserverFeatureTypeResponse } from './geoserver/models/featureType';
 import { GeoserverGetWorkspaceResponse } from './geoserver/models/workspace';
 
-export interface IConfig {
-  get: <T>(setting: string) => T;
-  has: (setting: string) => boolean;
-}
-
 export interface OpenApiConfig {
   filePath: string;
   basePath: string;
@@ -44,7 +39,7 @@ export interface DataStoresRequest {
   workspaceName: string;
 }
 
-export interface DataStore extends Workspace {}
+export type DataStore = Workspace;
 
 export type GetDataStoresResponse = DataStore[];
 
@@ -76,6 +71,11 @@ export interface ConnectionParams {
   sslMode: string;
 }
 
+export interface ConnectionEntry {
+  '@key': string;
+  $: string;
+}
+
 export interface GeoServerDeleteReqParams extends Record<string, unknown> {
   recurse: boolean;
 }
@@ -85,7 +85,7 @@ export interface FeatureType {
   link?: string;
 }
 
-export interface FeatureTypesRequest extends DataStoreRequest {}
+export type FeatureTypesRequest = DataStoreRequest;
 
 export interface FeatureTypeRequest extends FeatureTypesRequest {
   featureTypeName: string;

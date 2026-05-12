@@ -1,7 +1,7 @@
-import jsLogger from '@map-colonies/js-logger';
 import { trace } from '@opentelemetry/api';
 import nock from 'nock';
 import { ConflictError, NotFoundError } from '@map-colonies/error-types';
+import { jsLogger } from '@map-colonies/js-logger';
 import { DataStoresManager } from '../../../../src/dataStores/models/dataStoresManager';
 import { GeoserverClient } from '../../../../src/serviceClients/geoserverClient';
 import { configMock, registerDefaultConfig, clear as clearConfig } from '../../../mocks/configMock';
@@ -25,16 +25,18 @@ describe('DataStoresManager', () => {
   let geoserverManager: GeoserverClient;
   const testTracer = trace.getTracer('testTracer');
   registerDefaultConfig();
-  const geoserverUrl = `${configMock.get<string>('geoserver.url')}/rest`;
+  const geoserverUrl = `${configMock.get('geoserver.url') as unknown as string}/rest`;
 
-  beforeEach(function () {
+  beforeEach(async function () {
     registerDefaultConfig();
-    geoserverManager = new GeoserverClient(configMock, jsLogger({ enabled: false }), testTracer);
-    workspacesManager = new WorkspacesManager(jsLogger({ enabled: false }), configMock, testTracer, geoserverManager);
-    dataStoresManager = new DataStoresManager(jsLogger({ enabled: false }), configMock, testTracer, geoserverManager, workspacesManager);
+    const logger = await jsLogger({ enabled: false });
+    geoserverManager = new GeoserverClient(configMock, logger, testTracer);
+    workspacesManager = new WorkspacesManager(logger, configMock, testTracer, geoserverManager);
+    dataStoresManager = new DataStoresManager(logger, configMock, testTracer, geoserverManager, workspacesManager);
   });
 
   afterEach(() => {
+    // eslint-disable-next-line import-x/no-named-as-default-member -- prefer nock.cleanAll() for consistency
     nock.cleanAll();
     clearConfig();
     jest.resetAllMocks();

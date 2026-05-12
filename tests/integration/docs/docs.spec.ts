@@ -1,21 +1,21 @@
-import jsLogger from '@map-colonies/js-logger';
-import { trace } from '@opentelemetry/api';
 import httpStatusCodes from 'http-status-codes';
 import { getApp } from '../../../src/app';
-import { SERVICES } from '../../../src/common/constants';
+import { getTestContainerConfig, resetContainer } from '../testContainerConfig';
 import { DocsRequestSender } from './helpers/docsRequestSender';
 
 describe('docs', function () {
   let requestSender: DocsRequestSender;
-  beforeEach(function () {
-    const app = getApp({
-      override: [
-        { token: SERVICES.LOGGER, provider: { useValue: jsLogger({ enabled: false }) } },
-        { token: SERVICES.TRACER, provider: { useValue: trace.getTracer('testTracer') } },
-      ],
+  beforeEach(async function () {
+    const [app] = await getApp({
+      override: await getTestContainerConfig(),
       useChild: true,
     });
     requestSender = new DocsRequestSender(app);
+  });
+
+  afterEach(function () {
+    resetContainer();
+    jest.restoreAllMocks();
   });
 
   describe('Happy Path', function () {

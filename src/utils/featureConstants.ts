@@ -1,16 +1,19 @@
-import config from 'config';
 import { GeoserverPostAttribute } from '../common/geoserver/models/featureType';
+import { getConfig } from '../common/config';
 
-export const srs: string = config.get<string>('geoserver.srs');
+export const getSrs = (): string => getConfig().get('geoserver.srs') as unknown as string;
 
-export const numOfDecimals: number = config.get<number>('geoserver.numOfDecimals');
+export const getNumOfDecimals = (): number => getConfig().get('geoserver.numOfDecimals') as unknown as number;
 
-export const boundingBox = {
-  minx: -180,
-  maxx: 180,
-  miny: -90,
-  maxy: 90,
-  crs: srs,
+export const getBoundingBox = (): { minx: number; maxx: number; miny: number; maxy: number; crs: string } => {
+  const srs = getSrs();
+  return {
+    minx: -180,
+    maxx: 180,
+    miny: -90,
+    maxy: 90,
+    crs: srs,
+  };
 };
 
 export const attributesMapping = [

@@ -1,10 +1,11 @@
-import { Logger } from '@map-colonies/js-logger';
+import type { Logger } from '@map-colonies/js-logger';
 import { inject, injectable } from 'tsyringe';
-import { Tracer } from '@opentelemetry/api';
+import type { Tracer } from '@opentelemetry/api';
 import { ConflictError, NotFoundError } from '@map-colonies/error-types';
 import { withSpanAsyncV4 } from '@map-colonies/telemetry';
 import { SERVICES } from '../../common/constants';
-import { DataStoreBodyRequest, DataStore, GetDataStoreResponse, IConfig, ConnectionParams, GeoServerDeleteReqParams } from '../../common/interfaces';
+import type { ConfigType } from '../../common/config';
+import type { DataStoreBodyRequest, DataStore, GetDataStoreResponse, ConnectionParams, GeoServerDeleteReqParams } from '../../common/interfaces';
 import { GeoserverClient } from '../../serviceClients/geoserverClient';
 import {
   GeoServerCreateDataStoreRequest,
@@ -22,12 +23,12 @@ export class DataStoresManager {
 
   public constructor(
     @inject(SERVICES.LOGGER) private readonly logger: Logger,
-    @inject(SERVICES.CONFIG) private readonly config: IConfig,
+    @inject(SERVICES.CONFIG) private readonly config: ConfigType,
     @inject(SERVICES.TRACER) public readonly tracer: Tracer,
-    private readonly geoserverManager: GeoserverClient,
-    private readonly workspacesManager: WorkspacesManager
+    @inject(GeoserverClient) private readonly geoserverManager: GeoserverClient,
+    @inject(WorkspacesManager) private readonly workspacesManager: WorkspacesManager
   ) {
-    this.connectionParams = this.config.get<ConnectionParams>('geoserver.dataStore');
+    this.connectionParams = this.config.get('geoserver.dataStore') as unknown as ConnectionParams;
   }
 
   @withSpanAsyncV4
@@ -100,7 +101,7 @@ export class DataStoresManager {
     try {
       await this.getDataStore(workspaceName, dataStoreName);
       return true;
-    } catch (e) {
+    } catch {
       return false;
     }
   }

@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import { WfsManager } from '../models/wfsManager';
 import { WfsSettings } from '../../../common/interfaces';
@@ -10,7 +10,7 @@ type UpdateWorkspaceHandler = RequestHandler<undefined, unknown, WfsSettings>;
 
 @injectable()
 export class WfsController {
-  public constructor(private readonly wfsManager: WfsManager) {}
+  public constructor(@inject(WfsManager) private readonly wfsManager: WfsManager) {}
 
   public getWfsMode: GetWfsSettingsHandler = async (req, res, next) => {
     try {

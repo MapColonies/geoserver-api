@@ -1,11 +1,11 @@
-import { Logger } from '@map-colonies/js-logger';
+import type { Logger } from '@map-colonies/js-logger';
 import { NotFoundError } from '@map-colonies/error-types';
-import { HttpClient, IHttpRetryConfig } from '@map-colonies/mc-utils';
+import { HttpClient, type IHttpRetryConfig } from '@map-colonies/mc-utils';
 import { inject, injectable } from 'tsyringe';
-import { Tracer } from '@opentelemetry/api';
+import type { Tracer } from '@opentelemetry/api';
 import type { AxiosBasicCredentials } from 'axios';
 import { withSpanAsyncV4 } from '@map-colonies/telemetry';
-import { IConfig } from '../common/interfaces';
+import type { ConfigType } from '../common/config';
 import { SERVICES } from '../common/constants';
 
 interface RequestOptions<T> {
@@ -18,20 +18,20 @@ export class GeoserverClient extends HttpClient {
   private readonly auth: AxiosBasicCredentials;
 
   public constructor(
-    @inject(SERVICES.CONFIG) private readonly config: IConfig,
-    @inject(SERVICES.LOGGER) protected readonly logger: Logger,
+    @inject(SERVICES.CONFIG) private readonly config: ConfigType,
+    @inject(SERVICES.LOGGER) logger: Logger,
     @inject(SERVICES.TRACER) public readonly tracer: Tracer
   ) {
     super(
       logger,
-      `${config.get<string>('geoserver.url')}/rest`,
+      `${config.get('geoserver.url')}/rest`,
       'GeoServer',
-      config.get<IHttpRetryConfig>('httpRetry'),
-      config.get<boolean>('disableHttpClientLogs')
+      config.get('httpRetry') as IHttpRetryConfig,
+      config.get('disableHttpClientLogs') as boolean
     );
     this.auth = {
-      username: config.get<string>('geoserver.auth.username'),
-      password: config.get<string>('geoserver.auth.password'),
+      username: config.get('geoserver.auth.username') as unknown as string,
+      password: config.get('geoserver.auth.password') as unknown as string,
     };
   }
 
@@ -59,7 +59,7 @@ export class GeoserverClient extends HttpClient {
       const response = await this.get<T>(url, options?.queryParams, undefined, this.auth, options?.headers);
       return response;
     } catch (error) {
-      this.logger.error({ msg: `Failed to perform GET request to ${url}`, error });
+      this.logger.error({ msg: `Failed to perform GET request to ${url}`, err: error });
       if (error instanceof NotFoundError) {
         error.message = `No resource was found for get of ${endpoint}`;
       }
@@ -96,7 +96,7 @@ export class GeoserverClient extends HttpClient {
       const response = await this.post<T>(url, body, options?.queryParams, undefined, this.auth, options?.headers);
       return response;
     } catch (error) {
-      this.logger.error({ msg: `Failed to perform POST request to ${url}`, error });
+      this.logger.error({ msg: `Failed to perform POST request to ${url}`, err: error });
       throw error;
     }
   }
@@ -123,7 +123,7 @@ export class GeoserverClient extends HttpClient {
     try {
       await this.delete(url, options?.queryParams, undefined, this.auth, options?.headers);
     } catch (error) {
-      this.logger.error({ msg: `Failed to perform DELETE request to ${url}`, error });
+      this.logger.error({ msg: `Failed to perform DELETE request to ${url}`, err: error });
       if (error instanceof NotFoundError) {
         error.message = `No resource was found for delete of ${endpoint}`;
       }
@@ -160,7 +160,7 @@ export class GeoserverClient extends HttpClient {
       const response = await this.put<T>(url, body, options?.queryParams, undefined, this.auth, options?.headers);
       return response;
     } catch (error) {
-      this.logger.error({ msg: `Failed to perform PUT request to ${url}`, error });
+      this.logger.error({ msg: `Failed to perform PUT request to ${url}`, err: error });
       if (error instanceof NotFoundError) {
         error.message = `No resource was found for put of ${endpoint}`;
       }

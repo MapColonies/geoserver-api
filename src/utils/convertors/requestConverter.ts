@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { WfsServiceLevel } from '../../common/enums';
 import { GeoServerCreateDataStoreRequest, GeoServerUpdateDataStoreRequest } from '../../common/geoserver/models/dataStore';
 import { GeoServerCreateFeatureRequest } from '../../common/geoserver/models/featureType';
 import { GeoserverWfsSettingsRequest } from '../../common/geoserver/models/wfsMode';
 import { GeoserverWorkspaceRequest } from '../../common/geoserver/models/workspace';
 import { ConnectionParams, DataStoreBodyRequest, FeatureTypeBodyRequest } from '../../common/interfaces';
-import { attributesMapping, boundingBox, srs, numOfDecimals } from '../featureConstants';
+import { attributesMapping, getBoundingBox, getNumOfDecimals, getSrs } from '../featureConstants';
 
 /* This file contains functions that converts inputs from the geoserver-api to the request input the GeoServer itself expects to receive */
 export const workspaceRequestConverter = (workspaceName: string): GeoserverWorkspaceRequest => {
@@ -52,6 +51,9 @@ export const updateDataStoreRequestConverter = (updateRequest: DataStoreBodyRequ
 };
 
 export const postFeatureTypeRequestConverter = (request: FeatureTypeBodyRequest): GeoServerCreateFeatureRequest => {
+  const srs = getSrs();
+  const boundingBox = getBoundingBox();
+  const numOfDecimals = getNumOfDecimals();
   return {
     featureType: {
       name: request.name ?? request.nativeName,
