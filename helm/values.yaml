@@ -107,7 +107,7 @@ db:
   port: ''
   schema: 'polygon_parts'
   name: ''
-  dbType: ''
+  dbType: 'postgis'
   sslEnabled: false
   secrets:
       useExternal: true
