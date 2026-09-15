@@ -1,30 +1,20 @@
 global:
   cloudProvider: {}
-  tracing: {}
-  metrics: {}
-  openTelemetryOptions: {}
+  telemetry:
+    tracing: {}
+    logger:
+      opentelemetryOptions: {}
   environment: ''
-
-mclabels:
-  #environment: development
-  component: backend
-  partOf: ingestion
-  owner: raster
-  gisDomain: raster
-  prometheus:
-    enabled: true
-    port: 8080
-
   serviceUrls:
     geoserverUrl: ""
-  geoserver: 
+  geoserver:
     secrets:
       useExternal: false
-      externalSecretName: '' 
-    auth: 
+      externalSecretName: ''
+    auth:
       username: ""
       password: ""
-  db: 
+  db:
     username: ""
     password: ""
     host: ""
@@ -37,13 +27,22 @@ mclabels:
     secrets:
       useExternal: false
       externalSecretName: ''
-
-  ca:    
+  ca:
     secretName: ''
     path: '/usr/local/share/ca-certificates'
-    key: 'ca.crt'  
+    key: 'ca.crt'
   ingress:
-    domain: 'apps.aroapp.io'      
+    domain: 'apps.aroapp.io'
+
+mclabels:
+  #environment: development
+  component: backend
+  partOf: ingestion
+  owner: raster
+  gisDomain: raster
+  prometheus:
+    enabled: true
+    port: 8080
 
 enabled: true
 environment: development
@@ -52,7 +51,7 @@ revisionHistoryLimit: 5 # Amount of revisions we keep
 initialDelaySeconds: 60
 nodePort: 30030 #for minikube deployment only
 resetOnConfigChange: true
-imagePullPolicy: Always
+imagePullPolicy: IfNotPresent
 
 nameOverride: ""
 fullnameOverride: ""
@@ -99,17 +98,6 @@ cloudProvider:
   imagePullSecretName: 'my-registry-secret'
   flavor: openshift
 
-tracing:
-  enabled: false
-  url: ''
-
-metrics:
-  enabled: false
-  url: ''
-  prometheus:
-    scrape: true
-    port: 8080  
-
 geoserver:  
   secrets:
       useExternal: true
@@ -117,9 +105,9 @@ geoserver:
 db: 
   host: ''
   port: ''
-  schema: ''
+  schema: 'polygon_parts'
   name: ''
-  dbType: ''
+  dbType: 'postgis'
   sslEnabled: false
   secrets:
       useExternal: true
@@ -128,32 +116,42 @@ serviceUrls:
   geoserverUrl: ''      
 
 configManagement:
-  offlineMode: false
+  offlineMode: true
   name: 'geoserver-api'
   version: 'latest'
   serverUrl: 'http://localhost:8080/api'
 
-env:
+server:
   port: 80
   targetPort: 8080
   protocol: TCP
-  logLevel: info
-  logPrettyPrintEnabled: false
-  openTelemetryOptions:
-    enabled: false
-    url: ''
-    resourceAttributes: {}
   responseCompressionEnabled: true
   requestPayloadLimit: 1mb
-  disableHttpClientLogs: false     
+
+telemetry:
+  logger:
+    level: info
+    prettyPrint: false
+    opentelemetryOptions:
+      enabled: true
+      url: http://localhost:4317
+      # Rendered as OTEL_RESOURCE_ATTRIBUTES in "key=value,key=value" format
+      # resourceAttributes:
+      #   service.namespace: namespace
+      #   deployment.environment: dev
+  tracing:
+    enabled: true
+    url: http://localhost:55681/v1/traces
+
+env:
+  disableHttpClientLogs: false
   httpRetry:
     attempts: 5
     delay: exponential
     resetTimeout: true
-  srs: "EPSG:4326"  
-  numOfDecimals: 100  
+  srs: "EPSG:4326"
+  numOfDecimals: 100
   wfsMaxFeatures: 1000
-
 
 resources:
   enabled: false
