@@ -20,7 +20,7 @@ interface RegisterOptions {
 export const registerExternalValues = async (options?: RegisterOptions): Promise<DependencyContainer> => {
   const configInstance = getConfig();
   const loggerConfig = configInstance.get('telemetry.logger');
-  const logger = await jsLogger({ ...loggerConfig, prettyPrint: loggerConfig.prettyPrint, mixin: getOtelMixin() });
+  const logger = await jsLogger({ ...loggerConfig, mixin: getOtelMixin() });
   const tracer = trace.getTracer(SERVICE_NAME);
   const metricsRegistry = new Registry();
 
