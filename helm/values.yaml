@@ -164,7 +164,7 @@ resources:
       memory: 128Mi
 
 route:
-  enabled: true
+  enabled: false
   path: /
   host: 
   timeout:
