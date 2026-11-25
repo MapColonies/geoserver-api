@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.1](https://github.com/MapColonies/geoserver-api/compare/v2.1.0...v2.1.1) (2026-11-25)
+
+
+### Bug Fixes
+
+* **config:** map otlp logger env vars by their schema names ([ba4ecd9](https://github.com/MapColonies/geoserver-api/commit/ba4ecd9e76ec428908260e00f42a767f61f216ca))
+* **helm:** add mclabels to pod template labels ([17d3213](https://github.com/MapColonies/geoserver-api/commit/17d321311a497c5c2397db63216b88c273a2abea))
+* **helm:** add mclabels to pod template labels ([e23c55b](https://github.com/MapColonies/geoserver-api/commit/e23c55bc2c2c18a146563da842072b4bcb21c364))
+* **helm:** default db.dbType to postgis (MAPCO-11633) ([6129f82](https://github.com/MapColonies/geoserver-api/commit/6129f824cf9dbe75fc2bca0b7521ada7db2b40f6))
+* **helm:** default route.enabled to false ([efba6b8](https://github.com/MapColonies/geoserver-api/commit/efba6b829208b2ed2f8543c11c36aa976ee75f3b))
+* **helm:** split env values into server and telemetry scopes and fix default values ([261571c](https://github.com/MapColonies/geoserver-api/commit/261571cece81cc5aba87731ee05156495f936e85))
+
 ## [2.1.0](https://github.com/MapColonies/geoserver-api/compare/v2.0.0...v2.1.0) (2026-05-12)
 
 
